@@ -55,6 +55,7 @@ class ATK:
         self.home = Path(atk_home).resolve()
         self.out_dir = Path(out_dir).resolve()
         self.out_dir.mkdir(parents=True, exist_ok=True)
+        (self.out_dir / "Output").mkdir(exist_ok=True)  # ATK 只往已存在的 Output 子目录写报告，不存在时静默不写
         cwd = os.getcwd()
         os.chdir(self.home)  # 引擎按工作目录找 AstroData
         self.m = _import_atk(self.home)
@@ -216,7 +217,13 @@ class ATK:
         if start is None or stop is None:
             start, stop = self.time_period()
         self.root.GetAnimation().Reset()
-        return self.root.OutputDataReport(self.find(obj_name), report_name, start, stop)
+        path = self.root.OutputDataReport(self.find(obj_name), report_name, start, stop)
+        p = Path(path)
+        if not p.is_absolute():
+            p = self.out_dir / p
+        if not p.exists() or p.stat().st_size == 0:  # ATK 写失败时不报错，这里主动检查
+            raise RuntimeError(f"ATK 没有生成报告文件：{p}")
+        return str(p)
 
     def position_j2000(self, obj_name, time_str):
         """返回某时刻 J2000 位置速度 (pos[3], vel[3])，单位 m、m/s。"""
