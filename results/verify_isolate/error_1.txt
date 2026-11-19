@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "I:\建模比赛2\weixing\run.py", line 77, in run_job
+    s["report_file"] = atk.report(sat, job["report"], job.get("start") or None, job.get("stop") or None)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "I:\建模比赛2\weixing\code\atkbridge.py", line 215, in report
+    return self.root.OutputDataReport(self.find(obj_name), report_name, start, stop)
+                                      ^^^^^^^^^^^^^^^^^^^
+  File "I:\建模比赛2\weixing\code\atkbridge.py", line 139, in find
+    walk(self.scenario())
+  File "I:\建模比赛2\weixing\code\atkbridge.py", line 134, in walk
+    if c.GetInstanceName() == name:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'GetInstanceName'
