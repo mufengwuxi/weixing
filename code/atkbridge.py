@@ -116,6 +116,8 @@ class ATK:
             kids = o.GetChildren()
             for i in range(kids.GetCount()):
                 c = kids.Item(i)
+                if c is None:  # 计算可见性后子对象集合里会多出空槽，跳过
+                    continue
                 res.append((c.GetInstanceName(), type(c).__name__, c.GetPath()))
                 if c.GetHasChildren():
                     walk(c)
@@ -131,6 +133,8 @@ class ATK:
             kids = o.GetChildren()
             for i in range(kids.GetCount()):
                 c = kids.Item(i)
+                if c is None:  # 计算可见性后子对象集合里会多出空槽，跳过
+                    continue
                 if c.GetInstanceName() == name:
                     found.append(c)
                 if c.GetHasChildren():

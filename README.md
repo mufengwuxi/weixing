@@ -22,7 +22,7 @@
 ## 日常使用
 
 1. 复制 `params/example.csv`，按 `params/README.md` 的说明填参数。每行是一个任务。
-2. 运行 `python run.py params/你的参数表.csv`。任务很多、或者 ATK 偶尔崩溃时，加上 `--isolate`，让每个任务单独开一个进程运行。
+2. 先关掉 ATK 界面，再运行 `python run.py params/你的参数表.csv`。开着界面时，ATK 会往安装目录写三维地图缓存。任务很多、或者 ATK 偶尔崩溃时，加上 `--isolate`，让每个任务单独开一个进程运行。
 3. 结果在 `results/<参数表名_时间>/` 下：
    - `summary.csv`：每个任务一行
    - `access_<id>.csv`：可见窗口明细
