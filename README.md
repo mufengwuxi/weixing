@@ -29,6 +29,12 @@
    - `raw/`：ATK 原始输出，不提交
 4. 在自己的分支上提交参数表和 `results/` 下的汇总结果，然后提 PR。
 
+## 注意事项
+
+- 批量运行前关掉 ATK 界面。
+- 提示 "Python was not found" 时，说明 PATH 里的 `python` 是 Microsoft Store 占位符，换成 Python 的完整路径。
+- ATK 官方示例脚本（`report/vendor_samples/examples/`）是 GBK 编码；本环境导出的报告和 CSV 是 UTF-8 编码。
+
 ## 在代码里直接调用
 
 ```python
