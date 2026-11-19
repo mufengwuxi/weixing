@@ -1,0 +1,5 @@
+﻿job_id,status,propagator,n_windows,total_access_s,first_start,last_stop,r_expected_m,r_actual_m,report_file,elapsed_s,error
+1,ok,ePropagatorTwoBody,16,,2023-03-11 00:00:00.00250282287597656,2023-03-11 23:23:03.24553345987806,,,I:/建模比赛2/weixing/results/verify2_isolate/raw/1/Output/J2000 Position Velocity.txt,0.07,
+2,ok,ePropagatorTwoBody,5,,2023-03-11 00:02:27.192791999333,2023-03-11 23:23:03.24083266461093,6993000.0,6993000.0,,0.07,
+3,ok,ePropagatorTwoBody,11,,2023-03-11 01:38:20.7081205226514,2023-03-11 22:57:35.4381156174059,7499250.0,7499250.0,,0.06,
+4,error,ePropagatorTwoBody,,,,,,,,0.05,"KeyError: '场景里没有名为 不存在的卫星 的对象。现有对象：卫星1, 卫星2'"
