@@ -1,1 +1,0 @@
-﻿#include "AstSPICE/SpiceUsr.h"

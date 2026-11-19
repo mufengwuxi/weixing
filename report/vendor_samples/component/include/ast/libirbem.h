@@ -1,1 +1,0 @@
-﻿#include "AstWeather/libirbem.h"

@@ -7,6 +7,8 @@
 1. `git pull` 拉取最新代码。
 2. 读本文件和 `TASKS.md`，只做 `TASKS.md` 里分配给本机的任务。
 3. ATK 目录通过环境变量 `ATK_HOME` 指定，不要把绝对路径写死进代码。
+4. 如果 PATH 里的 `python` 是 Microsoft Store 占位符（运行时提示 "Python was not found"），就改用 Python 的全路径运行脚本。
+5. 控制台日志一律存成 `report/` 下的 `.txt` 文件，`*.log` 会被 `.gitignore` 忽略。
 
 ## 运行与回传
 
@@ -26,3 +28,4 @@
 
 - 不提交注册码、账号密码、本机 ID 之类的授权信息。
 - 不修改 ATK 安装目录里的任何文件。
+- 不把 ATK 的 C++ 源码、DLL、数据文件提交进仓库，只提交 TASKS.md 要求的报告和示例脚本。
