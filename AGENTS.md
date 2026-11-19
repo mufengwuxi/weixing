@@ -29,3 +29,9 @@
 - 不提交注册码、账号密码、本机 ID 之类的授权信息。
 - 不修改 ATK 安装目录里的任何文件。
 - 不把 ATK 的 C++ 源码、DLL、数据文件提交进仓库，只提交 TASKS.md 要求的报告和示例脚本。
+
+## 给远端的技术备忘（Component 模式，已在本机验证）
+
+- 启动方式：`os.add_dll_directory(ATK_HOME)`，`os.chdir(ATK_HOME)`，再把 `IntegratingWithATK/component/Python` 加进 `sys.path`，然后 `import ATKComponentPythonModule`。
+- 调用前必须先 `SetSaveFileBasePath(<仓库内目录>)`，否则输出会写进 ATK 安装目录。
+- ATK 自带的示例脚本是 GBK 编码。
