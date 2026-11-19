@@ -1,24 +1,19 @@
 # TASKS.md：当前任务
 
-## 任务 1：探测 ATK 接口（已完成）
-## 任务 2：验证 Component 模式（已完成，3.12 和 ATK 自带 Python 都能导入）
+任务 1 到 3（探测接口、验证 Component、导出接口定义）已完成。
 
-## 任务 3：导出接口定义并载入比赛场景
+## 任务 4：验证联动环境
 
-1. `git pull`，切到新分支 `api-<名字>`。
-2. 设置 ATK 目录：
+1. `git pull`，切到新分支 `verify-<名字>`。确认已设置 `ATK_HOME`，并关掉 ATK 界面。
+2. 依次运行下面两条命令（Python 路径按本机实际情况填）：
    ```
-   set ATK_HOME=I:\建模比赛2\ATK4\ATK-4.2.0-rc.2
+   python run.py params/example.csv --name verify_inproc
+   python run.py params/example.csv --name verify_isolate --isolate
    ```
-3. 找到竞赛软件包 MMC10 文件夹里的 `测试.atk`，把它的完整路径填进下面的命令。关掉 ATK 界面后运行：
-   ```
-   C:\Users\xie\AppData\Local\Programs\Python\Python312\python.exe tools/dump_api.py --scenario "<测试.atk 的完整路径>"
-   ```
-4. 提交并推送以下内容，然后提 PR：
-   - `report/api_report.md`
-   - `report/vendor_samples/component/Python/ATKComponentPythonModule.py`
-   - `report/vendor_samples/examples/*.java`
-   - `scenes/测试.atk`
-5. 如果脚本中途崩溃（包括 Python 进程直接退出、没有报错信息），`report/api_report.md` 里会保留崩溃前的内容。照样提交，再把控制台输出的最后 100 行存成 `report/api_console.txt` 一起提交。
-
-`report/atk_output/` 是 ATK 运行时的输出目录，已被忽略，不用提交。
+3. 对照下面的预期检查结果，结论写进 `report/verify_notes.md`：
+   - 任务 1 到 3 的状态是 `ok`。任务 4 的状态是 `error`，报错提示找不到对象，这是故意设计的。
+   - 任务 2、3 的 `r_expected_m` 和 `r_actual_m` 应该基本相等（误差在 1 米以内）。如果差很多，或者差了 1000 倍，说明单位理解错了，照实写下来。
+   - `results/verify_*/raw/` 下面有 ATK 输出，ATK 安装目录里没有新增文件。
+   - 同一进程运行和单独进程运行的结果是否一致。
+4. 提交 `results/verify_inproc/` 和 `results/verify_isolate/`（`raw/` 已被忽略）以及 `report/verify_notes.md`，然后提 PR。
+5. 如果出错，把控制台输出存成 `report/verify_console.txt` 一起提交。不要改 `code/` 和 `run.py`。

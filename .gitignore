@@ -7,3 +7,4 @@ results/raw/
 *.log
 ~$*
 report/atk_output/
+results/*/raw/

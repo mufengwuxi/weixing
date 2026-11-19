@@ -1,0 +1,5 @@
+job_id,scenario,satellite,access_to,epoch,sma_m,ecc,inc_deg,raan_deg,argp_deg,ta_deg,start,stop,step_s,report,note
+1,scenes/AccessExample.atk,卫星1,卫星2,,,,,,,,,,60,J2000 Position Velocity,原样载入场景，算卫星1到卫星2的可见窗口
+2,scenes/AccessExample.atk,卫星1,卫星2,start,7000000,0.001,45,0,0,0,,,60,,改卫星1轨道（7000 km、倾角45度）后重算
+3,scenes/AccessExample.atk,卫星1,卫星2,start,7500000,0.01,98,30,0,90,,,60,,改成太阳同步附近的倾角，再重算
+4,scenes/AccessExample.atk,卫星1,不存在的卫星,,,,,,,,,,60,,故意写错名字，检查报错能不能正常记录
