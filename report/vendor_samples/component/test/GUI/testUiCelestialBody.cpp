@@ -1,0 +1,70 @@
+﻿/// @file      testUiCelestialBody.cpp
+/// @brief     测试 UiCelestialBody 类
+/// @author    金柯<jinke18@foxmail.com>
+/// @date      2026-04-10
+
+#ifdef AST_WITH_QT
+#include "ast/UiCelestialBody.hpp"
+#include "ast/CelestialBody.hpp"
+#include <QApplication>
+#include <QMainWindow>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QDebug>
+
+AST_USING_NAMESPACE
+
+int main(int argc, char* argv[])
+{
+    printf("testUiCelestialBody.cpp\n");
+    QApplication app(argc, argv);
+
+    QMainWindow window;
+    QWidget* centralWidget = new QWidget(&window);
+    QVBoxLayout* layout = new QVBoxLayout(centralWidget);
+
+    UiCelestialBody* uiCelestialBody = new UiCelestialBody(centralWidget);
+    layout->addWidget(uiCelestialBody);
+
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    QPushButton* testButton = new QPushButton("测试", centralWidget);
+    QPushButton* refreshButton = new QPushButton("刷新", centralWidget);
+    buttonLayout->addWidget(testButton);
+    buttonLayout->addWidget(refreshButton);
+    buttonLayout->addStretch();
+    layout->addLayout(buttonLayout);
+
+    // 创建天体
+    auto* body = new CelestialBody();
+    body->setName("Earth");
+    body->setJplSpiceId(399);
+    uiCelestialBody->setCelestialBody(body);
+
+    QObject::connect(testButton, &QPushButton::clicked, [uiCelestialBody]() {
+        if (auto b = uiCelestialBody->getCelestialBody())
+        {
+            qDebug() << "Name:" << QString::fromStdString(b->getName());
+            qDebug() << "SPICE ID:" << b->getJplSpiceId();
+            qDebug() << "GM:" << b->getGM();
+            qDebug() << "Radius:" << b->getRadius();
+        }
+    });
+
+    QObject::connect(refreshButton, &QPushButton::clicked, [uiCelestialBody]() {
+        uiCelestialBody->refreshUi();
+    });
+
+    window.setCentralWidget(centralWidget);
+    window.setWindowTitle("UiCelestialBody Test");
+    window.resize(500, 600);
+    window.show();
+
+    return app.exec();
+}
+#else
+#include <stdio.h>
+int main(){
+    puts("没有启用Qt库");
+    return 0;
+}
+#endif

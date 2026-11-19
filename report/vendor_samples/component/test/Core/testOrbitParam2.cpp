@@ -1,0 +1,363 @@
+﻿/// @file      testOrbitParamSpecial.cpp
+/// @brief     轨道参数转换特殊情况测试
+/// @details   测试抛物线轨道、双曲线轨道和各种边界情况下的轨道参数转换。
+/// @author    金柯<jinke18@foxmail.com>
+/// @date      19.11.2025
+
+#include "ast/OrbitParam.hpp"
+#include "ast/Constants.hpp"
+#include "ast/AstTestMacro.h"
+#include <cstdio>
+
+AST_USING_NAMESPACE
+
+// 测试常量
+const double CB_RADIUS = 6378137.0; // 地球赤道半径 [m]
+const double GM = 3.986004418e14;    // 地球引力参数 [m^3/s^2]
+const double EPS = 1e-7;            // 一般精度要求
+const double HIGH_EPS = 1e-14;      // 高精度要求（用于近点角转换）
+const double REL_EPS = 1e-13;       // 相对精度要求（用于量级远大于1的量，如秒数）
+
+/// @brief 测试抛物线轨道 (e = 1.0) 参数转换
+TEST(OrbitParam, ParabolaOrbit)
+{
+    printf("测试: 抛物线轨道 (e = 1.0)\n");
+    double eccentricity = 1.0;
+
+    // 测试平近点角 ←→ 偏近点角转换
+    printf("  测试平近点角 ←→ 偏近点角转换...\n");
+    {
+        // 测试不同的平近点角值
+        double meanAnomalies[] = {0.0, 0.1, 0.5, 1.0, 2.0, 5.0};
+        int numTests = sizeof(meanAnomalies) / sizeof(meanAnomalies[0]);
+
+        for (int i = 0; i < numTests; i++) {
+            double M = meanAnomalies[i];
+            double E = aMeanToEcc(M, eccentricity);
+            double M_back = aEccToMean(E, eccentricity);
+            EXPECT_NEAR(M, M_back, HIGH_EPS);
+        }
+    }
+
+    // 测试偏近点角 ←→ 真近点角转换
+    printf("  测试偏近点角 ←→ 真近点角转换...\n");
+    {
+        // 测试不同的偏近点角值
+        double eccAnomalies[] = {0.0, 0.1, 0.5, 1.0, 2.0, 5.0};
+        int numTests = sizeof(eccAnomalies) / sizeof(eccAnomalies[0]);
+
+        for (int i = 0; i < numTests; i++) {
+            double E = eccAnomalies[i];
+            double f = aEccToTrue(E, eccentricity);
+            double E_back = aTrueToEcc(f, eccentricity);
+            EXPECT_NEAR(E, E_back, HIGH_EPS);
+        }
+    }
+
+    // 测试真近点角 ←→ 平近点角转换
+    printf("  测试真近点角 ←→ 平近点角转换...\n");
+    {
+        // 测试不同的真近点角值（注意抛物线轨道的真近点角范围）
+        double trueAnomalies[] = {-kPI/2, -kPI/4, 0.0, kPI/4, kPI/2, kPI-0.1};
+        int numTests = sizeof(trueAnomalies) / sizeof(trueAnomalies[0]);
+
+        for (int i = 0; i < numTests; i++) {
+            double f = trueAnomalies[i];
+            double M = aTrueToMean(f, eccentricity);
+            double f_back = aMeanToTrue(M, eccentricity);
+            EXPECT_NEAR(f, f_back, HIGH_EPS);
+        }
+    }
+
+    // 测试轨道周期相关函数（抛物线轨道没有周期，应返回无效值）
+    printf("  测试抛物线轨道周期函数...\n");
+    {
+        double periRad = 7000000.0; // 近地点半径
+        double semiMajorAxis = periRad / (1 - eccentricity); // 长半轴（理论上无穷大，但计算上需要处理）
+
+        A_UNUSED(semiMajorAxis);
+
+        // 检查aPeriRadToPeriod在抛物线轨道时的行为
+        double period = aPeriRadToPeriod(periRad, eccentricity, GM);
+        // 注意：由于实现中可能没有特殊处理抛物线轨道的周期计算，这里只检查结果是否合理
+
+        A_UNUSED(period);
+    }
+
+}
+
+/// @brief 测试双曲线轨道 (e > 1.0) 参数转换
+TEST(OrbitParam, HyperbolaOrbit)
+{
+    printf("测试: 双曲线轨道 (e > 1.0)\n");
+
+    // 测试多个不同的偏心率值
+    double eccentricities[] = {1.1, 1.5, 2.0, 5.0};
+    int numEccTests = sizeof(eccentricities) / sizeof(eccentricities[0]);
+
+    for (int e_idx = 0; e_idx < numEccTests; e_idx++) {
+        double eccentricity = eccentricities[e_idx];
+        printf("  测试偏心率 e = %.2f\n", eccentricity);
+
+        // 测试平近点角 ←→ 偏近点角转换
+        printf("    测试平近点角 ←→ 偏近点角转换...\n");
+        {
+            // 双曲线轨道的平近点角范围
+            double meanAnomalies[] = {0.0, 0.5, 1.0, 2.0, 5.0};
+            int numTests = sizeof(meanAnomalies) / sizeof(meanAnomalies[0]);
+
+            for (int i = 0; i < numTests; i++) {
+                double M = meanAnomalies[i];
+                double E = aMeanToEcc(M, eccentricity);
+                double M_back = aEccToMean(E, eccentricity);
+                EXPECT_NEAR(M, M_back, HIGH_EPS);
+            }
+        }
+
+        // 测试偏近点角 ←→ 真近点角转换
+        printf("    测试偏近点角 ←→ 真近点角转换...\n");
+        {
+            // 测试不同的偏近点角值
+            double eccAnomalies[] = {0.1, 0.5, 1.0, 2.0};
+            int numTests = sizeof(eccAnomalies) / sizeof(eccAnomalies[0]);
+
+            for (int i = 0; i < numTests; i++) {
+                double E = eccAnomalies[i];
+                double f = aEccToTrue(E, eccentricity);
+
+                // 验证真近点角在有效范围内
+                double maxTrueAnomaly = kPI - acos(1.0 / eccentricity);
+                EXPECT_TRUE(f < maxTrueAnomaly && f > -maxTrueAnomaly);
+
+                // 验证往返转换
+                double E_back = aTrueToEcc(f, eccentricity);
+                EXPECT_NEAR(E, E_back, HIGH_EPS);
+            }
+        }
+
+        // 测试真近点角 ←→ 平近点角转换
+        printf("    测试真近点角 ←→ 平近点角转换...\n");
+        {
+            // 测试双曲线轨道有效范围内的真近点角
+            double maxTrueAnomaly = kPI - acos(1.0 / eccentricity);
+            double trueAnomalies[] = {-maxTrueAnomaly * 0.8, 0.0, maxTrueAnomaly * 0.8};
+            int numTests = sizeof(trueAnomalies) / sizeof(trueAnomalies[0]);
+
+            for (int i = 0; i < numTests; i++) {
+                double f = trueAnomalies[i];
+                double M = aTrueToMean(f, eccentricity);
+                double f_back = aMeanToTrue(M, eccentricity);
+                EXPECT_NEAR(f, f_back, HIGH_EPS);
+            }
+        }
+
+        // 测试无效真近点角的情况
+        printf("    测试无效真近点角处理...\n");
+        {
+            // 超出双曲线轨道允许范围的真近点角
+            double invalidTrueAnomaly = kPI - acos(1.0 / eccentricity) + 0.1;
+            double E = aTrueToEcc(invalidTrueAnomaly, eccentricity);
+            // 检查是否返回了无效值
+            EXPECT_TRUE(std::isnan(E));
+        }
+
+        // 测试双曲线轨道的长半轴和半径关系
+        printf("    测试双曲线轨道长半轴和半径关系...\n");
+        {
+            // 双曲线轨道长半轴为负值
+            double semiMajorAxis = -10000000.0; // 负值
+
+            double periRad = aSMAToPeriRad(semiMajorAxis, eccentricity);
+            double semiMajorAxisBack = aPeriRadToSMA(periRad, eccentricity);
+
+            // 验证往返转换
+            EXPECT_NEAR(semiMajorAxis, semiMajorAxisBack, EPS);
+        }
+    }
+
+}
+
+/// @brief 测试双曲轨道真近点角的周期性表示 (f 与 f±2pi 等价)
+/// @details 双曲轨道的真近点角物理上落在 (-f_inf, f_inf) 内，f_inf = pi - acos(1/e)
+///          是渐近线张角。但真近点角作为角度是周期量：f 与 f - 2pi 指向同一方向、
+///          表示同一条双曲轨道上的同一个点，所有以真近点角为自变量的转换函数
+///          都应当接受这两种等价写法并给出相同结果。
+TEST(OrbitParam, HyperbolaTrueAnomalyPeriodicity)
+{
+    printf("测试: 双曲轨道真近点角的周期性表示\n");
+
+    // 算例：地月转移在月球影响球处的双曲轨道（来自 testPatchedConic）
+    const double e = 5.1340328842;
+    const double semiMajorAxis = -5908634.594;    // 双曲轨道半长轴为负 [m]
+    const double fInf = kPI - acos(1.0 / e);      // 渐近线张角 ~101.23 deg
+    printf("  e=%.10f  f_inf=%.6f deg\n", e, fInf / kDegToRad);
+
+    const double trueAnomalyNorm = -75.748072 * kDegToRad;          // 落在 (-pi, pi]
+    const double trueAnomalyWrapped = trueAnomalyNorm + kTwoPI;     // 等价的 (pi, 2pi) 表示
+
+    printf("  f_norm=%.6f deg  f_wrapped=%.6f deg\n", trueAnomalyNorm / kDegToRad, trueAnomalyWrapped / kDegToRad);
+
+
+    // --- 基准值：归一化表示下的各转换结果 ---
+    const double E       = aTrueToEcc(trueAnomalyNorm, e);
+    const double M       = aTrueToMean(trueAnomalyNorm, e);
+    const double timePp  = aTrueToTimePastPeri(trueAnomalyNorm, semiMajorAxis, e, GM);
+    ASSERT_FALSE(std::isnan(E)) << "基准：归一化角度本身必须可用";
+    ASSERT_FALSE(std::isnan(M));
+    ASSERT_FALSE(std::isnan(timePp));
+
+    printf("  E=%.15f  M=%.15f  timePastPeri=%.6f s\n", E, M, timePp);
+
+    // 基准值自身的自洽性
+    EXPECT_NEAR(aEccToTrue(E, e), trueAnomalyNorm, HIGH_EPS);
+    EXPECT_NEAR(aMeanToTrue(M, e), trueAnomalyNorm, HIGH_EPS);
+    EXPECT_LT(timePp, 0.0); // f_norm < 0 表示尚未到达近心点，故"过近心点时间"为负
+
+    // 等价的 (pi, 2pi) 内的值的计算结果
+    EXPECT_FALSE(std::isnan(aTrueToEcc(trueAnomalyWrapped, e)));
+    EXPECT_FALSE(std::isnan(aTrueToMean(trueAnomalyWrapped, e)));
+    EXPECT_FALSE(std::isnan(aTrueToTimePastPeri(trueAnomalyWrapped, semiMajorAxis, e, GM)));
+
+    EXPECT_NEAR(aTrueToEcc(trueAnomalyWrapped, e), E, HIGH_EPS);
+    EXPECT_NEAR(aTrueToMean(trueAnomalyWrapped, e), M, HIGH_EPS);
+    EXPECT_NEAR(aTrueToTimePastPeri(trueAnomalyWrapped, semiMajorAxis, e, GM), timePp, std::abs(timePp) * REL_EPS);
+
+    // --- 参数化：多个偏心率与多个角度位置 ---
+    const double eccs[] = {1.1, 1.5, 2.0, 5.0};
+    for (double ecc : eccs)
+    {
+        const double inf = kPI - acos(1.0 / ecc);
+        // frac < 0 取近心点前的角度，> 0 取近心点后的角度
+        const double fracs[] = {-0.8, -0.5, -0.2, 0.2, 0.5, 0.8};
+        for (double frac : fracs)
+        {
+            const double fLegit   = inf * frac;              // (-f_inf, f_inf)，合法
+            const double fWrapped = (fLegit < 0.0) ? (fLegit + kTwoPI) : fLegit;
+
+            ASSERT_FALSE(std::isnan(aTrueToEcc(fLegit, ecc)));
+            EXPECT_FALSE(std::isnan(aTrueToEcc(fWrapped, ecc)));
+            EXPECT_NEAR(aTrueToEcc(fWrapped, ecc), aTrueToEcc(fLegit, ecc), HIGH_EPS);
+            EXPECT_NEAR(aTrueToMean(fWrapped, ecc), aTrueToMean(fLegit, ecc), HIGH_EPS);
+        }
+    }
+
+    // --- 椭圆轨道同样应按 2pi 周期 ---
+    for (double ecc : {0.0, 0.3, 0.7, 0.95})
+    {
+        for (double fLegit : {-2.5, -1.0, 1.0, 2.5})
+        {
+            const double fWrapped = (fLegit < 0.0) ? (fLegit + kTwoPI) : fLegit;
+            EXPECT_NEAR(aTrueToEcc(fWrapped, ecc), aTrueToEcc(fLegit, ecc), HIGH_EPS);
+            EXPECT_NEAR(aTrueToMean(fWrapped, ecc), aTrueToMean(fLegit, ecc), HIGH_EPS);
+        }
+    }
+}
+
+/// @brief 测试接近边界的情况
+TEST(OrbitParam, BoundaryConditions)
+{
+    printf("测试: 边界条件\n");
+
+    // 测试接近抛物线的椭圆轨道 (e 接近但小于 1.0)
+    printf("  测试接近抛物线的椭圆轨道 (e = 0.999)...\n");
+    {
+        double eccentricity = 0.999; // 非常接近1.0
+        double meanAnomaly = 1.0;
+
+        // 测试近点角转换
+        double E = aMeanToEcc(meanAnomaly, eccentricity);
+        double M_back = aEccToMean(E, eccentricity);
+        EXPECT_NEAR(meanAnomaly, M_back, HIGH_EPS);
+
+        double f = aEccToTrue(E, eccentricity);
+        double E_back = aTrueToEcc(f, eccentricity);
+        EXPECT_NEAR(E, E_back, HIGH_EPS);
+    }
+
+    // 测试接近抛物线的双曲线轨道 (e 接近但大于 1.0)
+    printf("  测试接近抛物线的双曲线轨道 (e = 1.001)...\n");
+    {
+        double eccentricity = 1.001; // 非常接近1.0
+        double meanAnomaly = 1.0;
+
+        // 测试近点角转换
+        double E = aMeanToEcc(meanAnomaly, eccentricity);
+        double M_back = aEccToMean(E, eccentricity);
+        EXPECT_NEAR(meanAnomaly, M_back, HIGH_EPS);
+
+        double f = aEccToTrue(E, eccentricity);
+        double E_back = aTrueToEcc(f, eccentricity);
+        EXPECT_NEAR(E, E_back, HIGH_EPS);
+    }
+
+    // 测试极端椭圆轨道 (e 接近 1.0 但小于 1.0)
+    printf("  测试极端椭圆轨道 (e = 0.99)...\n");
+    {
+        double eccentricity = 0.99;
+        double perigeeAlt = 200000.0; // 近地点高度
+
+        // 计算远地点高度（应该非常大）
+        double apogeeAlt = aPeriAltToApoAlt(perigeeAlt, eccentricity, CB_RADIUS);
+        double perigeeAltBack = aApoAltToPeriAlt(apogeeAlt, eccentricity, CB_RADIUS);
+
+        // 验证往返转换
+        EXPECT_NEAR(perigeeAlt, perigeeAltBack, EPS);
+    }
+
+    // 测试负偏心率的处理（应该返回无效值）
+    printf("  测试负偏心率处理...\n");
+    {
+        double negativeEcc = -0.1;
+        double eccAnomaly = 1.0;
+
+        // 测试负偏心率的处理
+        double meanAnomaly = aEccToMean(eccAnomaly, negativeEcc);
+        EXPECT_TRUE(std::isnan(meanAnomaly));
+
+        double trueAnomaly = aEccToTrue(eccAnomaly, negativeEcc);
+        EXPECT_TRUE(std::isnan(trueAnomaly));
+    }
+
+}
+
+/// @brief 测试迭代函数的收敛性
+TEST(OrbitParam, Convergence)
+{
+    printf("测试: 迭代函数收敛性\n");
+
+    // 测试不同精度要求下的收敛性
+    double meanAnomaly = 10.0; // 较大的平近点角
+    double eccentricity = 0.9;  // 高偏心率
+
+    printf("  测试不同精度要求...\n");
+    {
+        // 不同的精度要求
+        double precisions[] = {1e-10, 1e-12, 1e-14, 1e-15};
+        int numTests = sizeof(precisions) / sizeof(precisions[0]);
+
+        for (int i = 0; i < numTests; i++) {
+            double eps = precisions[i];
+            int maxIter = 200; // 增加迭代次数以确保收敛
+
+            double E = aMeanToEcc(meanAnomaly, eccentricity, eps, maxIter);
+            double M_back = aEccToMean(E, eccentricity);
+
+            // 验证结果满足精度要求
+            EXPECT_TRUE(fabs(meanAnomaly - M_back) < eps * 10); // 允许10倍精度误差作为安全边界
+        }
+    }
+
+    // 测试极端高偏心率椭圆轨道的收敛性
+    printf("  测试极端高偏心率椭圆轨道...\n");
+    {
+        double highEcc = 0.9999;
+        double M = 5.0;
+
+        double E = aMeanToEcc(M, highEcc, 1e-12, 200);
+        double M_back = aEccToMean(E, highEcc);
+        EXPECT_NEAR(M, M_back, 1e-10);
+    }
+
+}
+
+GTEST_MAIN()

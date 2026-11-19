@@ -1,0 +1,491 @@
+﻿/// @file      testReflect.cpp
+/// @brief     ~
+/// @details   ~
+/// @author    金柯<jinke18@foxmail.com>
+/// @date      2025-12-10
+
+#include "ast/ReflectAPI.hpp"
+#include "ast/Property.hpp"
+#include "ast/Class.hpp"
+#include "ast/AstTestMacro.h"
+
+AST_USING_NAMESPACE
+
+class TestClass{
+public:
+    // 成员变量
+    bool propBool_;
+    int propInt_;
+    double propDouble_;
+    std::string propString_;
+
+    // 成员函数（不同返回类型和参数类型）
+    bool propBool() const{return propBool_;}
+    int propInt() const{return propInt_;}
+    double propDouble() const{return propDouble_;}
+    const std::string& propString() const{return propString_;}
+
+    // 不同类型的setter函数
+    errc_t setPropBool(bool b){ propBool_ = b; return 0;}
+    errc_t setPropInt(int i){ propInt_ = i; return 0;}
+    errc_t setPropDouble(double d){ propDouble_ = d; return 0;}
+    errc_t setPropString(StringView s){ propString_ = std::string(s); return 0;}
+
+    void setPropBool2(bool b){ propBool_ = b;}
+    void setPropInt2(int i){ propInt_ = i;}
+    void setPropDouble2(double d){ propDouble_ = d;}
+    void setPropString2(StringView s){ propString_ = std::string(s);}
+};
+
+
+// 测试布尔属性
+TEST(Reflect, PropertyBool)
+{
+    auto prop = aNewPropertyBoolMem<TestClass, &TestClass::propBool_>();
+    TestClass test{};
+    test.propBool_ = true;
+    bool value;
+    errc_t err;
+    err = prop->getValueBool(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, true);
+    err = prop->setValueBool(&test, false);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, false);
+    delete prop;
+}
+
+TEST(Reflect, PropertyBoolGetterSetter)
+{
+    auto prop = aNewPropertyBool<TestClass, &TestClass::propBool, &TestClass::setPropBool>();
+    TestClass test{};
+    test.propBool_ = true;
+    bool value;
+    errc_t err;
+    err = prop->getValueBool(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, true);
+    err = prop->setValueBool(&test, false);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, false);
+    delete prop;
+}
+
+TEST(Reflect, PropertyBoolGetterSetter2)
+{
+    auto prop = aNewPropertyBool<TestClass, &TestClass::propBool, &TestClass::setPropBool2>();
+    TestClass test{};
+    test.propBool_ = true;
+    bool value;
+    errc_t err;
+    err = prop->getValueBool(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, true);
+    err = prop->setValueBool(&test, false);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, false);
+    delete prop;
+}
+
+// 测试布尔属性的类型转换
+TEST(Reflect, PropertyBoolConvert)
+{
+    auto prop = aNewPropertyBoolMem<TestClass, &TestClass::propBool_>();
+    TestClass test{};
+
+    // 测试 bool -> int
+    test.propBool_ = true;
+    int intValue;
+    errc_t err = prop->getValueInt(&test, intValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(intValue, 1);
+
+    // 测试 int -> bool
+    err = prop->setValueInt(&test, 0);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, false);
+
+    // 测试 bool -> double
+    test.propBool_ = true;
+    double doubleValue;
+    err = prop->getValueDouble(&test, doubleValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(doubleValue, 1.0);
+
+    // 测试 double -> bool
+    err = prop->setValueDouble(&test, 0.0);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, false);
+
+    // 测试 bool -> string
+    test.propBool_ = true;
+    std::string stringValue;
+    err = prop->getValueString(&test, stringValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(stringValue, "true");
+
+    // 测试 string -> bool
+    err = prop->setValueString(&test, "false");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, false);
+
+    // 测试 string -> bool (true)
+    err = prop->setValueString(&test, "true");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propBool_, true);
+    delete prop;
+}
+
+// 测试整数属性
+TEST(Reflect, PropertyInt)
+{
+    auto prop = aNewPropertyIntMem<TestClass, &TestClass::propInt_>();
+    TestClass test{};
+    test.propInt_ = 42;
+    int value;
+    errc_t err;
+    err = prop->getValueInt(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, 42);
+    err = prop->setValueInt(&test, 84);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propInt_, 84);
+    delete prop;
+}
+
+TEST(Reflect, PropertyIntGetterSetter)
+{
+    auto prop = aNewPropertyInt<TestClass, &TestClass::propInt, &TestClass::setPropInt>();
+    TestClass test{};
+    test.propInt_ = 42;
+    int value;
+    errc_t err;
+    err = prop->getValueInt(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, 42);
+    err = prop->setValueInt(&test, 84);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propInt_, 84);
+    delete prop;
+}
+
+TEST(Reflect, PropertyIntGetterSetter2)
+{
+    auto prop = aNewPropertyInt<TestClass, &TestClass::propInt, &TestClass::setPropInt2>();
+    TestClass test{};
+    test.propInt_ = 42;
+    int value;
+    errc_t err;
+    err = prop->getValueInt(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, 42);
+    err = prop->setValueInt(&test, 84);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propInt_, 84);
+    delete prop;
+}
+
+// 测试整数属性的类型转换
+TEST(Reflect, PropertyIntConvert)
+{
+    auto prop = aNewPropertyIntMem<TestClass, &TestClass::propInt_>();
+    TestClass test{};
+
+    // 测试 int -> bool
+    test.propInt_ = 42;
+    bool boolValue;
+    errc_t err = prop->getValueBool(&test, boolValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(boolValue, true);
+
+    // 测试 bool -> int
+    err = prop->setValueBool(&test, false);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propInt_, 0);
+
+    // 测试 int -> double
+    test.propInt_ = 42;
+    double doubleValue;
+    err = prop->getValueDouble(&test, doubleValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(doubleValue, 42.0);
+
+    // 测试 double -> int
+    err = prop->setValueDouble(&test, 84.5);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propInt_, 84);
+
+    // 测试 int -> string
+    test.propInt_ = 42;
+    std::string stringValue;
+    err = prop->getValueString(&test, stringValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(stringValue, "42");
+
+    // 测试 string -> int
+    err = prop->setValueString(&test, "84");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propInt_, 84);
+    delete prop;
+}
+
+// 测试双精度属性（已有的）
+TEST(Reflect, PropertyDouble)
+{
+    auto prop = aNewPropertyDoubleMem<TestClass, &TestClass::propDouble_>();
+    TestClass test{};
+    test.propDouble_ = 1.0204;
+    double value;
+    errc_t err;
+    err = prop->getValueDouble(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, 1.0204);
+    err = prop->setValueDouble(&test, 2.0408);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propDouble_, 2.0408);
+    delete prop;
+}
+
+TEST(Reflect, PropertyDoubleGetterSetter)
+{
+    auto prop = aNewPropertyDouble<TestClass, &TestClass::propDouble, &TestClass::setPropDouble>();
+    TestClass test{};
+    test.propDouble_ = 1.0204;
+    double value;
+    errc_t err;
+    err = prop->getValueDouble(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, 1.0204);
+    err = prop->setValueDouble(&test, 2.0408);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propDouble_, 2.0408);
+    delete prop;
+}
+
+TEST(Reflect, PropertyDoubleGetterSetter2)
+{
+    auto prop = aNewPropertyDouble<TestClass, &TestClass::propDouble, &TestClass::setPropDouble2>();
+    TestClass test{};
+    test.propDouble_ = 1.0204;
+    double value;
+    errc_t err;
+    err = prop->getValueDouble(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, 1.0204);
+    err = prop->setValueDouble(&test, 2.0408);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propDouble_, 2.0408);
+    delete prop;
+}
+
+// 测试双精度属性的类型转换
+TEST(Reflect, PropertyDoubleConvert)
+{
+    auto prop = aNewPropertyDoubleMem<TestClass, &TestClass::propDouble_>();
+    TestClass test{};
+
+    // 测试 double -> bool
+    test.propDouble_ = 42.5;
+    bool boolValue;
+    errc_t err = prop->getValueBool(&test, boolValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(boolValue, true);
+
+    // 测试 bool -> double
+    err = prop->setValueBool(&test, true);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propDouble_, 1.0);
+
+    // 测试 double -> int
+    test.propDouble_ = 42.5;
+    int intValue;
+    err = prop->getValueInt(&test, intValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(intValue, 42);
+
+    // 测试 int -> double
+    err = prop->setValueInt(&test, 84);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propDouble_, 84.0);
+
+    // 测试 double -> string
+    test.propDouble_ = 42.5;
+    std::string stringValue;
+    err = prop->getValueString(&test, stringValue);
+    EXPECT_FALSE(err);
+    // 注意：浮点数转字符串可能有精度问题，这里不进行精确比较
+
+    // 测试 string -> double
+    err = prop->setValueString(&test, "84.5");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propDouble_, 84.5);
+    delete prop;
+}
+
+// 测试字符串属性
+TEST(Reflect, PropertyString)
+{
+    auto prop = aNewPropertyStringMem<TestClass, &TestClass::propString_>();
+    TestClass test{};
+    test.propString_ = "test";
+    std::string value;
+    errc_t err;
+    err = prop->getValueString(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, "test");
+    err = prop->setValueString(&test, "test2");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propString_, "test2");
+    delete prop;
+}
+
+TEST(Reflect, PropertyStringGetterSetter)
+{
+    auto prop = aNewPropertyString<TestClass, &TestClass::propString, &TestClass::setPropString>();
+    TestClass test{};
+    test.propString_ = "test";
+    std::string value;
+    errc_t err;
+    err = prop->getValueString(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, "test");
+    err = prop->setValueString(&test, "test2");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propString_, "test2");
+    delete prop;
+}
+
+TEST(Reflect, PropertyStringGetterSetter2)
+{
+    auto prop = aNewPropertyString<TestClass, &TestClass::propString, &TestClass::setPropString2>();
+    TestClass test{};
+    test.propString_ = "test";
+    std::string value;
+    errc_t err;
+    err = prop->getValueString(&test, value);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(value, "test");
+    err = prop->setValueString(&test, "test2");
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propString_, "test2");
+    delete prop;
+}
+
+// 测试字符串属性的类型转换
+TEST(Reflect, PropertyStringConvert)
+{
+    auto prop = aNewPropertyStringMem<TestClass, &TestClass::propString_>();
+    TestClass test{};
+
+    // 测试 string -> bool
+    test.propString_ = "true";
+    bool boolValue;
+    errc_t err = prop->getValueBool(&test, boolValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(boolValue, true);
+
+    // 测试 bool -> string
+    err = prop->setValueBool(&test, false);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propString_, "false");
+
+    // 测试 string -> int
+    test.propString_ = "42";
+    int intValue;
+    err = prop->getValueInt(&test, intValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(intValue, 42);
+
+    // 测试 int -> string
+    err = prop->setValueInt(&test, 84);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(test.propString_, "84");
+
+    // 测试 string -> double
+    test.propString_ = "42.5";
+    double doubleValue;
+    err = prop->getValueDouble(&test, doubleValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(doubleValue, 42.5);
+
+    // 测试 double -> string
+    err = prop->setValueDouble(&test, 84.5);
+    EXPECT_FALSE(err);
+    // 注意：浮点数转字符串可能有精度问题，这里只检查值的正确性
+    double checkValue;
+    err = prop->getValueDouble(&test, checkValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(checkValue, 84.5);
+    delete prop;
+}
+
+// 测试Struct类的功能
+TEST(Reflect, Struct)
+{
+    Struct testStruct;
+
+    // 创建属性
+    // constexpr auto boolMemberPtr = ;
+    // constexpr auto intMemberPtr = &TestClass::propInt_;
+    // constexpr auto doubleMemberPtr = &TestClass::propDouble_;
+    // constexpr auto stringMemberPtr = &TestClass::propString_;
+
+    auto boolProp = aNewPropertyBoolMem<TestClass, &TestClass::propBool_>();
+    auto intProp = aNewPropertyIntMem<TestClass, &TestClass::propInt_>();
+    auto doubleProp = aNewPropertyDoubleMem<TestClass, &TestClass::propDouble_>();
+    auto stringProp = aNewPropertyStringMem<TestClass, &TestClass::propString_>();
+
+    // 添加属性到Struct
+    testStruct.addProperty("boolProp", boolProp);
+    testStruct.addProperty("intProp", intProp);
+    testStruct.addProperty("doubleProp", doubleProp);
+    testStruct.addProperty("stringProp", stringProp);
+
+    // 测试获取属性
+    EXPECT_EQ(testStruct.getProperty("boolProp"), boolProp);
+    EXPECT_EQ(testStruct.getProperty("intProp"), intProp);
+    EXPECT_EQ(testStruct.getProperty("doubleProp"), doubleProp);
+    EXPECT_EQ(testStruct.getProperty("stringProp"), stringProp);
+
+    // 测试获取不存在的属性
+    EXPECT_EQ(testStruct.getProperty("nonExistentProp"), nullptr);
+
+    // 测试使用属性操作对象
+    TestClass testObj{};
+    testObj.propBool_ = true;
+    testObj.propInt_ = 42;
+    testObj.propDouble_ = 3.14;
+    testObj.propString_ = "test";
+
+    bool boolValue;
+    errc_t err = testStruct.getProperty("boolProp")->getValueBool(&testObj, boolValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(boolValue, true);
+
+    int intValue;
+    err = testStruct.getProperty("intProp")->getValueInt(&testObj, intValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(intValue, 42);
+
+    double doubleValue;
+    err = testStruct.getProperty("doubleProp")->getValueDouble(&testObj, doubleValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(doubleValue, 3.14);
+
+    std::string stringValue;
+    err = testStruct.getProperty("stringProp")->getValueString(&testObj, stringValue);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(stringValue, "test");
+
+    // 测试修改属性值
+    err = testStruct.getProperty("boolProp")->setValueBool(&testObj, false);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(testObj.propBool_, false);
+
+    err = testStruct.getProperty("intProp")->setValueInt(&testObj, 84);
+    EXPECT_FALSE(err);
+    EXPECT_EQ(testObj.propInt_, 84);
+}
+
+
+GTEST_MAIN()

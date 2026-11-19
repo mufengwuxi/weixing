@@ -1,0 +1,10 @@
+sudo mv /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5 /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.old
+sudo mv /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.5 /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.5.old
+sudo mv /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.5.1 /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.5.1.old
+sudo ln -s /opt/Qt5.7.0/5.7/gcc_64/lib/libQt5Core.so.5 /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5
+sudo ln -s /opt/Qt5.7.0/5.7/gcc_64/lib/libQt5Core.so.5.7 /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.7
+sudo ln -s /opt/Qt5.7.0/5.7/gcc_64/lib/libQt5Core.so.5.7.0 /usr/local/MATLAB/R2021b/bin/glnxa64/libQt5Core.so.5.7.0
+sudo cp -rf libATKConnectorDll.so /usr/lib64/libATKConnectorDll.so
+sudo cp -rf libATKConnectorDll.so.1 /usr/lib64/libATKConnectorDll.so.1
+sudo cp -rf libATKConnectorDll.so.1.0 /usr/lib64/libATKConnectorDll.so.1.0
+sudo cp -rf libATKConnectorDll.so.1.0.0 /usr/lib64/libATKConnectorDll.so.1.0.0 
