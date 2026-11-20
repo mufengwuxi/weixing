@@ -24,7 +24,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "code"))
-OUT = REPO / "results" / "p1_atk_verify"
+OUT = REPO / "results" / "p1_atk_verify"  # 可用 --out 改
 R_E = 6378.137
 AU_KM = 149597870.7
 C_KM_S = 299792.458
@@ -158,7 +158,11 @@ def main():
     ap.add_argument("solution")
     ap.add_argument("--step", type=float, default=1.0, help="ATK 二体星历步长（秒）")
     ap.add_argument("--grid", type=float, default=0.05, help="观测段检查网格（秒）")
+    ap.add_argument("--out", help="输出目录，默认 results/p1_atk_verify")
     a = ap.parse_args()
+    global OUT
+    if a.out:
+        OUT = (REPO / a.out) if not Path(a.out).is_absolute() else Path(a.out)
 
     sol = json.loads(Path(a.solution).read_text(encoding="utf-8"))
     mu = sol["mu_km3_s2"]
