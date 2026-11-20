@@ -61,3 +61,11 @@
 ### 任务 14 第三轮
 
 已按 PR #19 恢复 `SetThrustAxesName(f"Satellite/{name} VNC(Earth)")`，结束预报段多留了 600 s。`git pull` 后从第 2 步重跑：第一问 → 第二问 → 截图。
+
+### 任务 14 第四轮
+
+已合并 PR #12、#13、#16、#17、#20（`atkbridge.save()` 的修复已经在 main 上）。`build_single_r1.py` 现在会把恰在历元时刻的首脉冲并入初始速度。`git pull` 后，只需重跑第二问并截图：
+```
+python tools/build_single_r1.py solutions/p2_claude_30.json --out results/single_r1_p2
+```
+预期：第 2 节会多一行“首脉冲在历元时刻，已并入初始状态速度”，3 h 位置差在 1 m 以内，第 3 节 30/30 满足。截图请点开 r1 的机动规划，让段列表（Coast、Burn）可见。

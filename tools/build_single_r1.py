@@ -105,7 +105,14 @@ def main():
         init.SetOrbitEpoch(fmt(0))
         init.SetElementType(m.eVAElementTypeCartesian)
         el = init.GetElement()
-        for f, val in zip(("SetX", "SetY", "SetZ", "SetVx", "SetVy", "SetVz"), km(r1)):
+        state0 = r1.copy()
+        # 首脉冲恰在历元（t≈0）时，ATK 的零时长预报段会把机动用错（任务 14 实测偏 70 km）。
+        # 这时把它直接并入初始速度，数值上完全等价。
+        if seq_burns and seq_burns[0][0] < 1e-3:
+            state0[3:] += seq_burns[0][1]
+            seq_burns = seq_burns[1:]
+            log("- 首脉冲在历元时刻，已并入初始状态速度")
+        for f, val in zip(("SetX", "SetY", "SetZ", "SetVx", "SetVy", "SetVz"), km(state0)):
             getattr(el, f)(val)
 
         def propagate(label, dur):
@@ -159,7 +166,7 @@ def main():
     try:
         build("r1", [(t, d, p) for (t, d), p in zip(burns, pre)], t_end, conv)
         log(f"- 段序列：初始状态 + {len(burns)} × (预报段 + 机动段) + 结束预报段，RunMCS 完成")
-        tchk = burns[0][0] + 3 * 3600
+        tchk = max(burns[0][0], 1.0) + 3 * 3600
         e = np.linalg.norm(np.array(atk.posvel("r1", fmt(tchk), "CBI")[0]) / 1000 - replay(tchk)[0]) * 1000
         log(f"- 第一次脉冲后 3 h，ATK 与解析重放位置差 {e:.3f} m")
     except Exception:
