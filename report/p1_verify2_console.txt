@@ -52,10 +52,12 @@ C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing
   - 方案原定开始时刻：角度裕量 0.0026°，距离裕量 0.278 km
   - 开始时刻改为 2027-01-02T14:25:46.634（后移 0.0 s）：角度裕量 0.0026°，距离裕量 0.278 km，Δv 不变
 
+场景已保存到 `results\p1_atk_verify\P1Verify.atk`，可以在 ATK 界面里打开查看轨道（b1、r1_full_arc2 等）。
+
 明细：samples.csv（0.05 s 网格，全部组合），scan.csv（0.5 s 扫描）。
-new objvgt: 000001A3AEAFDBC0
-new objvgt: 000001A3AEAFF5D0
-new objvgt: 000001A3AEB00080
-new objvgt: 000001A3AEB00BF0
-new objvgt: 000001A3AEB00170
-new objvgt: 000001A3AEB08AB0
+new objvgt: 000001E95B1EB540
+new objvgt: 000001E95B1EAC40
+new objvgt: 000001E95B1EBF30
+new objvgt: 000001E95B1EC590
+new objvgt: 000001E95B1EDA90
+new objvgt: 000001E95B1ED340
