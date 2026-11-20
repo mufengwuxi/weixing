@@ -83,6 +83,7 @@ class ATK:
         return self.scenario()
 
     def new(self, name, start, stop):
+        """新建场景。注意：同一进程里 CloseScenario 之后再建场景，对象创建会返回 None（任务 14 实测），一个进程只建一个场景。"""
         if self.scenario_loaded:
             self.close()
         sc = self.root.GetChildren().New(self.m.eScenario, name)

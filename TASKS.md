@@ -48,3 +48,12 @@
    ```
 4. 用 ATK 界面打开 `results/single_r1_p2/raw/single_r1.atk`，确认场景里只有一颗 r1，r1 的机动规划里能看到各个预报段和机动段。截一张图放到 `report/single_r1_gui.png`。
 5. 提交两个 `summary.md` 和截图，然后提 PR。如果第 1 节标定误差很大，或者脚本报错，先把 `summary.md` 和控制台输出（存成 `report/task14_console.txt`）提交上来，不要自己改脚本。
+
+### 任务 14 第二轮（脚本已按 PR #18 的定位修好）
+
+修改内容：
+- 去掉了标定场景，全程只建一个场景，不再在同一进程里关闭后重开；
+- VNC 约定直接采用任务 14 标定出的 (1, 1, False)；
+- 去掉了会报“can not choose parent satellite's axes”的 `SetThrustAxesName`。
+
+`git pull` 后，从任务 14 的第 2 步重新做一遍：先跑第一问，再跑第二问，最后截图。第 2 节新增了一行“第一次脉冲后 3 h 位置差”，应该在 1 m 以内。

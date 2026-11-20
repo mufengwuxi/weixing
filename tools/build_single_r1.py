@@ -93,11 +93,7 @@ def main():
     from atkbridge import ATK
     atk = ATK(out_dir=out / "raw")
     m = atk.m
-    atk.new("Calibrate", fmt(0), fmt(t_end))
     km = lambda x: [y * 1000 for y in x]  # noqa: E731
-    for name in sorted(set(o[0] for o in obs)):
-        tg = targets[name]
-        atk.add_satellite_cartesian(name, fmt(0), km(tg[:3]), km(tg[3:]), step_s=10.0)
 
     def build(name, seq_burns, t_stop, conv):
         """建一颗 MCS 卫星；seq_burns 为 [(t, dv_km_s, (r,v))]。"""
@@ -138,7 +134,6 @@ def main():
             mv = segs.Insert(m.eVASegmentTypeManeuver, f"Burn{k:02d}", "-")
             mv.SetManeuverType(m.eVAManeuverTypeImpulsive)
             ac = mv.GetManeuver().GetAttitudeControl()
-            ac.SetThrustAxesName(f"Satellite/{name} VNC(Earth)")
             c = vnc(r, v, dv, conv) * 1000
             ac.AssignCartesian(float(c[0]), float(c[1]), float(c[2]))
             tc = tb
@@ -146,29 +141,11 @@ def main():
         mcs.RunMCS()
         return sat
 
-    # 1. 标定 VNC 约定：只用第一次脉冲，比较脉冲后 3 小时的位置
+    # 1. VNC 约定：任务 14 已在 ATK 中标定，(1, 1, False) 与解析解相差 0.000 m，直接采用
+    conv = (1, 1, False)
     log()
-    log("## 1. 标定脉冲坐标系约定")
-    tb, dv = burns[0]
-    convs = [(1, 1, False), (1, -1, False), (-1, 1, False), (-1, -1, False), (1, 1, True), (1, -1, True)]
-    errs = []
-    tchk = tb + 3 * 3600
-    r_after, v_after = replay(tb + 1e-6)
-    rk = kepler(r_after, v_after, tchk - tb - 1e-6, mu)[0][0]
-    for i, cv in enumerate(convs):
-        try:
-            build(f"cal{i}", [(tb, dv, pre[0])], tchk + 600, cv)
-            p = np.array(atk.posvel(f"cal{i}", fmt(tchk), "CBI")[0]) / 1000
-            errs.append(np.linalg.norm(p - rk) * 1000)
-            log(f"- 约定 {cv}：脉冲后 3 h 与解析解相差 {errs[-1]:.3f} m")
-        except Exception as e:
-            errs.append(np.inf)
-            log(f"- 约定 {cv}：失败 {type(e).__name__}: {e}")
-    best = int(np.argmin(errs))
-    conv = convs[best]
-    log(f"- 采用约定 {conv}（误差 {errs[best]:.3f} m）")
-    if not np.isfinite(errs[best]) or errs[best] > 100:
-        log("- **标定误差过大，后续结果不可信，请把本文件发回远端**")
+    log("## 1. 脉冲坐标约定")
+    log("- 采用标准 VNC：V 沿速度，N 沿轨道角动量，C = V × N（任务 14 标定误差 0.000 m）")
 
     # 2. 新建干净的场景：只有目标星和一颗 r1
     log()
@@ -180,6 +157,9 @@ def main():
     try:
         build("r1", [(t, d, p) for (t, d), p in zip(burns, pre)], t_end, conv)
         log(f"- 段序列：初始状态 + {len(burns)} × (预报段 + 机动段) + 结束预报段，RunMCS 完成")
+        tchk = burns[0][0] + 3 * 3600
+        e = np.linalg.norm(np.array(atk.posvel("r1", fmt(tchk), "CBI")[0]) / 1000 - replay(tchk)[0]) * 1000
+        log(f"- 第一次脉冲后 3 h，ATK 与解析重放位置差 {e:.3f} m")
     except Exception:
         log("```")
         log(traceback.format_exc())
