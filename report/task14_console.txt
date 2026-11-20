@@ -1,0 +1,56 @@
+# 单颗 r1 的 ATK 机动规划复核
+
+- 方案：`solutions/p1_claude_robust.json`；脉冲 2 次，观测 1 次
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+
+## 1. 标定脉冲坐标系约定
+- 约定 (1, 1, False)：脉冲后 3 h 与解析解相差 0.000 m
+- 约定 (1, -1, False)：脉冲后 3 h 与解析解相差 3356.741 m
+- 约定 (-1, 1, False)：脉冲后 3 h 与解析解相差 103.187 m
+- 约定 (-1, -1, False)：脉冲后 3 h 与解析解相差 3358.327 m
+- 约定 (1, 1, True)：脉冲后 3 h 与解析解相差 2202.564 m
+- 约定 (1, -1, True)：脉冲后 3 h 与解析解相差 2141.187 m
+- 采用约定 (1, 1, False)（误差 0.000 m）
+
+## 2. 搭建单颗 r1
+new objvgt: 0000021CE6991290
+new objvgt: 0000021CE6991F80
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+new objvgt: 0000021CE6993A80
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+new objvgt: 0000021CE6985E60
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+new objvgt: 0000021CE69888C0
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+new objvgt: 0000021CE698A450
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+new objvgt: 0000021CE64FCB90
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+Traceback (most recent call last):
+  File "C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing\tools\build_single_r1.py", line 217, in <module>
+    main()
+  File "C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing\tools\build_single_r1.py", line 179, in main
+    atk.add_satellite_cartesian(name, fmt(0), km(tg[:3]), km(tg[3:]), step_s=10.0)
+  File "C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing\code\atkbridge.py", line 154, in add_satellite_cartesian
+    sat.SetPropagatorType(self.m.ePropagatorTwoBody)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'SetPropagatorType'

@@ -1,0 +1,36 @@
+# 任务 14 探针报告：build_single_r1.py 第 2 节崩溃的根因
+
+时间：2026-11-20 深夜，本机 xiehuiyu（ATK 4.2.0-rc.2 Component 模式，界面已关闭）。
+现象：第一问试跑，标定阶段成功（约定 (1,1,False)，误差 0.000 m），第 2 节
+`atk.new("SingleR1")` 之后 `add_satellite_cartesian("b1")` 崩溃：
+`GetChildren().New(eSatellite, "b1")` 返回 None。
+
+## 探针实验（三个独立进程，最小复现）
+
+1. **换名字跨场景**：S1 里建卫星 a1 正常；`CloseScenario` 后新建 S2，建**全新名字** a2
+   → 仍然 None。排除"名字冲突"假设。
+2. **不关闭旧场景**：S1（含卫星 a1）保持打开，直接 `root.GetChildren().New(eScenario, "S2")`，
+   通过 **S2 的显式引用** `sc2.GetChildren().New(eSatellite, "b1")` → **OK**。
+3. **当前场景指针**：S2 建好后 `GetCurrentScenario()` 仍然返回 S1。
+
+## 结论
+
+- 根因：**同进程内 `CloseScenario()` 之后，`GetCurrentScenario()` 返回的是已关闭的旧场景**，
+  对它 `GetChildren().New()` 得到 None。bridge 的 `add_satellite_cartesian`/`new` 用的正是
+  `GetCurrentScenario()`。此前所有脚本都是单场景单进程，从未触发这条路径。
+- 名字重用无关紧要；"关闭场景"这个动作才是 poison pill，且一旦出现过一次 None，
+  该进程后续所有 New 都失败。
+- 修复方向（任选其一，脚本侧改）：
+  1. 全程只用一个场景：标定卫星 cal0–cal5 就建在最终场景里，不 `atk.new("SingleR1")`，
+     或者把标定放到 `subprocess` 里跑完退出；
+  2. 不调 `CloseScenario`：手动 `root.GetChildren().New(eScenario, ...)` 开第二个场景，
+     后续对象都用**显式场景引用**创建（bridge 的 new()/scenario() 不能再用）。
+- 另一个无害噪音：`SetBurnCoordAxes` 的 "can not choose parent satellite's axes" Debug 报错
+  在每种约定下都出现，但机动仍然生效且标定误差 0.000 m——ATK 在轴名解析失败时回退到了
+  默认 VNC 轴。远端可考虑跳过 `SetThrustAxesName` 或忽略该报错。
+
+## 标定结果本身是好消息
+
+六种约定里 (1, 1, False) 与解析解相差 **0.000 m**：ATK 的 VNC 就是标准
+(沿速度、法向、副法向) 约定，无符号翻转、无转置。远端修好场景问题后，
+标定逻辑不用动。
