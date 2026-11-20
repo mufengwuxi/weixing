@@ -334,6 +334,13 @@ def main():
         w = csv.DictWriter(f, fieldnames=list(scan_rows[0]))
         w.writeheader()
         w.writerows(scan_rows)
+    scen = OUT / "P1Verify.atk"
+    try:
+        atk.save(scen)
+        log()
+        log(f"场景已保存到 `{scen.relative_to(REPO)}`，可以在 ATK 界面里打开查看轨道（b1、r1_full_arc2 等）。")
+    except Exception as e:
+        log(f"场景保存失败：{e}")
     atk.close()
     log()
     log("明细：samples.csv（0.05 s 网格，全部组合），scan.csv（0.5 s 扫描）。")
