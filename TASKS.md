@@ -57,3 +57,7 @@
 - 去掉了会报“can not choose parent satellite's axes”的 `SetThrustAxesName`。
 
 `git pull` 后，从任务 14 的第 2 步重新做一遍：先跑第一问，再跑第二问，最后截图。第 2 节新增了一行“第一次脉冲后 3 h 位置差”，应该在 1 m 以内。
+
+### 任务 14 第三轮
+
+已按 PR #19 恢复 `SetThrustAxesName(f"Satellite/{name} VNC(Earth)")`，结束预报段多留了 600 s。`git pull` 后从第 2 步重跑：第一问 → 第二问 → 截图。

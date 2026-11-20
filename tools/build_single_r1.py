@@ -134,10 +134,12 @@ def main():
             mv = segs.Insert(m.eVASegmentTypeManeuver, f"Burn{k:02d}", "-")
             mv.SetManeuverType(m.eVAManeuverTypeImpulsive)
             ac = mv.GetManeuver().GetAttitudeControl()
+            # 必须显式设为本卫星的 VNC 轴；会打出 "can not choose parent satellite's axes" 的调试信息，但轴名生效（任务 14 实测）
+            ac.SetThrustAxesName(f"Satellite/{name} VNC(Earth)")
             c = vnc(r, v, dv, conv) * 1000
             ac.AssignCartesian(float(c[0]), float(c[1]), float(c[2]))
             tc = tb
-        propagate("CoastEnd", t_stop - tc)
+        propagate("CoastEnd", t_stop - tc + 600)  # 星历末端留余量，查询时刻恰在末端会读不到
         mcs.RunMCS()
         return sat
 
