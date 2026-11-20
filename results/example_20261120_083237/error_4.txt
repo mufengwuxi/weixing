@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "D:\数模\weixing\run.py", line 65, in run_job
+    wins = atk.access(sat, job["access_to"], job.get("start") or None, job.get("stop") or None,
+                      float(job.get("step_s") or 60))
+  File "D:\数模\weixing\code\atkbridge.py", line 194, in access
+    a, b = self.find(from_name), self.find(to_name)
+                                 ~~~~~~~~~^^^^^^^^^
+  File "D:\数模\weixing\code\atkbridge.py", line 147, in find
+    raise KeyError(f"场景里没有名为 {name} 的对象。现有对象：{names}")
+KeyError: '场景里没有名为 不存在的卫星 的对象。现有对象：卫星1, 卫星2'
