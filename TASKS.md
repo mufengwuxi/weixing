@@ -69,3 +69,23 @@
 python tools/build_single_r1.py solutions/p2_claude_30.json --out results/single_r1_p2
 ```
 预期：第 2 节会多一行“首脉冲在历元时刻，已并入初始状态速度”，3 h 位置差在 1 m 以内，第 3 节 30/30 满足。截图请点开 r1 的机动规划，让段列表（Coast、Burn）可见。
+
+## 任务 15：第三问（双星）方案的 ATK 复核
+
+第三问方案：r1 观测西侧 10 颗，用 19.239 m/s；r2（初始轨道由我们设计）观测东侧 20 颗，用 36.409 m/s；合计 30 颗，55.648 m/s。说明见 `docs/第三问Claude版.md`。
+
+1. `git pull`，切到新分支 `p3-xiehuiyu`，关掉 ATK 界面。
+2. 两星各跑一遍接力复核：
+   ```
+   python tools/verify_p2.py solutions/p3_r1.json --out results/verify_p3_r1
+   python tools/verify_p2.py solutions/p3_r2.json --out results/verify_p3_r2
+   ```
+   预期结论分别为 10/10 和 20/20，ATK 与 Python 的位置差在米级。
+3. 每颗星各用一颗卫星的 MCS 段序列复现，每条命令是一个独立进程：
+   ```
+   python tools/build_single_r1.py solutions/p3_r1.json --out results/single_p3_r1
+   python tools/build_single_r1.py solutions/p3_r2.json --name r2 --out results/single_p3_r2
+   ```
+   预期：第 2 节"3 h 位置差"在 1 m 以内，第 3 节分别为 10/10 和 20/20。r2 的首脉冲已经并入初始轨道，不会出现"首脉冲在历元时刻"那一行。
+4. 用 ATK 界面打开 `results/single_p3_r2/raw/single_r1.atk`，展开 r2 的机动规划段列表，截图保存为 `report/single_p3_r2_gui.png`。
+5. 提交 4 个 `summary.md` 和截图，提 PR。报错时按 AGENTS.md 的规则，把控制台输出存为 `report/task15_console.txt` 并提交。

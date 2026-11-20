@@ -8,6 +8,7 @@ r1 的传播器设为机动规划（Astromaster），段序列为：
 用法（仓库根目录，已设置 ATK_HOME，关闭 ATK 界面）：
     python tools/build_single_r1.py solutions/p1_claude_robust.json --out results/single_r1_p1
     python tools/build_single_r1.py solutions/p2_claude_30.json --out results/single_r1_p2
+    python tools/build_single_r1.py solutions/p3_r2.json --name r2 --out results/single_p3_r2   # 第三问
 输出：<out>/summary.md（每一步的诊断、每次观测的检查）、<out>/raw/ 下的场景文件 single_r1.atk（可在 ATK 界面打开）
 """
 
@@ -55,6 +56,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("solution")
     ap.add_argument("--out", default="results/single_r1")
+    ap.add_argument("--name", default="r1", help="观测星名称；第三问复核 r2 时用 --name r2")
     a = ap.parse_args()
     epoch, mu, r1, targets, burns, obs, t_end = load(a.solution)
     burns.sort(key=lambda b: b[0])
@@ -164,10 +166,10 @@ def main():
         tg = targets[name]
         atk.add_satellite_cartesian(name, fmt(0), km(tg[:3]), km(tg[3:]), step_s=10.0)
     try:
-        build("r1", [(t, d, p) for (t, d), p in zip(burns, pre)], t_end, conv)
+        build(a.name, [(t, d, p) for (t, d), p in zip(burns, pre)], t_end, conv)
         log(f"- 段序列：初始状态 + {len(burns)} × (预报段 + 机动段) + 结束预报段，RunMCS 完成")
         tchk = max(burns[0][0], 1.0) + 3 * 3600
-        e = np.linalg.norm(np.array(atk.posvel("r1", fmt(tchk), "CBI")[0]) / 1000 - replay(tchk)[0]) * 1000
+        e = np.linalg.norm(np.array(atk.posvel(a.name, fmt(tchk), "CBI")[0]) / 1000 - replay(tchk)[0]) * 1000
         log(f"- 第一次脉冲后 3 h，ATK 与解析重放位置差 {e:.3f} m")
     except Exception:
         log("```")
@@ -185,7 +187,7 @@ def main():
     n_ok = 0
     for i, (name, s, D) in enumerate(sorted(obs, key=lambda o: o[1]), 1):
         tt = np.arange(s, s + D + 1e-9, 0.2)
-        rO = np.array([atk.posvel("r1", fmt(x), "CBI")[0] for x in tt]) / 1000
+        rO = np.array([atk.posvel(a.name, fmt(x), "CBI")[0] for x in tt]) / 1000
         rT = np.array([atk.posvel(name, fmt(x), "CBI")[0] for x in tt]) / 1000
         dpos = np.linalg.norm(rO[0] - replay(s)[0]) * 1000
         d, al, th = geometry(rO, rT, sun.geometric(tt))
