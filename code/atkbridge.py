@@ -147,6 +147,33 @@ class ATK:
             raise KeyError(f"场景里没有名为 {name} 的对象。现有对象：{names}")
         return found[0]
 
+    # ---------- 新建对象 ----------
+    def add_satellite_cartesian(self, name, epoch, r_m, v_ms, frame="ICRF", step_s=1.0):
+        """新建二体卫星，初始状态为笛卡尔坐标（米、米/秒）。frame 取 ICRF、J2000 等。"""
+        sat = self.scenario().GetChildren().New(self.m.eSatellite, name)
+        sat.SetPropagatorType(self.m.ePropagatorTwoBody)
+        prop = sat.GetPropagator()
+        prop.SetStep(float(step_s))
+        st = prop.GetInitialState().GetRepresentation()
+        st.SetEpoch(epoch)
+        st.AssignCartesian(getattr(self.m, "eCoordinateSystem" + frame),
+                           *[float(x) for x in r_m], *[float(x) for x in v_ms])
+        self.root.GetAnimation().Reset()
+        return sat
+
+    def add_planet(self, name, central_body="Sun"):
+        """新建天体对象（默认太阳），用来读取它的位置。"""
+        p = self.scenario().GetChildren().New(self.m.ePlanet, name)
+        p.GetPositionSourceData().SetCentralBody(central_body)
+        self.root.GetAnimation().Reset()
+        return p
+
+    def posvel(self, obj_name, time_str, frame="CBI"):
+        """返回某时刻位置速度 (pos[3], vel[3])，单位 m、m/s。frame 取 CBI、J2000、CBF。"""
+        pos, vel = self.m.vector_double(), self.m.vector_double()
+        getattr(self.root, f"OutputPosVel{frame}")(self.find(obj_name), time_str, pos, vel)
+        return list(pos), list(vel)
+
     # ---------- 轨道 ----------
     def propagator_type(self, sat_name):
         sat = self.find(sat_name)
