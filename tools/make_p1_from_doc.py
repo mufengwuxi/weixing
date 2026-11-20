@@ -52,17 +52,25 @@ def main():
         print(r, [ws.cell(row=r, column=c).value for c in range(1, 8)])
     r1 = row(ws, 4)
     b1 = row(ws, 6)
+    sys.path.insert(0, str(REPO / "tools"))
+    from verify_p1_atk import elements
+    e = elements(r1[:3], r1[3:], 398600.4418)["e"]
+    if e > 0.5:  # 旧数据：r1 轨道穿过地球，按文档规则修正
+        r1_used, how = [f * x for f, x in zip(FLIP, r1)], f"表中 r1 偏心率 {e:.3f}，按文档规则把 X、Y、Vy、Vz 取负"
+    else:
+        r1_used, how = r1, f"表中 r1 偏心率 {e:.6f}，直接使用，未做修正"
+    print(how)
     sol = {
         "epoch_utc": "2027-01-01T00:00:00",
         "mu_km3_s2": 398600.4418,
         "r1_original_km": r1,
-        "r1_used_km": [f * x for f, x in zip(FLIP, r1)],
+        "r1_used_km": r1_used,
         "b1_km": b1,
         "maneuvers": [{"t_s": sec(t), "dv_km_s": [x / 1000 for x in dv]} for t, dv in DOC["maneuvers"]],
         "obs_start_s": sec(DOC["obs_start"]),
         "obs_duration_s": 60,
         "claimed": DOC["claimed"],
-        "note": "由 tools/make_p1_from_doc.py 根据 第一问总结.md 的表格数值生成（Δv 4 位小数、时刻毫秒），不是求解器全精度输出",
+        "note": "由 tools/make_p1_from_doc.py 根据 第一问总结.md 的表格数值生成（Δv 4 位小数、时刻毫秒），不是求解器全精度输出；" + how,
     }
     out = REPO / "solutions" / "p1_doc.json"
     out.write_text(json.dumps(sol, ensure_ascii=False, indent=2), encoding="utf-8")
