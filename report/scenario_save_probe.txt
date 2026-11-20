@@ -1,0 +1,30 @@
+# SaveScenario 用法探测（fix-scenario-save-xiehuiyu 分支的依据）
+
+时间：2026-11-20，本机 xiehuiyu（ATK 4.2.0-rc.2，Component 模式）。
+背景：verify_p1_atk.py 新增的"跑完保存场景"功能只生成了空目录 P1Verify.atk/，界面里打不开。
+
+## 实验（最小场景：1 颗卫星，48 h）
+
+| 实验 | 调用方式 | 结果 |
+|---|---|---|
+| A | `SaveScenario()` 无参数 | 写到 `<SetSaveFileBasePath>/Output/<场景名>.atk`，1 MB 真文件 ✅ |
+| B | `SaveScenario("...\ProbeB.atk")` 传 .atk 路径 | 只创建了同名空目录，无任何文件 ❌ |
+| C | 传一个不存在的目录路径 | 同上，只建空目录 ❌ |
+| D | 先在目标目录里预建 `Output/` 再传目录路径 | 仍然什么都不写 ❌ |
+| E | 中途重新 `SetSaveFileBasePath(目标目录)` 后无参数调用 | 写到 `<目标>/Output/Probe.atk` ✅ |
+
+## 结论
+
+1. `SaveScenario` 的路径参数不能用来指定输出文件，任何传参形式都写不出场景，官方示例（AccessTest.java 等）也都是无参数调用。
+2. 唯一可靠做法：`SetSaveFileBasePath(目标目录)` + 无参数 `SaveScenario()`，文件落在 `<目标目录>/Output/<场景名>.atk`。
+
+## 修复
+
+`code/atkbridge.py` 的 `save(path)` 改为：切基目录 → 无参数保存 → 从 `Output/` 把文件移动到 `path` → 恢复原基目录。顺带清理之前误用留下的空目录。
+修复后 `verify_p1_atk.py` 不需要改动，`results/p1_atk_verify/P1Verify.atk` 正常生成（step=1.0，全精度，约 370 MB）。
+
+## 附注
+
+370 MB 是 48 h、7 个对象、1 s 步长的全精度星历所致，界面打开很慢。演示可用粗步长版本
+`P1Verify_view60.atk`（60 s 步长，约 4 MB，由仓库外的一次性脚本生成，两者轨道一致，仅星历密度不同）。
+两个 .atk 都被 .gitignore 忽略，不入库。
