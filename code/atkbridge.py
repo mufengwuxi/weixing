@@ -98,10 +98,28 @@ class ATK:
         return sc.GetStartTime(), sc.GetStopTime()
 
     def save(self, path=None):
-        if path:
-            self.root.SaveScenario(str(self._abs(path)))
-        else:
+        """SaveScenario 不接受文件路径：传参数只会建一个同名空目录，不写文件（本机实测）。
+        带参数时先把保存基目录切到目标位置，无参数保存进 Output/，再把文件移动到 path。"""
+        if not path:
             self.root.SaveScenario()
+            return
+        import shutil
+        p = self._abs(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        (p.parent / "Output").mkdir(exist_ok=True)
+        if p.is_dir():
+            if any(p.iterdir()):
+                raise FileExistsError(f"{p} 已存在且非空")
+            p.rmdir()  # 之前误用 SaveScenario(path) 留下的空目录
+        self.m.SetSaveFileBasePath(str(p.parent))
+        try:
+            self.root.SaveScenario()
+            src = max((p.parent / "Output").glob("*.atk"), key=lambda f: f.stat().st_mtime, default=None)
+            if src is None:
+                raise FileNotFoundError(f"保存后 {p.parent / 'Output'} 里没有 .atk 文件")
+            shutil.move(str(src), str(p))
+        finally:
+            self.m.SetSaveFileBasePath(str(self.out_dir))
 
     def close(self):
         if self.scenario_loaded:

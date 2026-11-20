@@ -55,9 +55,9 @@ C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing
 场景已保存到 `results\p1_atk_verify\P1Verify.atk`，可以在 ATK 界面里打开查看轨道（b1、r1_full_arc2 等）。
 
 明细：samples.csv（0.05 s 网格，全部组合），scan.csv（0.5 s 扫描）。
-new objvgt: 00000217EC48FCA0
-new objvgt: 00000217EC634E40
-new objvgt: 00000217EC879780
-new objvgt: 00000217EC6FD6F0
-new objvgt: 00000217EC87CC40
-new objvgt: 00000217EC933030
+new objvgt: 000001E95B1EB540
+new objvgt: 000001E95B1EAC40
+new objvgt: 000001E95B1EBF30
+new objvgt: 000001E95B1EC590
+new objvgt: 000001E95B1EDA90
+new objvgt: 000001E95B1ED340
