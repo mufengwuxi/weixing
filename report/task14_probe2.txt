@@ -1,0 +1,35 @@
+# 任务 14 探针报告 二：修复版脚本的 3340 m 偏差根因（机动段坐标轴）
+
+时间：2026-11-20 深夜，本机 xiehuiyu（ATK 4.2.0-rc.2 Component 模式）。
+现象：修复场景重开问题后（13a7b07），第一问跑通但结果不对——
+第一次脉冲后 3 h 位置差 3340.403 m（应 <1 m），观测检查光照角 52.7° 不满足。
+
+## 探针实验（单脉冲最小场景，检查点 = 脉冲后 3 h）
+
+| 机动段轴名写法 | 与"dv 按方案本意施加"的解析解差 | 判定 |
+|---|---|---|
+| 完全不调 SetThrustAxesName | 3340.403 m | 默认轴 **不是 VNC** |
+| `Satellite/<本卫星名> VNC(Earth)` | **0.000 m** | ✔ 生效为 VNC |
+| `Satellite/<本卫星名> VNC` | **0.000 m** | ✔ 生效为 VNC |
+| `VNC(Earth)`（无卫星前缀） | 3340.403 m | 无效，等同没设 |
+| `VNC`（无卫星前缀） | 3340.403 m | 无效，等同没设 |
+
+对照组：把 VNC 分量数值直接当 ICRF 分量施加的解析解与上述位置差 83.6 km，
+排除"默认轴=惯性"的简单解释——默认轴是 ATK 自己的某种内部约定，反正不是 VNC。
+
+## 结论与修复
+
+1. **13a7b07 里删掉 `SetThrustAxesName` 一行是这次偏差的直接原因**。任务 14 第一轮的
+   标定之所以得到 0.000 m，正是因为当时 `SetThrustAxesName(f"Satellite/{name} VNC(Earth)")`
+   虽然打印了 "can not choose parent satellite's axes" 的 Debug 噪音，但轴名实际生效了。
+2. **修复：恢复 `ac.SetThrustAxesName(f"Satellite/{name} VNC(Earth)")`**（name 为正在建的
+   卫星名，即 r1）。`Satellite/<名> VNC` 也可以。Debug 噪音可以无视，或试加场景前缀消掉。
+3. 附带发现两个坑，供以后写 MCS 脚本参考：
+   - posvel 查询时刻若正好等于星历末端，返回空数组——预报段要留出余量（旧标定留了 600 s）。
+   - 停止条件除 SetTrip 外最好按脚本原样调 SetTolerance(1e-6)。
+
+## 验证
+
+带 `Satellite/<名> VNC(Earth)` 的探针卫星与解析解差 0.000 m，六种约定中 (1,1,False)
+（标准 VNC：V 沿速度、N 沿角动量、C = V×N）就是 ATK 的语义。远端恢复该行后，
+本机重跑任务 14 全流程。
