@@ -10,3 +10,4 @@ report/atk_output/
 results/*/raw/
 results/p1_atk_verify/*.atk
 results/**/*.atk
+code/p2/__pycache__/
