@@ -20,3 +20,12 @@
    ```
 2. 预期结果：机动约束全部满足（单次最大约 28.18 m/s）；Python 复核 29/29；ATK 复核 29/29；累计 Δv 约 172.09 m/s。
 3. 提交 `results/p2_verify_29/` 下的 `summary.md` 和 `observations.csv`，然后提 PR。
+
+## 任务 13：复核第二问 30 颗版本（优先做这个，任务 11、12 可以跳过）
+
+1. `git pull`，切到新分支 `p2-claude30-verify-xiehuiyu`，关掉 ATK 界面，然后运行：
+   ```
+   python tools/verify_p2.py solutions/p2_claude_30.json --out results/p2_verify_30
+   ```
+2. 预期结果：机动约束全部满足；Python 复核 30/30；ATK 复核 30/30；累计 Δv 约 177.26 m/s。特别注意第 21、22 行的 b19 和 b20：它们是同一次飞越中先后观测的，b19 这次观测不需要机动。
+3. 提交 `results/p2_verify_30/` 下的 `summary.md` 和 `observations.csv`，然后提 PR，PR 说明里写上三处复核结论。

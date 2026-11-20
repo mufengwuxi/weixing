@@ -6,6 +6,8 @@ from eng import R1, TG, MU
 L = json.load(open(sys.argv[1]))
 burns = []
 for x in L:
+    if x.get('t1') is None:  # 与相邻观测共用同一段轨迹，本次观测不需要机动
+        continue
     burns.append({"t_s": x['t1'], "dv_km_s": x['dv1'], "for": x['target']})
     burns.append({"t_s": x['t2'], "dv_km_s": x['dv2'], "for": x['target']})
 burns.sort(key=lambda b: b['t_s'])
@@ -15,6 +17,6 @@ tot = sum(np.linalg.norm(b['dv_km_s']) for b in burns) * 1000
 sol = {"problem": "P2", "epoch_utc": "2027-01-01T00:00:00", "mu_km3_s2": MU, "r1_km": R1.tolist(),
        "targets_km": {k: v.tolist() for k, v in TG.items()}, "burns": burns, "observations": obs,
        "summary": {"n_targets": len(obs), "total_dv_m_s": tot, "margins": {"distance_km": 0.5, "angle_deg": 0.5, "duration_s": 62}},
-       "note": "code/p2 求解：解析漂移模型排日程（sched.py）+ 逐段真实二体动力学 SLSQP（realize.py）；每次观测最多 2 次脉冲；太阳为 ERFA 几何星历"}
+       "note": "code/p2 求解（b19 与 b20 同一次飞越先后观测，b19 不单独机动）：解析漂移模型排日程（sched.py）+ 逐段真实二体动力学 SLSQP（realize.py）；每次观测最多 2 次脉冲；太阳为 ERFA 几何星历"}
 json.dump(sol, open(sys.argv[2], 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print(len(obs), 'targets', round(tot, 4), 'm/s')
