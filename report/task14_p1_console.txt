@@ -1,0 +1,34 @@
+# 单颗 r1 的 ATK 机动规划复核
+
+- 方案：`solutions/p1_claude_robust.json`；脉冲 2 次，观测 1 次
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+
+## 1. 脉冲坐标约定
+- 采用标准 VNC：V 沿速度，N 沿轨道角动量，C = V × N（任务 14 标定误差 0.000 m）
+
+## 2. 搭建单颗 r1
+- 段序列：初始状态 + 2 × (预报段 + 机动段) + 结束预报段，RunMCS 完成
+- 第一次脉冲后 3 h，ATK 与解析重放位置差 0.000 m
+
+## 3. 逐次观测检查（ATK 单颗 r1 传播，0.2 s 网格，太阳为 ERFA 几何方向）
+| # | 目标 | 与解析重放位置差 (m) | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b1 | 0.00 | 12.511–16.819 | 44.0010 | 43.9995 | 是 |
+
+## 结论：单颗 r1 在 ATK 中复现方案，1/1 次观测满足约束。
+场景已保存为 `results\single_r1_p1\raw\single_r1.atk`，可在 ATK 界面中打开查看 r1 的段序列。
+new objvgt: 000001ED4B2D5080
+new objvgt: 000001ED4B2D4FC0
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
