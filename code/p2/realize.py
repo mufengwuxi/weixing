@@ -18,14 +18,20 @@ def solve_leg(r,v,t0,tmin,n,s,tries=(18.0,25.0,14.0,32.0)):
                 if best is None or c<best[0]: best=(c,f.x,info)
         if best is not None and best[0]<e[0]*1000*1.05: break
     return best
+OPPS={}
 def realize(seq,log=print):
     r,v,t0,tmin=R1[:3].copy(),R1[3:].copy(),0.0,0.0
     out=[]; tot=0
-    for n,s in seq:
-        b=None
-        for ds in (0.0,):
-            b=solve_leg(r,v,t0,tmin,n,s+ds)
-            if b: break
+    if not OPPS:
+        for m in NAMES: OPPS[m]=opportunities(HZ,m)
+    for i,(n,s) in enumerate(seq):
+        b=solve_leg(r,v,t0,tmin,n,s)
+        if b is None:
+            nxt=seq[i+1][1] if i+1<len(seq) else T_END-D
+            alts=[x for x in OPPS[n] if tmin+4000<x<nxt-3*3600 and abs(x-s)>600]
+            for x in sorted(alts,key=lambda x:abs(x-s))[:4]:
+                b=solve_leg(r,v,t0,tmin,n,x)
+                if b: log(f'  {n} 改到 {x/86400:.2f}d'); break
         if b is None:
             log(f'  {n}@{s/86400:.2f}d 失败，跳过'); continue
         c,x,info=b; t1,t2,d1,d2,sx=x[0]*3600,x[1]*3600,x[2:5]/1000,x[5:8]/1000,x[8]*3600

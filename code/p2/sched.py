@@ -17,11 +17,13 @@ NODEANG={}
 for n in NAMES:
     h=np.cross(TG[n][:3],TG[n][3:]); h/=np.linalg.norm(h); nd=np.cross(H0,h)
     NODEANG[n]=None if np.linalg.norm(nd)<1e-4 else np.degrees(np.arctan2(nd/np.linalg.norm(nd)@Y0,nd/np.linalg.norm(nd)@X0))%180
+import os
+WS=float(os.environ.get('WSCALE','1.0'))
 def wmax(n):
     a=NODEANG[n]
-    if a is None: return 0.6
+    if a is None: return 0.6*WS
     off=min(abs(a-36.8),180-abs(a-36.8))
-    return 3.0 if off<10 else (1.5 if off<30 else 0.4)
+    return 3.0 if off<10 else (1.5*WS if off<30 else 0.4*WS)
 def wrap(x): return (x+180)%360-180
 PH0={n:[p for s_,m,p in EV if m==n] for n in NAMES}
 PHT={n:[(s_,p) for s_,m,p in EV if m==n] for n in NAMES}
@@ -77,4 +79,4 @@ if __name__=='__main__':
     k=max(res); b=res[k]
     print('RESULT mu',mu,'count',k,'cost %.1f'%b[0],'end %.2f d'%(b[1]/86400),'%.0fs'%(time.time()-t))
     print(' '.join(f'{n}@{s/86400:.2f}:{c:.1f}' for n,s,c in b[5]))
-    pickle.dump(res,open(f'sched_{mu}_{W}_{md}_{ct}_{rt}.pkl','wb'))
+    pickle.dump(res,open(f'sched_{mu}_{W}_{md}_{ct}_{rt}_ws{WS}.pkl','wb'))
