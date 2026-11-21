@@ -148,17 +148,17 @@ def fig1a():
     hx, hy = P(215, a_s)
     body.append(arrow(tx, ty, hx, hy, "#000000", 1.3))
     # 距离约束：两段同心圆弧（黑色虚线）
-    for r, lab in ((55, "10 km"), (175, "50 km")):
+    for r, lab in ((88, "10 km"), (185, "50 km")):
         body.append(poly(arc(tx, ty, r, a_o - np.radians(32), a_o + np.radians(32)), stroke="#000000", w=1.0, closed=False, dash="4,3"))
         lx, ly = P(r, a_o - np.radians(34))
         body.append(text(lx, ly - 8, lab, 12, "middle"))
     # 相对矢量 ρ 与观测卫星（红色）
-    ox, oy = P(135, a_o)
+    ox, oy = P(140, a_o)
     body.append(arrow(tx, ty, ox + 18 * np.cos(a_o) * -1, oy + 18 * np.sin(a_o), "#000000", 1.5))
-    mx, my = P(85, a_o - np.radians(9))
+    mx, my = P(115, a_o + np.radians(8))
     body.append(text(mx, my, "ρ", 16, "middle", italic=True))
     body.append(satellite(ox, oy, "#D62828", "#8C1C13", 0.9, -15))
-    body.append(text(ox, oy + 34, "观测卫星 O", 14))
+    body.append(text(ox - 6, oy - 30, "观测卫星 O", 14))
     # 目标卫星（蓝色）
     body.append(satellite(tx, ty, "#1F5FAD", "#163E73", 0.9, -15))
     body.append(text(tx + 36, ty + 28, "目标 B", 14, "start"))
@@ -169,8 +169,8 @@ def fig1a():
     body.append(poly(arc(tx, ty, 44, a_e, a_o), stroke="#000000", w=1.0, closed=False))
     lx, ly = P(58, (a_o + a_e) / 2)
     body.append(text(lx, ly + 5, "θ", 15, italic=True))
-    body.append(poly(arc(tx, ty, 205, a_e, a_s, 50), stroke="#000000", w=0.9, closed=False, dash="2,3"))
-    lx, ly = P(220, (a_e + a_s) / 2)
+    body.append(poly(arc(tx, ty, 215, a_e, a_s, 50), stroke="#000000", w=0.9, closed=False, dash="2,3"))
+    lx, ly = P(230, (a_e + a_s) / 2)
     body.append(text(lx, ly + 5, "β", 15, "middle", italic=True))
     body.append(text(W - 20, H - 16, "示意图，未按比例绘制", 12, "end"))
     save("fig1a_geometry.svg", W, H, body)
