@@ -346,7 +346,6 @@ def fig2():
         yy = ly + 20 + n * 19
         body.append(f'<circle cx="{lx + 7}" cy="{yy - 4}" r="5.5" fill="{c}" stroke="#1A1A1A" stroke-width="0.8"/>')
         body.append(text(lx + 18, yy, f"{a_}°–{b_}°", 12, "start"))
-    body.append(text(W / 2, H - 8, f"周向为相对 R1 的相位（真实角度），径向为半长轴偏差（放大约 {K * 42164 / R0:.0f} 倍显示）；R1 倾角 {i0:.2f}°", 11, "middle", "#555555"))
     save("fig2_targets.svg", W, H, body)
 
 
