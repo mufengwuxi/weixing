@@ -6,12 +6,14 @@
 |---|---|---|---|---|---|
 | 第一问 | `q1/p1_doc.json` | v1 | zzx | 5.2127 m/s | 已被 v2 取代 |
 | 第一问 | `q1/p1_claude_limit.json` | v2 极限版 | Claude | 5.212705 m/s | 贴边界，仅作对照 |
-| 第一问 | `q1/p1_claude_robust.json` | v2 稳健版 | Claude | 5.270312 m/s | **当前采用** |
+| 第一问 | `q1/p1_claude_robust.json` | v2 稳健版 | Claude | 5.270312 m/s | 稳健性对照 |
+| 第一问 | `q1/p1_claude_v3.json` | v3（旧数据） | Claude | 5.212816 m/s | **当前采用**，待新数据重算 |
 | 第二问 | `q2/zzx_Q2_25targets_model_reproducible.zip` | v1 | zzx | 25 颗，188.285 m/s | 已被 v2 取代 |
 | 第二问 | `q2/p2_claude_27.json` | v2-27 | Claude | 27 颗，149.92 m/s | 已被取代 |
 | 第二问 | `q2/p2_claude_29.json` | v2-29 | Claude | 29 颗，172.09 m/s | 已被取代 |
 | 第二问 | `q2/p2_claude_30.json` | v2-30 | Claude | 30 颗，177.2571 m/s | **当前采用** |
-| 第三问 | `q3/p3_claude.json`（汇总），`q3/p3_r1.json`、`q3/p3_r2.json`（每颗星各一份） | v1 | Claude | 30 颗，55.648 m/s | **当前采用** |
+| 第三问 | `q3/p3_claude.json`（汇总），`q3/p3_r1.json`、`q3/p3_r2.json`（每颗星各一份） | v1 | Claude | 30 颗，55.648 m/s | 已被 v2 取代 |
+| 第三问 | `q3/v2_p3_claude.json`（汇总），`q3/v2_p3_r1.json`、`q3/v2_p3_r2.json` | v2（旧数据） | Claude | 30 颗，34.263 m/s（δa ≥ 15 km） | **当前采用**，待新数据重算 |
 
 新方案用新文件名，在上表加一行，同时登记到根目录的 `CHANGELOG.md`。
 
