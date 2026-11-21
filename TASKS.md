@@ -4,20 +4,7 @@
 
 **2026-11-20 仓库目录已重整**：方案按问题放进 `solutions/q1/`、`q2/`、`q3/`，结果写进 `results/q1/`、`q2/`、`q3/`，日志和截图放到 `report/tasks/`。开工前先 `git pull`，然后照抄下面的新命令。如果手上有按旧路径做了一半的任务，就按新路径重跑；已经提交了的 PR 也请改成新路径。
 
-## 任务 18：第三问主方案 v6 的 ATK 复核（在任务 17 完成后做）
-
-第三问按题面"R2 提前发射"重新求解，主方案为 v6（δa = 5.90 km）：两颗星合计 33.460 m/s。r1 与 v4 相同，只需复核 r2。
-
-1. `git pull`，在任务 17 的分支上继续，或新建分支 `verify-v5-xiehuiyu`。
-2. 运行：
-   ```
-   python tools/verify_p2.py solutions/q3/v6_p3_r2.json --out results/q3/verify_v6_r2
-   python tools/build_single_r1.py solutions/q3/v6_p3_r2.json --name r2 --out results/q3/single_v6_r2
-   ```
-   预期：20/20，累计 Δv 15.312 m/s。
-3. 生成 r2 的粗采样查看场景，并截图为 `report/tasks/task18_r2_gui.png`。生成方法与任务 17 相同。
-4. 把任务 17 里写的"查看场景生成器"脚本提交到 `tools/make_view_scene.py`。它的参数是方案文件、卫星名、输出路径和星历步长，开头用注释写明用法。以后截图统一用它，不再生成 1.9 GB 的官方场景。
-5. 提交两个 `summary.md`、截图、脚本，以及控制台输出 `report/tasks/task18_console.txt`，提 PR。
+目前没有待做的 ATK 任务。任务 18 已完成（PR #25），见 `report/tasks/已完成任务.md`。
 
 ## 任务 17（最优先）：当前最优方案的 ATK 复核（新数据）
 
