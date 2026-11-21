@@ -15,7 +15,9 @@
    python tools/build_single_r1.py solutions/q3/v6_p3_r2.json --name r2 --out results/q3/single_v6_r2
    ```
    预期：20/20，累计 Δv 15.312 m/s。
-3. 提交两个 `summary.md` 和控制台输出 `report/tasks/task18_console.txt`，提 PR。
+3. 生成 r2 的粗采样查看场景，并截图为 `report/tasks/task18_r2_gui.png`。生成方法与任务 17 相同。
+4. 把任务 17 里写的"查看场景生成器"脚本提交到 `tools/make_view_scene.py`。它的参数是方案文件、卫星名、输出路径和星历步长，开头用注释写明用法。以后截图统一用它，不再生成 1.9 GB 的官方场景。
+5. 提交两个 `summary.md`、截图、脚本，以及控制台输出 `report/tasks/task18_console.txt`，提 PR。
 
 ## 任务 17（最优先）：当前最优方案的 ATK 复核（新数据）
 
