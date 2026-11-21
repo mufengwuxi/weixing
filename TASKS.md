@@ -4,39 +4,51 @@
 
 **2026-11-20 仓库目录已重整**：方案按问题放进 `solutions/q1/`、`q2/`、`q3/`，结果写进 `results/q1/`、`q2/`、`q3/`，日志和截图放到 `report/tasks/`。开工前先 `git pull`，然后照抄下面的新命令。如果手上有按旧路径做了一半的任务，就按新路径重跑；已经提交了的 PR 也请改成新路径。
 
-## 任务 19：论文用 ATK 截图
+## 任务 19：论文用 ATK 截图（11-21 修订）
 
-论文第 5–7 节要插入 ATK 的三维渲染截图。请在 ATK 界面里按下面的要求截 6 张图，存为 PNG。
+论文第 5–7 节要插入 ATK 三维渲染截图。论文里卫星名一律大写（R1、R2、B1–B30），截图里的标注也要大写。
 
-**通用要求**
-- 截图分辨率不低于 1920×1080，只截 3D 视图窗口，不要截菜单栏和左侧对象树。
-- 背景保持 ATK 默认的星空即可；打开卫星名称标注；轨迹线加粗到 2 像素以上，颜色约定：观测卫星（R1、R2）红色，目标卫星蓝色或白色。
-- 截图存到 `paper/figures/atk/`，文件名按下面给的写；同时把每张图对应的视角说明（场景时间、相机中心、视野大小）记在 `paper/figures/atk/README.md`，方便以后重截。
-- 不改 ATK 安装目录，不提交场景文件里的授权信息。
+### 第一步：把查看场景生成器的大写命名正式入库
 
-**第一步：重新生成第一问的查看场景（步长改为 1 s）**
+你在本机为第一问场景改成了大写 R1/B1 和场景名 Scenario1，这个改动还没进仓库。请把它做成 `tools/make_view_scene.py` 的选项，不要写死：
 
-第一问的观测是近距离飞越，相对速度约 0.23 km/s，60 s 的星历步长画不出近距离的轨迹弯曲，需要 1 s：
+- 新增 `--upper`：卫星名和目标名全部转成大写（r1→R1，b12→B12）；
+- 新增 `--scenario-name`：场景名，默认保持现在的值；
+- 新增 `--step` 已有，不变。
+
+### 第二步：重新生成 4 个查看场景（全部大写）
+
+第一问是近距离飞越（相对速度约 0.23 km/s），60 s 步长会把近景轨迹画成折线，所以第一问用 1 s：
 ```
-python tools/make_view_scene.py solutions/q1/p1_claude_v4.json r1 results/q1/single_v4_view/q1_view_1s.atk --step 1
+python tools/make_view_scene.py solutions/q1/p1_claude_v4.json r1 results/q1/single_v4_view/q1_view_1s.atk --step 1 --upper --scenario-name Scenario1
+python tools/make_view_scene.py solutions/q2/v3c_p2_lns_scp.json r1 results/q2/single_v3c/raw_view/v3c_view_upper.atk --step 60 --upper
+python tools/make_view_scene.py solutions/q3/v6_p3_r1.json r1 results/q3/single_v6_r1/raw_view/v6_r1_view_upper.atk --step 60 --upper
+python tools/make_view_scene.py solutions/q3/v6_p3_r2.json r2 results/q3/single_v6_r2/raw_view/v6_r2_view_upper.atk --step 60 --upper
 ```
-第二、三问沿用任务 18 生成的查看场景（`results/q2/single_v3c/raw_view/v3c_view.atk`、`results/q3/single_v6_r1/raw_view/v6_r1_view.atk`、`results/q3/single_v6_r2/raw_view/v6_r2_view.atk`）。
+原来的小写场景文件不要删。生成后逐个在 ATK 里打开，确认对象浏览器里卫星都是大写、MCS 段完整、轨迹可见。
 
-**第二步：截图清单**
+### 第三步：统一显示设置
 
-| 文件名 | 场景 | 场景时间（UTC） | 视角 | 要能看出什么 |
+- 3D 窗口调到不小于 1920×1080，只截 3D 视图区域（不含菜单栏、对象树、时间轴面板）。
+- 背景用 ATK 默认星空；打开所有卫星的名称标注，字号调大到截图缩小到半页宽时仍能看清。
+- 轨迹线宽 2 像素以上。颜色：观测卫星 R1、R2 红色；目标卫星统一浅蓝色。
+- 第二、三问目标多，目标的轨道线可以关掉，只显示目标点和名称，避免满屏线条。
+
+### 第四步：截图清单（存到 `paper/figures/atk/`）
+
+| 文件名 | 场景 | 场景时间（UTC） | 相机 | 要能看出什么 |
 |---|---|---|---|---|
-| `q1_overview.png` | 第一问 1 s 场景 | 2027-01-02 14:26:16 | 以地球为中心，从北极上方斜 30° 俯视，视野能容纳整条同步轨道 | 地球、R1 在 48 h 内的完整轨迹、B1 的位置 |
-| `q1_closeup.png` | 第一问 1 s 场景 | 2027-01-02 14:26:16 | 相机中心设为 B1，视野约 100 km，从垂直于 R1 相对运动方向的一侧看 | R1 从 B1 旁边掠过的一段轨迹，R1 与 B1 的标注都清楚 |
-| `q2_overview.png` | 第二问场景 | 2027-01-31 00:00:00 | 从北极正上方俯视同步带，视野放大到 30 颗目标所在的那段弧（约 40°） | R1 30 天的巡游轨迹和 30 颗目标 |
-| `q2_oblique.png` | 第二问场景 | 2027-01-16 00:00:00 | 从赤道面上方约 20° 斜视同一段弧 | 轨迹的高低起伏和目标的倾角差异 |
-| `q3_r1.png` | 第三问 R1 场景 | 2027-01-31 00:00:00 | 与 `q2_overview.png` 相同的视角和视野 | R1 负责的西侧目标和 R1 轨迹 |
-| `q3_r2.png` | 第三问 R2 场景 | 2027-01-31 00:00:00 | 与 `q2_overview.png` 相同的视角和视野 | R2 负责的东侧目标和 R2 轨迹 |
+| `q1_overview.png` | `q1_view_1s.atk` | 2027-01-02 14:26:16 | 中心为地球，从北极上方约 30° 斜视，视野刚好容纳整条同步轨道 | 地球、R1 在 48 h 内的轨迹（两次机动的折点）、B1 的位置 |
+| `q1_closeup.png` | `q1_view_1s.atk` | 2027-01-02 14:26:16 | 中心设为 B1，视野约 100 km，从垂直于 R1 相对运动方向的一侧看 | R1 从 B1 旁边掠过的一段轨迹，R1、B1 标注清楚 |
+| `q2_overview.png` | `v3c_view_upper.atk` | 2027-01-31 00:00:00 | 从北极正上方俯视，视野放大到 30 颗目标所在的约 40° 弧段 | R1 30 天的巡游轨迹和 30 颗目标 |
+| `q2_oblique.png` | `v3c_view_upper.atk` | 2027-01-16 00:00:00 | 同一弧段，从赤道面上方约 20° 斜视 | 轨迹的起伏和目标的倾角差异 |
+| `q3_r1.png` | `v6_r1_view_upper.atk` | 2027-01-31 00:00:00 | 与 `q2_overview.png` 完全相同（同一相机位置和视野） | R1 负责的西侧 10 颗目标和 R1 轨迹 |
+| `q3_r2.png` | `v6_r2_view_upper.atk` | 2027-01-31 00:00:00 | 与 `q2_overview.png` 完全相同 | R2 负责的东侧 20 颗目标和 R2 轨迹 |
 
-`q3_r1.png` 和 `q3_r2.png` 视角必须一致，论文里会左右并排放。
+`q2_overview`、`q3_r1`、`q3_r2` 三张必须用同一个相机视角，论文里要对照着看。做法：先在第二问场景里调好视角，把相机参数（位置、朝向、视野）记下来，再在第三问两个场景里照着设置。
 
-**第三步：提交**
+### 第五步：提交
 
-新建分支 `atk-figs-xiehuiyu`，提交 6 张 PNG、`paper/figures/atk/README.md` 和控制台输出 `report/tasks/task19_console.txt`，提 PR。
-
-
+- 每张图的场景时间、相机中心、相机位置、视野写进 `paper/figures/atk/README.md`，以后要重截能照着复原。
+- 新建分支 `atk-figs-xiehuiyu`，提交：`make_view_scene.py` 的改动、6 张 PNG、`paper/figures/atk/README.md`、控制台输出 `report/tasks/task19_console.txt`。`.atk` 场景文件太大，不提交。
+- 提 PR，PR 描述里贴 6 张图的缩略图。
