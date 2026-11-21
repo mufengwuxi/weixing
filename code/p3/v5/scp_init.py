@@ -39,6 +39,7 @@ X0 = R1.copy()
 AGEO = 42164.1696
 DA = float(os.environ.get('SCP_DA', 8.0))
 EMAX = float(os.environ.get('SCP_EMAX', 0.00095))
+EMAX_CERT = float(os.environ.get('SCP_EMAX_CERT', 0.001))  # 认证用的偏心率上限（灵敏度分析时可调小）
 
 
 def elem(x):
@@ -114,7 +115,7 @@ def certify(burns, obs, step=0.05, x0=None):
     worst = []
     if x0 is not None:
         a, ev = elem(x0)
-        if np.linalg.norm(ev) >= 0.001 or abs(a - AGEO) > DA:
+        if np.linalg.norm(ev) >= EMAX_CERT or abs(a - AGEO) > DA:
             return False, ('init', a - AGEO, np.linalg.norm(ev))
     for n, s in obs:
         if any(s < b[0] < s + D for b in burns):
