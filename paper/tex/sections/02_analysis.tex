@@ -13,19 +13,17 @@
 \end{equation}
 太阳距离远大于同步轨道半径，这个条件近似等价于目标位于地球的背阳一侧。同步轨道目标每天绕地球一周，$\beta$ 也以一天为周期变化，每天大约有一半时间满足这个条件。图~\ref{fig:geometry}(b) 给出了目标 B1 在前 48~h 内 $\beta$ 的变化，阴影部分为满足必要条件的时段。这个条件只与目标和太阳有关，可以在求解之前预先算出每颗目标的可观测时段。
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
   \centering
-  \begin{subfigure}{0.62\textwidth}
+  \begin{subfigure}[b]{0.41\textwidth}
     \centering
     \includegraphics[width=\linewidth]{fig1a_geometry.pdf}
-    \caption{观测卫星 R、目标卫星 B 与太阳、地心的几何关系}
-  \end{subfigure}
-
-  \vspace{6pt}
-  \begin{subfigure}{0.9\textwidth}
+    \caption{观测几何关系}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.57\textwidth}
     \centering
     \includegraphics[width=\linewidth]{fig1b_beta_b1.pdf}
-    \caption{B1 处太阳方向与地心方向的夹角 $\beta$ 在前 48~h 内的变化}
+    \caption{B1 处 $\beta$ 在前 48~h 内的变化}
   \end{subfigure}
   \caption{观测几何与可能观测时段}
   \label{fig:geometry}
@@ -42,27 +40,29 @@
 \end{equation}
 要在 $D$ 天内追上相位相差 $\Delta\lambda$ 的目标，需要先建立 $\Delta\lambda/D$ 的漂移率，到达后再把它消除，代价约为 $5.68\,\Delta\lambda/D$~m/s。可见机动代价主要由相位差和可用时间决定。时间越充裕，所需的漂移率越小，代价也越低。
 
-图~\ref{fig:targets} 画出了初始时刻 30 颗目标在相位和半长轴上的分布。目标大致对称地分布在 R1 的东西两侧，各自延伸约 $19^\circ$。它们的半长轴都非常接近同步轨道，彼此漂移得很慢，一个月下来相对位置几乎不变。所以可以把这 30 颗目标看成一条基本固定的队列，R1 要做的是沿着这条队列依次走过去。由此可以得到两点判断。第一，访问顺序应沿相位单向推进，来回折返会让漂移的路程和燃料都成倍增加。第二，相位接近、轨道面也接近的目标可以在同一次飞越中先后观测，比如 B19 和 B20 几乎挨在一起，观测完一颗顺路就能观测另一颗，省去一次单独的转移。
-
-\begin{figure}[htbp]
+\begin{figure}[!htb]
   \centering
-  \includegraphics[width=\textwidth]{fig2_targets.pdf}
-  \caption{初始时刻 30 颗目标在同步带上的分布。周向为相对 R1 的相位，径向为半长轴偏差（放大约 460 倍显示），颜色表示倾角}
+  \includegraphics[width=0.8\textwidth]{fig2_targets.pdf}
+  \caption{初始时刻 30 颗目标在同步带上的分布（径向放大显示）}
   \label{fig:targets}
 \end{figure}
+
+图~\ref{fig:targets} 画出了初始时刻 30 颗目标在相位和半长轴上的分布。目标大致对称地分布在 R1 的东西两侧，各自延伸约 $19^\circ$。它们的半长轴都非常接近同步轨道，彼此漂移得很慢，一个月下来相对位置几乎不变。所以可以把这 30 颗目标看成一条基本固定的队列，R1 要做的是沿着这条队列依次走过去。由此可以得到两点判断。第一，访问顺序应沿相位单向推进，来回折返会让漂移的路程和燃料都成倍增加。第二，相位接近、轨道面也接近的目标可以在同一次飞越中先后观测，比如 B19 和 B20 几乎挨在一起，观测完一颗顺路就能观测另一颗，省去一次单独的转移。
+
 
 \subsection{建模思路}
 
 基于上述分析，三个问题可以沿“单次观测单元、单星序列巡游、双星选轨与分工”这条主线逐层建模，总体框架如图~\ref{fig:framework} 所示。
 
-\begin{figure}[htbp]
+
+问题一是基本单元。给定 R1 的初始状态和目标 B1，决策变量是两次脉冲的时刻、两个速度增量矢量和观测开始时刻，约束是连续 60~s 内每一时刻都满足观测条件，这是一个带半无限约束的非线性规划。48~h 内 B1 有两次观测机会，越晚的机会留给相位调整的时间越多，所需速度增量越小。由于可观测区域非凸，求解时需要从多个初值出发搜索。约束要求 60~s 内每一时刻都满足，优化时每隔 1~s 检查一次，得到方案后再每隔 0.05~s 复查一遍，确认相邻检查时刻之间也没有越界。
+
+\begin{figure}[!htb]
   \centering
-  \includegraphics[width=\textwidth]{fig3_framework.pdf}
+  \includegraphics[width=0.78\textwidth]{fig3_framework.pdf}
   \caption{总体框架}
   \label{fig:framework}
 \end{figure}
-
-问题一是基本单元。给定 R1 的初始状态和目标 B1，决策变量是两次脉冲的时刻、两个速度增量矢量和观测开始时刻，约束是连续 60~s 内每一时刻都满足观测条件，这是一个带半无限约束的非线性规划。48~h 内 B1 有两次观测机会，越晚的机会留给相位调整的时间越多，所需速度增量越小。由于可观测区域非凸，求解时需要从多个初值出发搜索。约束要求 60~s 内每一时刻都满足，优化时每隔 1~s 检查一次，得到方案后再每隔 0.05~s 复查一遍，确认相邻检查时刻之间也没有越界。
 
 问题二把基本单元串成序列。决策同时包括离散部分和连续部分。离散部分是选哪些目标、按什么顺序、在哪一天的机会观测；连续部分是每次脉冲的时刻和矢量。前后两段转移共享中间的轨道状态，一段的机动会改变下一段的起点，所以逐段独立优化得到的方案并不是整体最优。我们先用漂移代价估计和束搜索确定访问顺序，再对整个 30 天计划的全部脉冲联合优化，并在外层调整访问顺序和观测时刻。
 
