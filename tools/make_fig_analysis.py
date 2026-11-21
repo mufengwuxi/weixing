@@ -150,8 +150,8 @@ def fig1a():
     # 距离约束：两段同心圆弧（黑色虚线）
     for r, lab in ((88, "10 km"), (185, "50 km")):
         body.append(poly(arc(tx, ty, r, a_o - np.radians(32), a_o + np.radians(32)), stroke="#000000", w=1.0, closed=False, dash="4,3"))
-        lx, ly = P(r, a_o - np.radians(34))
-        body.append(text(lx, ly - 8, lab, 12, "middle"))
+        lx, ly = P(r + 22 if r < 100 else r - 22, a_o + np.radians(22))
+        body.append(text(lx, ly + 4, lab, 12, "middle"))
     # 相对矢量 ρ 与观测卫星（红色）
     ox, oy = P(140, a_o)
     body.append(arrow(tx, ty, ox + 18 * np.cos(a_o) * -1, oy + 18 * np.sin(a_o), "#000000", 1.5))
