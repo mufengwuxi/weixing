@@ -158,10 +158,10 @@ def fig1a():
     mx, my = P(115, a_o + np.radians(8))
     body.append(text(mx, my, "ρ", 16, "middle", italic=True))
     body.append(satellite(ox, oy, "#D62828", "#8C1C13", 0.9, -15))
-    body.append(text(ox - 6, oy - 30, "观测卫星 O", 14))
+    body.append(text(ox - 6, oy - 30, "观测卫星 R", 14))
     # 目标卫星（蓝色）
     body.append(satellite(tx, ty, "#1F5FAD", "#163E73", 0.9, -15))
-    body.append(text(tx + 36, ty + 28, "目标 B", 14, "start"))
+    body.append(text(tx + 36, ty + 28, "目标卫星 B", 14, "start"))
     # 夹角 α、θ、β
     body.append(poly(arc(tx, ty, 44, a_o, a_s), stroke="#000000", w=1.0, closed=False))
     lx, ly = P(58, (a_o + a_s) / 2)
@@ -172,7 +172,6 @@ def fig1a():
     body.append(poly(arc(tx, ty, 215, a_e, a_s, 50), stroke="#000000", w=0.9, closed=False, dash="2,3"))
     lx, ly = P(230, (a_e + a_s) / 2)
     body.append(text(lx, ly + 5, "β", 15, "middle", italic=True))
-    body.append(text(W - 20, H - 16, "示意图，未按比例绘制", 12, "end"))
     save("fig1a_geometry.svg", W, H, body)
 
 

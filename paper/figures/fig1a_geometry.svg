@@ -59,7 +59,7 @@
 <line x1="0" y1="-8" x2="0" y2="-13" stroke="#1A1A1A" stroke-width="0.9"/>
 <circle cx="0" cy="-14.5" r="2" fill="#D62828" stroke="#1A1A1A" stroke-width="0.7"/>
 </g>
-<text x="377.8" y="232.7" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#000000">观测卫星 O</text>
+<text x="377.8" y="232.7" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#000000">观测卫星 R</text>
 <g transform="translate(520.0 295.0) rotate(-15.0) scale(0.9)">
 <rect x="-38" y="-6" width="28" height="12" fill="#163E73" stroke="#1A1A1A" stroke-width="0.8"/>
 <line x1="-31" y1="-6" x2="-31" y2="6" stroke="#1A1A1A" stroke-width="0.5"/>
@@ -79,12 +79,11 @@
 <line x1="0" y1="-8" x2="0" y2="-13" stroke="#1A1A1A" stroke-width="0.9"/>
 <circle cx="0" cy="-14.5" r="2" fill="#1F5FAD" stroke="#1A1A1A" stroke-width="0.7"/>
 </g>
-<text x="556.0" y="323.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="start" fill="#000000">目标 B</text>
+<text x="556.0" y="323.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="start" fill="#000000">目标卫星 B</text>
 <polyline points="477.2,284.8 477.5,283.8 477.7,282.7 478.1,281.7 478.4,280.6 478.8,279.6 479.2,278.6 479.6,277.6 480.1,276.6 480.5,275.6 481.0,274.6 481.5,273.6 482.1,272.7 482.7,271.7 483.3,270.8 483.9,269.9 484.5,269.0 485.2,268.1 485.9,267.2 486.6,266.4 487.3,265.6 488.0,264.8 488.8,264.0 489.6,263.2 490.4,262.5 491.2,261.7 492.0,261.0 492.9,260.3 493.8,259.7 494.7,259.0" fill="none" stroke="#000000" stroke-width="1.0"/>
 <text x="472.0" y="267.5" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#000000" font-style="italic">α</text>
 <polyline points="478.7,310.2 478.4,309.3 478.1,308.5 477.9,307.6 477.6,306.8 477.4,305.9 477.2,305.1 477.0,304.2 476.8,303.3 476.6,302.5 476.5,301.6 476.4,300.7 476.3,299.8 476.2,298.9 476.1,298.1 476.1,297.2 476.0,296.3 476.0,295.4 476.0,294.5 476.0,293.6 476.1,292.7 476.1,291.9 476.2,291.0 476.3,290.1 476.4,289.2 476.5,288.3 476.7,287.5 476.8,286.6 477.0,285.7 477.2,284.8" fill="none" stroke="#000000" stroke-width="1.0"/>
 <text x="462.1" y="303.4" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#000000" font-style="italic">θ</text>
 <polyline points="318.2,369.1 316.3,363.7 314.5,358.2 312.9,352.7 311.4,347.1 310.1,341.6 308.9,335.9 307.9,330.3 307.0,324.6 306.3,318.9 305.8,313.2 305.4,307.5 305.1,301.7 305.0,296.0 305.1,290.2 305.3,284.5 305.6,278.8 306.1,273.0 306.8,267.3 307.6,261.6 308.6,256.0 309.7,250.4 311.0,244.8 312.4,239.2 313.9,233.7 315.6,228.2 317.5,222.7 319.5,217.4 321.7,212.0 323.9,206.8 326.4,201.6 328.9,196.4 331.6,191.4 334.5,186.4 337.4,181.4 340.5,176.6 343.8,171.9 347.1,167.2 350.6,162.6 354.2,158.1 357.9,153.8 361.7,149.5 365.7,145.3 369.7,141.2 373.9,137.3 378.2,133.4 382.5,129.7 387.0,126.1 391.5,122.6 396.2,119.2" fill="none" stroke="#000000" stroke-width="0.9" stroke-dasharray="2,3"/>
 <text x="300.5" y="231.4" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#000000" font-style="italic">β</text>
-<text x="700.0" y="524.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">示意图，未按比例绘制</text>
 </svg>
