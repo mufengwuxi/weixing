@@ -4,6 +4,30 @@
 
 **2026-11-20 仓库目录已重整**：方案按问题放进 `solutions/q1/`、`q2/`、`q3/`，结果写进 `results/q1/`、`q2/`、`q3/`，日志和截图放到 `report/tasks/`。开工前先 `git pull`，然后照抄下面的新命令。如果手上有按旧路径做了一半的任务，就按新路径重跑；已经提交了的 PR 也请改成新路径。
 
+## 任务 17（最优先）：新数据下第一问 v4、第三问 v3 的 ATK 复核
+
+数据已更新为高精度版（任务 16）。下面这些方案都是用新数据求解的，旧数据的任务 13、14、15 可以不做了。
+
+1. `git pull`，切到新分支 `verify-v3-xiehuiyu`，关掉 ATK 界面。
+2. 第一问（约 1 分钟）：
+   ```
+   python tools/verify_p1_atk.py solutions/q1/p1_claude_v4.json --out results/q1/p1_verify_v4
+   ```
+   预期：ATK 轨道上的观测检查全部为"是"，最大侦测角和光照角不超过 45°（方案内部留了 0.01° 余量）。
+3. 第三问两颗星的接力复核：
+   ```
+   python tools/verify_p2.py solutions/q3/v3_p3_r1.json --out results/q3/verify_v3_r1
+   python tools/verify_p2.py solutions/q3/v3_p3_r2.json --out results/q3/verify_v3_r2
+   ```
+   预期：分别为 10/10、20/20，累计 Δv 约 18.943 和 16.907 m/s。
+4. 第三问用单颗卫星的 MCS 段序列复现，每条命令是一个独立进程：
+   ```
+   python tools/build_single_r1.py solutions/q3/v3_p3_r1.json --out results/q3/single_v3_r1
+   python tools/build_single_r1.py solutions/q3/v3_p3_r2.json --name r2 --out results/q3/single_v3_r2
+   ```
+   预期：第 3 节分别为 10/10、20/20。用 ATK 界面打开 `results/q3/single_v3_r2/raw/single_r1.atk`，展开 r2 的机动规划段列表，截图存为 `report/tasks/task17_r2_gui.png`。
+5. 提交 `results/` 下各 `summary.md`、截图和控制台输出 `report/tasks/task17_console.txt`，提 PR。
+
 ## 任务 16（最优先）：上传组委会更新后的高精度数据
 
 题目数据更新了，数值的小数位比原来更多。这个任务只换数据，不跑别的复核。

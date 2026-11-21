@@ -6,11 +6,11 @@
 
 | 问题 | 当前采用版本 | 结果 | 方案文件 | 说明文档 | ATK 复核 |
 |---|---|---|---|---|---|
-| 第一问 | v3（Claude，旧数据） | 5.212816 m/s | `solutions/q1/p1_claude_v3.json` | `docs/00_题目/v1_约束核对_claude.md` | 待复核；v2 稳健版 5.270312 已通过 |
-| 第二问 | v2 30 颗版（Claude） | 30 颗，177.2571 m/s | `solutions/q2/p2_claude_30.json` | `docs/q2/v2_第二问_claude.md` | 任务 13、14 进行中 |
-| 第三问 | v2 双星分工（Claude，旧数据） | 30 颗，34.263 m/s（δa ≥ 15 km） | `solutions/q3/v2_p3_claude.json` | `docs/q3/v2_第三问_claude.md` | 待复核；v1（55.648）在任务 15 中复核 |
+| 第一问 | v4（Claude，新数据） | 5.212815 m/s | `solutions/q1/p1_claude_v4.json` | `docs/00_题目/v1_约束核对_claude.md` | 任务 17 |
+| 第二问 | v2 30 颗版（Claude，旧数据） | 30 颗，177.2571 m/s | `solutions/q2/p2_claude_30.json` | `docs/q2/v2_第二问_claude.md` | 新数据待重算（简化流程目前 28 颗） |
+| 第三问 | v3 双星分工（Claude，新数据） | 30 颗，35.850 m/s（δa ≥ 7.8 km） | `solutions/q3/v3_p3_claude.json` | `docs/q3/v3_第三问_claude.md` | 任务 17 |
 
-每一问的版本是怎么演进的，见 [CHANGELOG.md](CHANGELOG.md)。任务 16 已上传高精度新数据，表中各版本的数值都是基于旧数据算的，新数据合并后会全部重新求解。三问统一的数学模型见 `docs/模型/v1_模型抽象_claude.md`。
+每一问的版本是怎么演进的，见 [CHANGELOG.md](CHANGELOG.md)。高精度新数据已于任务 16 合并；第一问 v4、第三问 v3 用的是新数据，第二问还在用旧数据，待重算。三问统一的数学模型见 `docs/模型/v1_模型抽象_claude.md`。
 
 ## 目录
 

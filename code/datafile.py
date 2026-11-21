@@ -38,8 +38,8 @@ def write_states_json(path, xlsx=DEFAULT):
 
 
 if __name__ == "__main__":
-    # python code/datafile.py  ->  重新生成 code/p3/v2/states.json 和 code/p2/batch/states.json
+    # python code/datafile.py  ->  重新生成 code/p3/v3/states.json（v1、v2 保留旧数据的 states.json，便于复现）
     root = Path(__file__).resolve().parent
-    for p in (root / "p3" / "v2" / "states.json", root / "p2" / "batch" / "states.json"):
+    for p in (root / "p3" / "v3" / "states.json",):
         write_states_json(p)
         print("已写入", p.relative_to(root.parent))
