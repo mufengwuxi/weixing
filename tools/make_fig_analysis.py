@@ -74,10 +74,29 @@ def arc(cx, cy, r, a0, a1, n=30):
     return [(cx + r * np.cos(t), cy - r * np.sin(t)) for t in np.linspace(a0, a1, n)]
 
 
+def satellite(x, y, body_col, panel_col, scale=1.0, rot=0.0):
+    """卫星图标：中间本体 + 两侧太阳翼（带分格线），可整体旋转缩放。"""
+    g = [f'<g transform="translate({x:.1f} {y:.1f}) rotate({rot:.1f}) scale({scale})">']
+    for sx in (-1, 1):  # 两侧太阳翼
+        x0 = 10 if sx > 0 else -38
+        g.append(f'<rect x="{x0}" y="-6" width="28" height="12" fill="{panel_col}" stroke="#1A1A1A" stroke-width="0.8"/>')
+        for k in (1, 2, 3):
+            g.append(f'<line x1="{x0 + 7 * k}" y1="-6" x2="{x0 + 7 * k}" y2="6" stroke="#1A1A1A" stroke-width="0.5"/>')
+        g.append('<line x1="{0}" y1="-6" x2="{1}" y2="6" stroke="none"/>'.format(x0, x0))
+        g.append(f'<line x1="{x0}" y1="0" x2="{x0 + 28}" y2="0" stroke="#1A1A1A" stroke-width="0.5"/>')
+        xa, xb = (7, 10) if sx > 0 else (-10, -7)
+        g.append(f'<line x1="{xa}" y1="0" x2="{xb}" y2="0" stroke="#1A1A1A" stroke-width="1.2"/>')
+    g.append(f'<rect x="-7" y="-8" width="14" height="16" rx="1.5" ry="1.5" fill="{body_col}" stroke="#1A1A1A" stroke-width="0.9"/>')
+    g.append(f'<line x1="0" y1="-8" x2="0" y2="-13" stroke="#1A1A1A" stroke-width="0.9"/>')
+    g.append(f'<circle cx="0" cy="-14.5" r="2" fill="{body_col}" stroke="#1A1A1A" stroke-width="0.7"/>')
+    g.append("</g>")
+    return "\n".join(g)
+
+
 def fig1a():
-    W, H = 620, 460
-    tx, ty = 470, 215                     # 目标
-    ex, ey, er = 110, 375, 45             # 地球（示意）
+    W, H = 720, 540
+    tx, ty = 520, 295                     # 目标
+    ex, ey, er = 125, 440, 70             # 地球（示意）
     a_e = np.arctan2(-(ey - ty), ex - tx)  # 地心方向（数学角，y 轴向上）
     a_s = a_e - np.radians(75)             # 太阳方向，与地心方向夹角 β = 75°
     a_o = (a_s + a_e) / 2 + np.radians(4)  # 观测卫星方向
@@ -85,43 +104,75 @@ def fig1a():
     def P(r, t):
         return tx + r * np.cos(t), ty - r * np.sin(t)
 
-    body = []
-    # 地球
-    body.append(poly(arc(ex, ey, er, 0, 2 * np.pi, 80), fill="#EDEDED", stroke="#000000", w=1.0))
-    body.append(text(ex, ey + er + 20, "地球", 13))
-    body.append(f'<circle cx="{ex}" cy="{ey}" r="2.5" fill="#000000"/>')
-    # 目标指向地心：虚线
-    body.append(line(tx, ty, ex, ey, "#000000", 1.0, "6,4"))
-    # 目标指向太阳
-    sx, sy = P(205, a_s)
-    body.append(arrow(tx, ty, sx, sy, "#000000", 1.3))
-    body.append(text(sx - 8, sy + 4, "太阳方向", 13, "end"))
-    # 距离约束：两段同心圆弧
+    body = ["""<defs>
+<radialGradient id="gEarth" cx="0.35" cy="0.32" r="0.75">
+<stop offset="0" stop-color="#8EC9F2"/><stop offset="0.55" stop-color="#2E6FB7"/><stop offset="1" stop-color="#0D2E5C"/>
+</radialGradient>
+<radialGradient id="gLand" cx="0.35" cy="0.32" r="0.8">
+<stop offset="0" stop-color="#A8D08D"/><stop offset="1" stop-color="#3E6B2E"/>
+</radialGradient>
+<radialGradient id="gSun" cx="0.4" cy="0.38" r="0.7">
+<stop offset="0" stop-color="#FFF7C2"/><stop offset="0.5" stop-color="#FFC531"/><stop offset="1" stop-color="#F08A12"/>
+</radialGradient>
+</defs>"""]
+    # 地球：渐变球体 + 示意大陆 + 大气外圈
+    body.append(f'<circle cx="{ex}" cy="{ey}" r="{er + 4}" fill="#CFE6FA" stroke="none" fill-opacity="0.6"/>')
+    body.append(f'<circle cx="{ex}" cy="{ey}" r="{er}" fill="url(#gEarth)" stroke="#0D2E5C" stroke-width="0.8"/>')
+    lands = [
+        [(-40, -38), (-18, -50), (2, -42), (8, -25), (-6, -12), (-2, 4), (-18, 12), (-30, -2), (-44, -16)],
+        [(14, -10), (34, -20), (52, -6), (48, 14), (30, 30), (20, 18), (24, 4)],
+        [(-30, 28), (-10, 24), (-2, 40), (-14, 56), (-30, 50)],
+    ]
+    def chaikin(pts, n=3):
+        for _ in range(n):
+            q = []
+            for i in range(len(pts)):
+                a, b = np.array(pts[i]), np.array(pts[(i + 1) % len(pts)])
+                q += [tuple(0.75 * a + 0.25 * b), tuple(0.25 * a + 0.75 * b)]
+            pts = q
+        return pts
+
+    for ld in lands:
+        body.append(poly([(ex + u, ey + v) for u, v in chaikin(ld)], fill="url(#gLand)", stroke="#2F5223", w=0.6))
+    body.append(text(ex, ey + er + 24, "地球", 14))
+    # 目标指向地心：黑色虚线
+    ux, uy = (tx - ex) / np.hypot(tx - ex, ty - ey), (ty - ey) / np.hypot(tx - ex, ty - ey)
+    body.append(line(tx, ty, ex + (er + 6) * ux, ey + (er + 6) * uy, "#000000", 1.1, "6,4"))
+    # 太阳：渐变球体 + 光芒
+    sx, sy = P(265, a_s)
+    for k in range(12):
+        t = 2 * np.pi * k / 12
+        body.append(line(sx + 30 * np.cos(t), sy + 30 * np.sin(t), sx + 40 * np.cos(t), sy + 40 * np.sin(t), "#F2A115", 2.0))
+    body.append(f'<circle cx="{sx:.1f}" cy="{sy:.1f}" r="26" fill="url(#gSun)" stroke="#E07B00" stroke-width="0.8"/>')
+    body.append(text(sx - 48, sy + 5, "太阳", 14, "end"))
+    hx, hy = P(215, a_s)
+    body.append(arrow(tx, ty, hx, hy, "#000000", 1.3))
+    # 距离约束：两段同心圆弧（黑色虚线）
     for r, lab in ((55, "10 km"), (175, "50 km")):
-        body.append(poly(arc(tx, ty, r, a_o - np.radians(32), a_o + np.radians(32)), stroke=GRAY, w=1.0, closed=False, dash="4,3"))
+        body.append(poly(arc(tx, ty, r, a_o - np.radians(32), a_o + np.radians(32)), stroke="#000000", w=1.0, closed=False, dash="4,3"))
         lx, ly = P(r, a_o - np.radians(34))
-        body.append(text(lx, ly - 6, lab, 11, "middle", GRAY))
-    # 观测卫星与相对矢量 ρ
-    ox, oy = P(130, a_o)
-    body.append(arrow(tx, ty, ox, oy, BLUE, 1.6))
-    body.append(f'<rect x="{ox - 5:.1f}" y="{oy - 5:.1f}" width="10" height="10" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>')
-    body.append(text(ox - 4, oy + 24, "观测卫星 O", 13, "middle"))
-    mx, my = P(85, a_o - np.radians(8))
-    body.append(text(mx, my, "ρ", 15, "middle", BLUE, italic=True))
-    # 目标
-    body.append(f'<circle cx="{tx}" cy="{ty}" r="5" fill="#000000"/>')
-    body.append(text(tx + 10, ty - 8, "目标 B", 13, "start"))
-    # 夹角 α（太阳方向与 ρ）、θ（地心方向与 ρ）、β（太阳方向与地心方向）
-    body.append(poly(arc(tx, ty, 38, a_o, a_s), stroke="#000000", w=1.0, closed=False))
-    lx, ly = P(52, (a_o + a_s) / 2)
-    body.append(text(lx, ly + 5, "α", 14, italic=True))
-    body.append(poly(arc(tx, ty, 38, a_e, a_o), stroke="#000000", w=1.0, closed=False))
-    lx, ly = P(52, (a_o + a_e) / 2)
-    body.append(text(lx, ly + 5, "θ", 14, italic=True))
-    body.append(poly(arc(tx, ty, 215, a_e, a_s, 50), stroke=GRAY, w=0.8, closed=False, dash="2,3"))
-    lx, ly = P(228, (a_e + a_s) / 2)
-    body.append(text(lx, ly + 5, "β", 14, "middle", GRAY, italic=True))
-    body.append(text(W - 20, H - 16, "示意图，未按比例绘制", 11, "end", GRAY))
+        body.append(text(lx, ly - 8, lab, 12, "middle"))
+    # 相对矢量 ρ 与观测卫星（红色）
+    ox, oy = P(135, a_o)
+    body.append(arrow(tx, ty, ox + 18 * np.cos(a_o) * -1, oy + 18 * np.sin(a_o), "#000000", 1.5))
+    mx, my = P(85, a_o - np.radians(9))
+    body.append(text(mx, my, "ρ", 16, "middle", italic=True))
+    body.append(satellite(ox, oy, "#D62828", "#8C1C13", 0.9, -15))
+    body.append(text(ox, oy + 34, "观测卫星 O", 14))
+    # 目标卫星（蓝色）
+    body.append(satellite(tx, ty, "#1F5FAD", "#163E73", 0.9, -15))
+    body.append(text(tx + 36, ty + 28, "目标 B", 14, "start"))
+    # 夹角 α、θ、β
+    body.append(poly(arc(tx, ty, 44, a_o, a_s), stroke="#000000", w=1.0, closed=False))
+    lx, ly = P(58, (a_o + a_s) / 2)
+    body.append(text(lx, ly + 5, "α", 15, italic=True))
+    body.append(poly(arc(tx, ty, 44, a_e, a_o), stroke="#000000", w=1.0, closed=False))
+    lx, ly = P(58, (a_o + a_e) / 2)
+    body.append(text(lx, ly + 5, "θ", 15, italic=True))
+    body.append(poly(arc(tx, ty, 205, a_e, a_s, 50), stroke="#000000", w=0.9, closed=False, dash="2,3"))
+    lx, ly = P(220, (a_e + a_s) / 2)
+    body.append(text(lx, ly + 5, "β", 15, "middle", italic=True))
+    body.append(text(W - 20, H - 16, "示意图，未按比例绘制", 12, "end"))
     save("fig1a_geometry.svg", W, H, body)
 
 
