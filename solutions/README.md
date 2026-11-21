@@ -20,7 +20,8 @@
 | 第三问 | `q3/v2_p3_claude.json`（汇总），`q3/v2_p3_r1.json`、`q3/v2_p3_r2.json` | v2（旧数据） | Claude | 30 颗，34.263 m/s（δa ≥ 15 km） | 已被 v3 取代 |
 | 第三问 | `q3/v3_p3_claude.json`（汇总），`q3/v3_p3_r1.json`、`q3/v3_p3_r2.json` | v3（新数据） | Claude | 30 颗，35.850 m/s（δa ≥ 7.8 km） | 已被 v4 取代 |
 | 第三问 | `q3/v4_p3_claude.json`（汇总），`q3/v4_p3_r1.json`、`q3/v4_p3_r2.json` | v4（新数据，M3-B） | Claude | 30 颗，34.103 m/s（δa ≥ 7.81 km） | 已被 v5 取代 |
-| 第三问 | `q3/v5_p3_claude.json`（汇总），`q3/v5_p3_r1.json`、`q3/v5_p3_r2.json`；δa = 8 km 方案 `q3/v5_p3_*_da8.json` | v5（新数据，M3-C） | Claude | 30 颗，33.274 m/s（δa ≥ 19.01 km） | **当前采用** |
+| 第三问 | `q3/v5_p3_claude.json`（汇总），`q3/v5_p3_r1.json`、`q3/v5_p3_r2.json`；δa = 8 km 方案 `q3/v5_p3_*_da8.json` | v5（新数据，M3-C） | Claude | 30 颗，33.274 m/s（δa ≥ 19.01 km） | 灵敏度分析用（δa 饱和点） |
+| 第三问 | `q3/v6_p3_claude.json`（汇总），`q3/v6_p3_r1.json`、`q3/v6_p3_r2.json` | v6（新数据，M3-C） | Claude | 30 颗，33.460 m/s（δa = 5.90 km） | **当前采用（主方案）** |
 
 新方案用新文件名，在上表加一行，同时登记到根目录的 `CHANGELOG.md`。
 

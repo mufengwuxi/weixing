@@ -4,17 +4,17 @@
 
 **2026-11-20 仓库目录已重整**：方案按问题放进 `solutions/q1/`、`q2/`、`q3/`，结果写进 `results/q1/`、`q2/`、`q3/`，日志和截图放到 `report/tasks/`。开工前先 `git pull`，然后照抄下面的新命令。如果手上有按旧路径做了一半的任务，就按新路径重跑；已经提交了的 PR 也请改成新路径。
 
-## 任务 18：第三问 v5 的 ATK 复核（在任务 17 完成后做）
+## 任务 18：第三问主方案 v6 的 ATK 复核（在任务 17 完成后做）
 
-第三问按题面"R2 提前发射"重新求解，得到 v5：两颗星合计 33.274 m/s。r1 与 v4 相同，只需复核 r2。
+第三问按题面"R2 提前发射"重新求解，主方案为 v6（δa = 5.90 km）：两颗星合计 33.460 m/s。r1 与 v4 相同，只需复核 r2。
 
 1. `git pull`，在任务 17 的分支上继续，或新建分支 `verify-v5-xiehuiyu`。
 2. 运行：
    ```
-   python tools/verify_p2.py solutions/q3/v5_p3_r2.json --out results/q3/verify_v5_r2
-   python tools/build_single_r1.py solutions/q3/v5_p3_r2.json --name r2 --out results/q3/single_v5_r2
+   python tools/verify_p2.py solutions/q3/v6_p3_r2.json --out results/q3/verify_v6_r2
+   python tools/build_single_r1.py solutions/q3/v6_p3_r2.json --name r2 --out results/q3/single_v6_r2
    ```
-   预期：20/20，累计 Δv 15.126 m/s。
+   预期：20/20，累计 Δv 15.312 m/s。
 3. 提交两个 `summary.md` 和控制台输出 `report/tasks/task18_console.txt`，提 PR。
 
 ## 任务 17（最优先）：当前最优方案的 ATK 复核（新数据）

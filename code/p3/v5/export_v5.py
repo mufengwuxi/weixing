@@ -42,6 +42,7 @@ def one(L, state, name):
 
 L1 = json.load(open(f'{H}/final/r1_west.json'))
 DAK = sys.argv[1] if len(sys.argv) > 1 else '25'
+VER = os.environ.get('P3_VER', '5')
 L2 = json.load(open(f'{H}/final/r2_da{DAK}.json'))
 s2 = json.load(open(f'{H}/final/r2_da{DAK}_init.json'))['state']
 A, B = one(L1, R1.tolist(), 'r1'), one(L2, s2, 'r2')
@@ -49,15 +50,15 @@ el = elements(s2)
 assert el['e'] < 1e-3
 DA_MIN = abs(el['a_km'] - AGEO)
 assert not set(A['targets_km']) & set(B['targets_km'])
-SUF = '' if DAK == '25' else f'_da{DAK}'
-if not SUF: json.dump(A, open(f'solutions/q3/v5_p3_r1{SUF}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-json.dump(B, open(f'solutions/q3/v5_p3_r2{SUF}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+SUF = '' if DAK == os.environ.get('P3_MAIN_DA', '25') else f'_da{DAK}'
+if not SUF: json.dump(A, open(f'solutions/q3/v{VER}_p3_r1{SUF}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+json.dump(B, open(f'solutions/q3/v{VER}_p3_r2{SUF}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 tot = A['summary']['total_dv_m_s'] + B['summary']['total_dv_m_s']
-P = {"problem": "P3", "epoch_utc": "2027-01-01T00:00:00", "mu_km3_s2": MU, "delta_a_km_required_min": DA_MIN, "version": "v5", "model": "M3-C", "scan_case_delta_a_km": DAK, "data": "data/数据.xlsx 高精度版（2026-11-20，PR #22）", "margins": {"optimize": {"distance_km": 0.05, "angle_deg": 0.05, "note": "SCP 先用 0.1 再用 0.05 热启动"}, "certify": {"distance_km": 0.01, "angle_deg": 0.01}, "duration_s": 60.5},
+P = {"problem": "P3", "epoch_utc": "2027-01-01T00:00:00", "mu_km3_s2": MU, "delta_a_km_required_min": DA_MIN, "version": f"v{VER}", "model": "M3-C", "scan_case_delta_a_km": DAK, "data": "data/数据.xlsx 高精度版（2026-11-20，PR #22）", "margins": {"optimize": {"distance_km": 0.05, "angle_deg": 0.05, "note": "SCP 先用 0.1 再用 0.05 热启动"}, "certify": {"distance_km": 0.01, "angle_deg": 0.01}, "duration_s": 60.5},
      "r2_design": {"state_km": s2, **el, "a_minus_GEO_km": el['a_km'] - AGEO},
      "assignment": {"r1": list(A['targets_km']), "r2": list(B['targets_km'])},
      "summary": {"n_targets": len(A['targets_km']) + len(B['targets_km']),
                  "dv_r1_m_s": A['summary']['total_dv_m_s'], "dv_r2_m_s": B['summary']['total_dv_m_s'], "total_dv_m_s": tot},
-     "files": {"r1": "solutions/q3/v5_p3_r1.json", "r2": "solutions/q3/v5_p3_r2.json"}}
-json.dump(P, open(f'solutions/q3/v5_p3_claude{SUF}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+     "files": {"r1": f"solutions/q3/v{VER}_p3_r1.json", "r2": f"solutions/q3/v{VER}_p3_r2.json"}}
+json.dump(P, open(f'solutions/q3/v{VER}_p3_claude{SUF}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print(P['summary'], {k: round(v, 5) for k, v in el.items()})

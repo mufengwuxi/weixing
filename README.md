@@ -8,7 +8,7 @@
 |---|---|---|---|---|---|
 | 第一问 | v4（Claude，新数据） | 5.212815 m/s | `solutions/q1/p1_claude_v4.json` | `docs/00_题目/v1_约束核对_claude.md` | 任务 17 |
 | 第二问 | v3-C（Claude，新数据，新模型 M2-B） | 30 颗，176.312 m/s | `solutions/q2/v3c_p2_lns_scp.json` | `docs/q2/v3_新模型设计_claude.md` | 待复核 |
-| 第三问 | v5（Claude，新数据，M3-C） | 30 颗，33.274 m/s（δa ≥ 19.01 km） | `solutions/q3/v5_p3_claude.json` | `docs/q3/v5_第三问_claude.md`、`MODELS.md` | 任务 18（v4 在任务 17） |
+| 第三问 | v6 主方案（Claude，新数据，M3-C） | 30 颗，33.460 m/s（δa = 5.90 km，取目标同步带宽度） | `solutions/q3/v6_p3_claude.json` | `docs/q3/v6_第三问主方案_claude.md`、`MODELS.md` | 任务 18 |
 
 每一问的版本是怎么演进的，见 [CHANGELOG.md](CHANGELOG.md)。高精度新数据已于任务 16 合并；第一问 v4、第三问 v3 用的是新数据，第二问还在用旧数据，待重算。三问统一的数学模型见 `docs/模型/v1_模型抽象_claude.md`，**全部模型的分类索引见 [MODELS.md](MODELS.md)**。
 
