@@ -37,10 +37,16 @@ def main():
 
     sol = json.loads(Path(a.solution).read_text(encoding="utf-8"))
     mu = sol["mu_km3_s2"]
-    r0 = np.array(sol["r1_km"])
-    targets = {k: np.array(v) for k, v in sol["targets_km"].items()}
-    burns = sorted([(b["t_s"], np.array(b["dv_km_s"])) for b in sol["burns"]], key=lambda b: b[0])
-    t_end = 2592000.0
+    if sol.get("problem") == "P2":  # 第二问 / 第三问格式
+        r0 = np.array(sol["r1_km"])
+        targets = {k: np.array(v) for k, v in sol["targets_km"].items()}
+        burns = sorted([(b["t_s"], np.array(b["dv_km_s"])) for b in sol["burns"]], key=lambda b: b[0])
+        t_end = 2592000.0
+    else:  # 第一问格式（r1_used_km / b1_km / maneuvers）
+        r0 = np.array(sol["r1_used_km"])
+        targets = {"b1": np.array(sol["b1_km"])}
+        burns = sorted([(b["t_s"], np.array(b["dv_km_s"])) for b in sol["maneuvers"]], key=lambda b: b[0])
+        t_end = 172800.0
     ep = datetime.fromisoformat(sol["epoch_utc"])
     fmt = lambda x: (lambda dt: f"{dt.day} {dt.strftime('%b %Y')} {dt.strftime('%H:%M:%S')}.{dt.microsecond:06d}")(ep + timedelta(seconds=float(x)))  # noqa: E731
 
