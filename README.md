@@ -7,7 +7,7 @@
 | 问题 | 当前采用版本 | 结果 | 方案文件 | 说明文档 | ATK 复核 |
 |---|---|---|---|---|---|
 | 第一问 | v4（Claude，新数据） | 5.212815 m/s | `solutions/q1/p1_claude_v4.json` | `docs/00_题目/v1_约束核对_claude.md` | 任务 17 |
-| 第二问 | v3-B（Claude，新数据，新模型 M2-B） | 30 颗，180.761 m/s | `solutions/q2/v3b_p2_scp.json` | `docs/q2/v3_新模型设计_claude.md` | 待复核 |
+| 第二问 | v3-C（Claude，新数据，新模型 M2-B） | 30 颗，176.312 m/s | `solutions/q2/v3c_p2_lns_scp.json` | `docs/q2/v3_新模型设计_claude.md` | 待复核 |
 | 第三问 | v4（Claude，新数据，M3-B） | 30 颗，34.103 m/s（δa ≥ 7.81 km） | `solutions/q3/v4_p3_claude.json` | `docs/q3/v3_第三问_claude.md`、`MODELS.md` | 待复核（v3 在任务 17） |
 
 每一问的版本是怎么演进的，见 [CHANGELOG.md](CHANGELOG.md)。高精度新数据已于任务 16 合并；第一问 v4、第三问 v3 用的是新数据，第二问还在用旧数据，待重算。三问统一的数学模型见 `docs/模型/v1_模型抽象_claude.md`，**全部模型的分类索引见 [MODELS.md](MODELS.md)**。

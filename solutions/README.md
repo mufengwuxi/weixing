@@ -14,7 +14,8 @@
 | 第二问 | `q2/p2_claude_29.json` | v2-29 | Claude | 29 颗，172.09 m/s | 已被取代 |
 | 第二问 | `q2/p2_claude_30.json` | v2-30（旧数据） | Claude | 30 颗，177.2571 m/s | 旧数据 |
 | 第二问 | `q2/v3a_p2_m2a.json` | v3-A（新数据，M2-A） | Claude | 30 颗，210.387 m/s | M2-B 的初值 |
-| 第二问 | `q2/v3b_p2_scp.json` | v3-B（新数据，M2-B） | Claude | 30 颗，180.761 m/s | **当前采用** |
+| 第二问 | `q2/v3b_p2_scp.json` | v3-B（新数据，M2-B 仅 SCP） | Claude | 30 颗，180.761 m/s | 已被 v3-C 取代 |
+| 第二问 | `q2/v3c_p2_lns_scp.json` | v3-C（新数据，M2-B 完整流程） | Claude | 30 颗，176.312 m/s | **当前采用** |
 | 第三问 | `q3/p3_claude.json`（汇总），`q3/p3_r1.json`、`q3/p3_r2.json`（每颗星各一份） | v1 | Claude | 30 颗，55.648 m/s | 已被 v2 取代 |
 | 第三问 | `q3/v2_p3_claude.json`（汇总），`q3/v2_p3_r1.json`、`q3/v2_p3_r2.json` | v2（旧数据） | Claude | 30 颗，34.263 m/s（δa ≥ 15 km） | 已被 v3 取代 |
 | 第三问 | `q3/v3_p3_claude.json`（汇总），`q3/v3_p3_r1.json`、`q3/v3_p3_r2.json` | v3（新数据） | Claude | 30 颗，35.850 m/s（δa ≥ 7.8 km） | 已被 v4 取代 |

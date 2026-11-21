@@ -38,6 +38,7 @@
 | **v2-30** | Claude | **30 颗，177.2571 m/s** | b19 与 b20 在同一次飞越中先后观测，b19 不需要单独机动，实现全覆盖 | `solutions/q2/p2_claude_30.json`、`docs/q2/v2_第二问_claude.md` | 652ba57 |
 | v3-A（新数据，M2-A） | Claude | 30 颗，210.387 m/s | 旧模型在新数据上：排日程只得到 29 颗，补插 b25 后到 213.71，再重排到 210.39 | `solutions/q2/v3a_p2_m2a.json` | 本次 |
 | **v3-B（新数据，M2-B）** | Claude | **30 颗，180.761 m/s** | 新模型：全计划 SCP，访问顺序不变，比 v3-A 低 14.1%；并行大邻域搜索还在运行 | `solutions/q2/v3b_p2_scp.json`、`code/p2/v3/`、`docs/q2/v3_新模型设计_claude.md` | 本次 |
+| **v3-C（新数据，M2-B 完整流程）** | Claude | **30 颗，176.312 m/s** | 并行大邻域搜索调整访问顺序（交换、局部重排），再做全计划 SCP | `solutions/q2/v3c_p2_lns_scp.json` | 本次 |
 | 论文稿 | Claude | — | 两层模型的论文表述、搜索实验、局部最优性证据和配图 | `paper/sections/04_第二问.md`、`paper/figures/p2_*.svg` | ce5d221、ca2fc51 |
 
 `results/q2/single_r1_p2/summary.md` 是任务 14 修复之前的旧输出（0/30），要等任务 14 第四轮重跑后替换。

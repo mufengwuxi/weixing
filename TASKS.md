@@ -28,11 +28,11 @@
    预期：第 3 节分别为 10/10、20/20。用 ATK 界面打开 `results/q3/single_v3_r2/raw/single_r1.atk`，展开 r2 的机动规划段列表，截图存为 `report/tasks/task17_r2_gui.png`。
 5. 追加（新模型结果，命令格式同上）：
    ```
-   python tools/verify_p2.py solutions/q2/v3b_p2_scp.json --out results/q2/verify_v3b
+   python tools/verify_p2.py solutions/q2/v3c_p2_lns_scp.json --out results/q2/verify_v3c
    python tools/verify_p2.py solutions/q3/v4_p3_r1.json --out results/q3/verify_v4_r1
    python tools/verify_p2.py solutions/q3/v4_p3_r2.json --out results/q3/verify_v4_r2
    ```
-   预期：30/30 → 180.761 m/s；10/10 → 18.148 m/s；20/20 → 15.956 m/s。
+   预期：30/30 → 176.312 m/s；10/10 → 18.148 m/s；20/20 → 15.956 m/s。
 6. 提交 `results/` 下各 `summary.md`、截图和控制台输出 `report/tasks/task17_console.txt`，提 PR。
 
 ## 任务 16（最优先）：上传组委会更新后的高精度数据
