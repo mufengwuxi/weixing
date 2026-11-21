@@ -158,7 +158,8 @@ def fig1a():
     mx, my = P(115, a_o + np.radians(8))
     body.append(text(mx, my, "ρ", 16, "middle", italic=True))
     body.append(satellite(ox, oy, "#D62828", "#8C1C13", 0.9, -15))
-    body.append(text(ox - 6, oy - 30, "观测卫星 R", 14))
+    lx, ly = P(140, a_o - np.radians(15))
+    body.append(text(lx, ly - 4, "观测卫星 R", 14))
     # 目标卫星（蓝色）
     body.append(satellite(tx, ty, "#1F5FAD", "#163E73", 0.9, -15))
     body.append(text(tx + 36, ty + 28, "目标卫星 B", 14, "start"))
