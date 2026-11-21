@@ -180,42 +180,66 @@ def fig1a():
 def fig1b():
     _, TG = read_states(str(REPO / "data" / "数据.xlsx"))
     b1 = np.array(TG["b1"])
-    t = np.arange(0, 48 * 3600 + 1, 300.0)
+    t = np.arange(0, 48 * 3600 + 1, 60.0)
     rb = kepler(b1[:3], b1[3:], t)[0]
     s = SUN(t) - rb
     c = np.sum(s * (-rb), 1) / np.linalg.norm(s, axis=1) / np.linalg.norm(rb, axis=1)
     beta = np.degrees(np.arccos(np.clip(c, -1, 1)))
-    W, H, L, R, T, B = 640, 340, 70, 25, 25, 60
-    X = lambda h: L + h / 48 * (W - L - R)  # noqa: E731
+    h = t / 3600
+    # β = 90° 的穿越时刻（线性插值）
+    edges = []
+    for i in np.where(np.diff(np.sign(beta - 90)) != 0)[0]:
+        edges.append(h[i] + (90 - beta[i]) / (beta[i + 1] - beta[i]) * (h[i + 1] - h[i]))
+    W, H, L, R, T, B = 700, 380, 72, 24, 46, 78
+    X = lambda v: L + v / 48 * (W - L - R)  # noqa: E731
     Y = lambda d: T + (180 - d) / 180 * (H - T - B)  # noqa: E731
     body = []
-    # β ≤ 90° 的时段加阴影
-    ok = beta <= 90
-    i = 0
-    while i < len(t):
-        if ok[i]:
-            j = i
-            while j + 1 < len(t) and ok[j + 1]:
-                j += 1
-            body.append(f'<rect x="{X(t[i] / 3600):.1f}" y="{T}" width="{X(t[j] / 3600) - X(t[i] / 3600):.1f}" '
-                        f'height="{H - T - B}" fill="#E6E6E6" stroke="none"/>')
-            i = j + 1
-        else:
-            i += 1
-    # 坐标轴与网格
-    for d in range(0, 181, 45):
-        body.append(line(L, Y(d), W - R, Y(d), "#E0E0E0", 0.8))
+    # 可观测时段：浅蓝底色
+    win = [(edges[k], edges[k + 1]) for k in range(0, len(edges) - 1, 2)]
+    for a0, a1 in win:
+        body.append(f'<rect x="{X(a0):.1f}" y="{T}" width="{X(a1) - X(a0):.1f}" height="{H - T - B}" fill="#DCEAF7" stroke="none"/>')
+    # 网格
+    for d in range(0, 181, 30):
+        body.append(line(L, Y(d), W - R, Y(d), "#E3E3E3", 0.7))
+    for v in range(0, 49, 6):
+        body.append(line(X(v), T, X(v), H - B, "#EEEEEE", 0.7))
+    # β ≤ 90° 部分的曲线下方填充
+    for a0, a1 in win:
+        m = (h >= a0) & (h <= a1)
+        pts = [(X(a0), Y(90))] + [(X(u), Y(v)) for u, v in zip(h[m], beta[m])] + [(X(a1), Y(90))]
+        body.append(poly(pts, fill="#2B5C8A", stroke="none", opacity=0.18))
+    # 90° 阈值线
+    body.append(line(L, Y(90), W - R, Y(90), "#C0392B", 1.3, "7,4"))
+    body.append(text(X(28), Y(90) + 18, "β = 90°", 13, "middle", "#C0392B"))
+    # 曲线
+    body.append(poly([(X(u), Y(v)) for u, v in zip(h, beta)], stroke="#1F4E79", w=2.2, closed=False))
+    # 窗口边界：竖虚线、圆点、横坐标数值
+    for e in edges:
+        body.append(line(X(e), Y(90), X(e), H - B, "#1F4E79", 0.9, "3,3"))
+        body.append(f'<circle cx="{X(e):.1f}" cy="{Y(90):.1f}" r="3.6" fill="#FFFFFF" stroke="#1F4E79" stroke-width="1.5"/>')
+        body.append(text(X(e), H - B + 38, f"{e:.2f}", 11.5, "middle", "#1F4E79"))
+        body.append(line(X(e), H - B, X(e), H - B + 26, "#1F4E79", 0.7, "2,2"))
+    for a0, a1 in win:
+        body.append(text((X(a0) + X(a1)) / 2, T + 20, "可能观测时段", 13, "middle", "#1F4E79"))
+        body.append(text((X(a0) + X(a1)) / 2, T + 37, f"{a1 - a0:.1f} h", 12, "middle", "#1F4E79"))
+    # 坐标框与刻度（刻度朝内）
+    body.append(f'<rect x="{L}" y="{T}" width="{W - L - R}" height="{H - T - B}" fill="none" stroke="#000000" stroke-width="1.1"/>')
+    for d in range(0, 181, 30):
+        body.append(line(L, Y(d), L + 6, Y(d)))
+        body.append(line(W - R, Y(d), W - R - 6, Y(d)))
         body.append(text(L - 8, Y(d) + 4, str(d), 12, "end"))
-    for h in range(0, 49, 6):
-        body.append(line(X(h), H - B, X(h), H - B + 5))
-        body.append(text(X(h), H - B + 20, str(h), 12))
-    body.append(line(L, H - B, W - R, H - B))
-    body.append(line(L, T, L, H - B))
-    body.append(line(L, Y(90), W - R, Y(90), ORANGE, 1.2, "6,4"))
-    body.append(text(L + 6, Y(90) - 6, "β = 90°", 12, "start", ORANGE))
-    body.append(poly([(X(a / 3600), Y(b)) for a, b in zip(t, beta)], stroke="#000000", w=1.5, closed=False))
-    body.append(text((L + W - R) / 2, H - 14, "时间 / h", 13))
-    body.append(text(20, (T + H - B) / 2, "β / (°)", 13, rot=-90))
+    for v in range(0, 49, 6):
+        body.append(line(X(v), H - B, X(v), H - B - 6))
+        body.append(line(X(v), T, X(v), T + 6))
+        body.append(text(X(v), H - B + 18, str(v), 12))
+    body.append(text((L + W - R) / 2, H - 12, "时间 t / h", 13))
+    body.append(text(24, (T + H - B) / 2, "β / (°)", 13, rot=-90))
+    # 图例
+    lx, ly = L + 4, 22
+    body.append(line(lx, ly, lx + 28, ly, "#1F4E79", 2.2))
+    body.append(text(lx + 34, ly + 4, "B1 处太阳方向与地心方向的夹角 β", 12, "start"))
+    body.append(f'<rect x="{lx + 300}" y="{ly - 7}" width="26" height="14" fill="#DCEAF7" stroke="#9DB9D5" stroke-width="0.8"/>')
+    body.append(text(lx + 332, ly + 4, "β ≤ 90°（满足必要条件）", 12, "start"))
     save("fig1b_beta_b1.svg", W, H, body)
 
 
