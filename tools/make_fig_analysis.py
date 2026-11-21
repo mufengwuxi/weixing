@@ -600,9 +600,101 @@ def fig4():
     save("fig4_unit.svg", W, H, body)
 
 
+# ---------------- 图 5：问题一观测过程 ----------------
+def q1_series(t):
+    R1, TG = read_states(str(REPO / "data" / "数据.xlsx"))
+    x, b = np.array(R1), np.array(TG["b1"])
+    sol = json.load(open(REPO / "solutions" / "q1" / "p1_claude_v4.json", encoding="utf-8"))
+    out = []
+    for tt in t:
+        r, v, tc = x[:3], x[3:], 0.0
+        for m in sol["maneuvers"]:
+            if m["t_s"] <= tt:
+                R_, V_ = kepler(r, v, m["t_s"] - tc)
+                r, v, tc = R_[0], V_[0] + np.array(m["dv_km_s"]), m["t_s"]
+        out.append(kepler(r, v, tt - tc)[0][0])
+    ro = np.array(out)
+    rb = kepler(b[:3], b[3:], t)[0]
+    rho = ro - rb
+    d = np.linalg.norm(rho, axis=1)
+    us = SUN(t) - rb
+    us /= np.linalg.norm(us, axis=1)[:, None]
+    ue = -rb / np.linalg.norm(rb, axis=1)[:, None]
+    al = np.degrees(np.arccos(np.clip(np.sum(us * rho, 1) / d, -1, 1)))
+    th = np.degrees(np.arccos(np.clip(np.sum(ue * rho, 1) / d, -1, 1)))
+    return d, al, th, sol["obs_start_s"]
+
+
+def frame(body, L, T, W_, H_, xt, yt, X, Y, xlab, ylab, yfmt=str):
+    body.append(f'<rect x="{L}" y="{T}" width="{W_}" height="{H_}" fill="none" stroke="#000000" stroke-width="1.1"/>')
+    for v in yt:
+        body.append(line(L, Y(v), L + W_, Y(v), "#E6E6E6", 0.7))
+        body.append(line(L, Y(v), L + 6, Y(v)))
+        body.append(text(L - 7, Y(v) + 4, yfmt(v), 12, "end"))
+    for v in xt:
+        body.append(line(X(v), T + H_, X(v), T + H_ - 6))
+        body.append(text(X(v), T + H_ + 18, str(v).replace("-", "−"), 12))
+    body.append(text(L + W_ / 2, T + H_ + 40, xlab, 13))
+    body.append(text(L - 44, T + H_ / 2, ylab, 13, rot=-90))
+
+
+def fig5():
+    # (a) 观测前后 ±15 min 的相对距离（对数坐标）
+    _, _, _, s0 = q1_series(np.array([0.0]))
+    ta = np.arange(-900, 901, 5.0)
+    d, al, th, s0 = q1_series(s0 + ta)
+    W, H = 640, 360
+    L, T, W_, H_ = 80, 40, 520, 250
+    lo, hi = np.log10(5), np.log10(300)
+    X = lambda v: L + (v + 15) / 30 * W_  # noqa: E731  横轴单位 min
+    Y = lambda v: T + (hi - np.log10(v)) / (hi - lo) * H_  # noqa: E731
+    body = []
+    body.append(f'<rect x="{L}" y="{Y(50):.1f}" width="{W_}" height="{Y(10) - Y(50):.1f}" fill="#DCEAF7"/>')
+    body.append(text(L + 8, Y(50) + 16, "10 ~ 50 km", 12, "start", "#1F4E79"))
+    body.append(f'<rect x="{X(0):.1f}" y="{T}" width="{X(1) - X(0):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.35"/>')
+    frame(body, L, T, W_, H_, range(-15, 16, 5), [5, 10, 20, 50, 100, 200], X, Y, "相对观测开始时刻 / min", "距离 d / km")
+    m = (d >= 5) & (d <= 300)
+    body.append(poly([(X(u / 60), Y(v)) for u, v, k in zip(ta, d, m) if k], stroke="#1F4E79", w=2.2, closed=False))
+    body.append(text(X(0.5), T - 8, "观测 60 s", 12, "middle", "#B5770A"))
+    body.append(arrow(X(0.5), T - 4, X(0.5), T + 10, "#B5770A", 1.0, 6))
+    save("fig5a_q1_range.svg", W, H, body)
+
+    # (b) 观测前后 ±3 min 的光照角、侦测角与距离
+    tb = np.arange(-180, 241, 1.0)
+    d, al, th, _ = q1_series(s0 + tb)
+    L, T, W_, H_ = 80, 40, 500, 250
+    X = lambda v: L + (v + 180) / 420 * W_  # noqa: E731
+    Y = lambda v: T + (120 - v) / 120 * H_  # noqa: E731  左轴 0°–120°
+    Y2 = lambda v: T + (60 - v) / 60 * H_  # noqa: E731  右轴 0–60 km
+    body = []
+    body.append(f'<rect x="{X(0):.1f}" y="{T}" width="{X(60) - X(0):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.30"/>')
+    frame(body, L, T, W_, H_, range(-180, 241, 60), range(0, 121, 30), X, Y, "相对观测开始时刻 / s", "角度 / (°)")
+    for v in range(0, 61, 15):
+        body.append(line(L + W_, Y2(v), L + W_ - 6, Y2(v)))
+        body.append(text(L + W_ + 7, Y2(v) + 4, str(v), 12, "start"))
+    body.append(text(L + W_ + 44, T + H_ / 2, "距离 d / km", 13, rot=90))
+    body.append(line(L, Y(45), L + W_, Y(45), "#C0392B", 1.2, "7,4"))
+    body.append(text(L + 6, Y(45) - 6, "45°", 12, "start", "#C0392B"))
+    clip = lambda arr, lo_, hi_: [(X(u), Y(min(max(v, lo_), hi_))) for u, v in zip(tb, arr)]  # noqa: E731
+    body.append(poly(clip(al, 0, 120), stroke="#D9822B", w=2.0, closed=False))
+    body.append(poly(clip(th, 0, 120), stroke="#2E7D32", w=2.0, closed=False, dash="8,3"))
+    body.append(poly([(X(u), Y2(min(v, 60))) for u, v in zip(tb, d)], stroke="#1F4E79", w=2.0, closed=False))
+    body.append(line(L, Y2(10), L + W_, Y2(10), "#1F4E79", 0.9, "3,3"))
+    body.append(text(L + W_ - 6, Y2(10) - 5, "10 km", 11, "end", "#1F4E79"))
+    lx, ly = L + 20, T + H_ + 62
+    for k, (lab, col, dash) in enumerate((("光照角 α", "#D9822B", None), ("侦测角 θ", "#2E7D32", "8,3"), ("距离 d", "#1F4E79", None))):
+        xx = lx + k * 150
+        body.append(line(xx, ly, xx + 30, ly, col, 2.0, dash))
+        body.append(text(xx + 36, ly + 4, lab, 12, "start"))
+    body.append(f'<rect x="{lx + 450}" y="{ly - 7}" width="24" height="14" fill="#F2A515" fill-opacity="0.30"/>')
+    body.append(text(lx + 480, ly + 4, "观测时段", 12, "start"))
+    save("fig5b_q1_angles.svg", 660, 380, body)
+
+
 if __name__ == "__main__":
     fig1a()
     fig1b()
     fig2()
     fig3()
     fig4()
+    fig5()
