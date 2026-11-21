@@ -33,7 +33,12 @@ def main():
     ap.add_argument("satname", help="机动卫星名（r1 / r2 等）")
     ap.add_argument("out", help="输出 .atk 路径")
     ap.add_argument("--step", type=float, default=60.0, help="MCS 星历步长（秒），默认 60")
+    ap.add_argument("--upper", action="store_true",
+                    help="卫星名和目标名全部转大写（r1→R1，b12→B12），论文截图用")
+    ap.add_argument("--scenario-name", default="SingleR1", help="场景名，默认 SingleR1")
     a = ap.parse_args()
+
+    satname = a.satname.upper() if a.upper else a.satname
 
     sol = json.loads(Path(a.solution).read_text(encoding="utf-8"))
     mu = sol["mu_km3_s2"]
@@ -65,12 +70,13 @@ def main():
     atk = ATK(out_dir=out.parent / "raw_view")
     m = atk.m
     km = lambda x: [y * 1000 for y in x]  # noqa: E731
-    atk.new("SingleR1", fmt(0), fmt(t_end))
+    atk.new(a.scenario_name, fmt(0), fmt(t_end))
     for name in sorted(targets):
         tg = targets[name]
-        atk.add_satellite_cartesian(name, fmt(0), km(tg[:3]), km(tg[3:]), step_s=a.step * 10)
+        tname = name.upper() if a.upper else name
+        atk.add_satellite_cartesian(tname, fmt(0), km(tg[:3]), km(tg[3:]), step_s=a.step * 10)
 
-    sat = atk.scenario().GetChildren().New(m.eSatellite, a.satname)
+    sat = atk.scenario().GetChildren().New(m.eSatellite, satname)
     sat.SetPropagatorType(m.ePropagatorAstromaster)
     mcs = sat.GetPropagator()
     try:
@@ -120,7 +126,7 @@ def main():
         mv = segs.Insert(m.eVASegmentTypeManeuver, f"Burn{k:02d}", "-")
         mv.SetManeuverType(m.eVAManeuverTypeImpulsive)
         ac = mv.GetManeuver().GetAttitudeControl()
-        ac.SetThrustAxesName(f"Satellite/{a.satname} VNC(Earth)")
+        ac.SetThrustAxesName(f"Satellite/{satname} VNC(Earth)")
         V = v / np.linalg.norm(v)
         N = np.cross(r, v); N /= np.linalg.norm(N)
         C = np.cross(V, N)
