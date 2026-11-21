@@ -214,11 +214,6 @@ def fig1b():
     body.append(line(L, Y(90), W - R, Y(90), ORANGE, 1.2, "6,4"))
     body.append(text(L + 6, Y(90) - 6, "β = 90°", 12, "start", ORANGE))
     body.append(poly([(X(a / 3600), Y(b)) for a, b in zip(t, beta)], stroke="#000000", w=1.5, closed=False))
-    # 两次观测机会：本文方案的观测时刻 38.43 h，另一次在 14.45 h 附近（求解器的两族起点）
-    sol = json.load(open(REPO / "solutions" / "q1" / "p1_claude_v4.json", encoding="utf-8"))
-    for h, lab in ((14.45, "机会 1"), (sol["obs_start_s"] / 3600, "机会 2（本文方案）")):
-        body.append(line(X(h), T, X(h), H - B, "#000000", 1.0, "2,3"))
-        body.append(text(X(h) + 4, T + 16, lab, 12, "start"))
     body.append(text((L + W - R) / 2, H - 14, "时间 / h", 13))
     body.append(text(20, (T + H - B) / 2, "β / (°)", 13, rot=-90))
     save("fig1b_beta_b1.svg", W, H, body)
