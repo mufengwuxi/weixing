@@ -5,11 +5,11 @@
 ATK 目录读环境变量 ATK_HOME，也可以用 --atk-root 指定。
 
 做的事情（不修改 ATK 安装目录里的任何文件）：
-1. 把 Help/Examples/08-二次开发案例 里的示例脚本复制到 report/vendor_samples/examples/
+1. 把 Help/Examples/08-二次开发案例 里的示例脚本复制到 report/env/vendor_samples/examples/
 2. 检查 _ATKComponentPythonModule.pyd 依赖哪个版本的 Python
 3. 分别用 ATK 自带的 Python 和当前 Python，加上 DLL 搜索路径后尝试导入 Component 模块
 4. 用第一个导入成功的解释器运行官方示例 ATKComponentPythonTest.py
-结果写到 report/component_report.md
+结果写到 report/env/component_report.md
 """
 
 import argparse
@@ -22,8 +22,8 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-REPORT = REPO / "report" / "component_report.md"
-EXAMPLES_OUT = REPO / "report" / "vendor_samples" / "examples"
+REPORT = REPO / "report" / "env" / "component_report.md"
+EXAMPLES_OUT = REPO / "report" / "env" / "vendor_samples" / "examples"
 TEXT_EXT = {".py", ".m", ".txt", ".md", ".ini", ".json", ".atks", ".bat"}
 
 # 子进程里执行的代码：设置 DLL 搜索路径后导入模块，可选再运行一个示例脚本

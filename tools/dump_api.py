@@ -5,10 +5,10 @@
 ATK 目录读环境变量 ATK_HOME。
 
 输出（不修改 ATK 安装目录）：
-    report/vendor_samples/component/Python/ATKComponentPythonModule.py   SWIG 接口定义（全部类和方法）
-    report/vendor_samples/examples/*.java                                Java 示例（含 AccessTest.java）
+    report/env/vendor_samples/component/Python/ATKComponentPythonModule.py   SWIG 接口定义（全部类和方法）
+    report/env/vendor_samples/examples/*.java                                Java 示例（含 AccessTest.java）
     scenes/<场景文件名>                                                    比赛场景副本
-    report/api_report.md                                                 根对象方法 + 场景载入结果 + 对象树
+    report/env/api_report.md                                                 根对象方法 + 场景载入结果 + 对象树
     report/atk_output/                                                   ATK 运行时输出目录（不提交）
 """
 
@@ -21,8 +21,8 @@ import traceback
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-REPORT = REPO / "report" / "api_report.md"
-OUTDIR = REPO / "report" / "atk_output"
+REPORT = REPO / "report" / "env" / "api_report.md"
+OUTDIR = REPO / "report" / "env" / "atk_output"
 out = []
 
 
@@ -84,13 +84,13 @@ def main():
 
     # 1. 复制接口定义和 Java 示例
     log("## 1. 复制的文件")
-    dst = REPO / "report" / "vendor_samples" / "component" / "Python"
+    dst = REPO / "report" / "env" / "vendor_samples" / "component" / "Python"
     dst.mkdir(parents=True, exist_ok=True)
     src = comp / "ATKComponentPythonModule.py"
     if src.exists():
         shutil.copy2(src, dst / src.name)
         log(f"- {src.name}（{src.stat().st_size} 字节）")
-    ex_dst = REPO / "report" / "vendor_samples" / "examples"
+    ex_dst = REPO / "report" / "env" / "vendor_samples" / "examples"
     ex_dst.mkdir(parents=True, exist_ok=True)
     for d in (root_dir / "Help").rglob("*"):
         if d.is_dir() and "二次开发" in d.name:

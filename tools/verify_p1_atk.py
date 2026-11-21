@@ -2,7 +2,7 @@
 
 用法（仓库根目录，Windows，已设置 ATK_HOME，已关闭 ATK 界面）：
     python -m pip install pyerfa
-    python tools/verify_p1_atk.py solutions/p1_doc.json
+    python tools/verify_p1_atk.py solutions/q1/p1_doc.json
 
 两种轨道传播 × 三种太阳位置，交叉检查 60 s 观测段：
     轨道：本脚本自带的开普勒解析传播（纯 Python）；ATK 二体传播
@@ -10,7 +10,7 @@
 另外把 Δv 截成 4 位小数（m/s）再用 ATK 算一遍，并在观测段前后扫描，给出不增加 Δv、
 只调整观测开始时刻就能得到的最大角度裕量。
 
-输出：results/p1_atk_verify/summary.md、samples.csv、scan.csv
+输出：results/q1/p1_atk_verify/summary.md、samples.csv、scan.csv
 """
 
 import argparse
@@ -24,7 +24,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "code"))
-OUT = REPO / "results" / "p1_atk_verify"  # 可用 --out 改
+OUT = REPO / "results" / "q1" / "p1_atk_verify"  # 可用 --out 改
 R_E = 6378.137
 AU_KM = 149597870.7
 C_KM_S = 299792.458
@@ -158,7 +158,7 @@ def main():
     ap.add_argument("solution")
     ap.add_argument("--step", type=float, default=1.0, help="ATK 二体星历步长（秒）")
     ap.add_argument("--grid", type=float, default=0.05, help="观测段检查网格（秒）")
-    ap.add_argument("--out", help="输出目录，默认 results/p1_atk_verify")
+    ap.add_argument("--out", help="输出目录，默认 results/q1/p1_atk_verify")
     a = ap.parse_args()
     global OUT
     if a.out:

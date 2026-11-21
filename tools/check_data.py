@@ -1,7 +1,7 @@
 """检查 数据.xlsx：列出所有卫星的轨道根数，并把 r1 和第一问方案里用过的 r1 对比。
 
 用法：python tools/check_data.py data/数据.xlsx
-输出：report/data_check.md
+输出：report/tasks/data_check.md
 """
 
 import json
@@ -45,7 +45,7 @@ def main():
     out.append("⚠ 表示偏心率大于 0.01 或近地点在地球内部。")
     out.append("")
 
-    old = REPO / "solutions" / "p1_doc.json"
+    old = REPO / "solutions" / "q1" / "p1_doc.json"
     if "r1" in states and old.exists():
         o = json.loads(old.read_text(encoding="utf-8"))
         r1 = states["r1"]
@@ -61,7 +61,7 @@ def main():
         o = json.loads(old.read_text(encoding="utf-8"))
         out.append(f"- b1 与旧数据位置差 {norm(sub(states['b1'][:3], o['b1_km'][:3])):.6f} km")
 
-    p = REPO / "report" / "data_check.md"
+    p = REPO / "report" / "tasks" / "data_check.md"
     p.write_text("\n".join(out), encoding="utf-8")
     print("\n".join(out))
 

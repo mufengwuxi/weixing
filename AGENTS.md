@@ -8,7 +8,8 @@
 2. 读本文件和 `TASKS.md`，只做 `TASKS.md` 里分配给本机的任务。
 3. ATK 目录通过环境变量 `ATK_HOME` 指定，不要把绝对路径写死进代码。
 4. 如果 PATH 里的 `python` 是 Microsoft Store 占位符（运行时提示 "Python was not found"），就改用 Python 的全路径运行脚本。
-5. 控制台日志一律存成 `report/` 下的 `.txt` 文件，`*.log` 会被 `.gitignore` 忽略。
+5. 控制台日志和截图一律存到 `report/tasks/` 下，日志存成 `.txt`（`*.log` 会被 `.gitignore` 忽略），文件名以任务号开头，比如 `task15_console.txt`。
+6. 复核结果按问题写进 `results/q1/`、`results/q2/`、`results/q3/`，TASKS.md 里的命令已经写好了输出路径，照抄即可。
 
 ## 运行与回传
 
@@ -18,11 +19,12 @@
 
 ## Git 规则
 
-- 不直接推 `main`。每个队员用自己的分支，比如 `zhangsan-run`，推上去后提 PR。
+- 不直接推 `main`。分支名写成"内容-人名"，比如 `p3-xiehuiyu`，推上去后提 PR。
 - 提交说明写清楚：在哪台电脑、跑了什么命令、结果在哪个文件。
 - `scenes/*.atk` 只由指定的场景负责人修改，其他人只读。
 - 参数统一写在 `params/*.csv` 里，不用 xlsx，方便看改动、合并冲突。
 - 大批量的中间结果不提交；论文要用的汇总表和图放 `results/` 并提交。
+- 不要改动 `docs/`、`paper/`、`solutions/` 里已有的文件，这些由队员和远端维护。
 
 ## 安全
 

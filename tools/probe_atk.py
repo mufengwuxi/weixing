@@ -7,8 +7,8 @@
 只用 Python 标准库，不改动 ATK 安装目录里的任何文件。
 
 输出：
-    report/probe_report.md        探测结论
-    report/vendor_samples/        包里示例脚本和配置的只读副本（供远端写代码参考）
+    report/env/probe_report.md        探测结论
+    report/env/vendor_samples/        包里示例脚本和配置的只读副本（供远端写代码参考）
 跑完后把 report/ 提交推送即可。
 """
 
@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-REPORT_DIR = REPO / "report"
+REPORT_DIR = REPO / "report" / "env"
 SAMPLES_DIR = REPORT_DIR / "vendor_samples"
 
 TEXT_EXT = {".py", ".m", ".ini", ".txt", ".md", ".json", ".xml", ".bat", ".cmd", ".cs", ".cpp", ".h"}
@@ -126,7 +126,7 @@ def main():
             log(s)
     log("```")
     if integ:
-        log(f"已复制 {copy_samples(integ)} 个示例文本文件到 report/vendor_samples/")
+        log(f"已复制 {copy_samples(integ)} 个示例文本文件到 report/env/vendor_samples/")
     else:
         log("没找到 IntegratingWithATK 目录")
     log()

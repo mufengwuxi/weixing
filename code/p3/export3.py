@@ -1,13 +1,13 @@
 """把第三问两颗星的结果合成方案文件。
 用法（仓库根目录）：python code/p3/export3.py
-输出：solutions/p3_claude.json（两星合并）、solutions/p3_r1.json、solutions/p3_r2.json（与第二问同格式，可直接用 verify_p2.py / build_single_r1.py 复核）"""
+输出：solutions/q3/p3_claude.json（两星合并）、solutions/q3/p3_r1.json、solutions/q3/p3_r2.json（与第二问同格式，可直接用 verify_p2.py / build_single_r1.py 复核）"""
 import json, os, sys
 import numpy as np
 H = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, H)
 from p2lib import R1, TG, MU  # 不设 P2_INIT/P2_TARGETS 时为 r1 与全部 30 颗目标
 
-AGEO, DA = 42164.1696, 50.0          # δa 取 50 km，论证见 docs/第三问Claude版.md
+AGEO, DA = 42164.1696, 50.0          # δa 取 50 km，论证见 docs/q3/v1_第三问_claude.md
 
 
 def elements(s):
@@ -46,14 +46,14 @@ A, B = one(L1, R1.tolist(), 'r1'), one(L2, s2, 'r2')
 el = elements(s2)
 assert el['e'] < 1e-3 and abs(el['a_km'] - AGEO) <= DA
 assert not set(A['targets_km']) & set(B['targets_km'])
-json.dump(A, open('solutions/p3_r1.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-json.dump(B, open('solutions/p3_r2.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+json.dump(A, open('solutions/q3/p3_r1.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+json.dump(B, open('solutions/q3/p3_r2.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 tot = A['summary']['total_dv_m_s'] + B['summary']['total_dv_m_s']
 P = {"problem": "P3", "epoch_utc": "2027-01-01T00:00:00", "mu_km3_s2": MU, "delta_a_km": DA,
      "r2_design": {"state_km": s2, **el, "a_minus_GEO_km": el['a_km'] - AGEO},
      "assignment": {"r1": list(A['targets_km']), "r2": list(B['targets_km'])},
      "summary": {"n_targets": len(A['targets_km']) + len(B['targets_km']),
                  "dv_r1_m_s": A['summary']['total_dv_m_s'], "dv_r2_m_s": B['summary']['total_dv_m_s'], "total_dv_m_s": tot},
-     "files": {"r1": "solutions/p3_r1.json", "r2": "solutions/p3_r2.json"}}
-json.dump(P, open('solutions/p3_claude.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+     "files": {"r1": "solutions/q3/p3_r1.json", "r2": "solutions/q3/p3_r2.json"}}
+json.dump(P, open('solutions/q3/p3_claude.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print(P['summary'], {k: round(v, 5) for k, v in el.items()})

@@ -6,7 +6,7 @@ __pycache__/
 results/raw/
 *.log
 ~$*
-report/atk_output/
+report/env/atk_output/
 results/*/raw/
 results/p1_atk_verify/*.atk
 results/**/*.atk

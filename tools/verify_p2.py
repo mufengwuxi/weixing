@@ -1,8 +1,8 @@
 """第二问方案复核：按机动序列重放整条 r1 轨迹，逐个检查观测和全部机动约束。
 
 用法（仓库根目录，Windows，已设置 ATK_HOME，已关闭 ATK 界面）：
-    python tools/verify_p2.py solutions/p2_claude_27.json --out results/p2_verify_27
-    python tools/verify_p2.py solutions/p2_claude_27.json --out results/p2_verify_27 --no-atk   # 只做 Python 复核
+    python tools/verify_p2.py solutions/q2/p2_claude_27.json --out results/q2/p2_verify_27
+    python tools/verify_p2.py solutions/q2/p2_claude_27.json --out results/q2/p2_verify_27 --no-atk   # 只做 Python 复核
 
 检查内容：
     1. 机动约束：单次 ≤ 30 m/s、任意相邻机动间隔 ≥ 3600 s、累计 ≤ 300 m/s、每次观测最多 2 次机动、观测期间无机动；

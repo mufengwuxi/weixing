@@ -10,7 +10,7 @@
     atk.report("卫星1", "J2000 Position Velocity", start, stop)  # 导出 ATK 数据报告，返回文件路径
     atk.save(path) / atk.close()
 
-接口依据 report/vendor_samples 里的官方示例和 SWIG 接口定义。
+接口依据 report/env/vendor_samples 里的官方示例和 SWIG 接口定义。
 """
 
 import math

@@ -1,11 +1,11 @@
-"""从 数据.xlsx 和 docs/第一问总结.md 里的数值生成第一问方案文件。
+"""从 数据.xlsx 和 docs/q1/v1_第一问总结_zzx.md 里的数值生成第一问方案文件。
 
 用于在拿不到求解代码时先做复核。文档里 Δv 只有 4 位小数（m/s）、时刻只到毫秒，
 所以这个文件代表“按文档能复现到什么程度”，不是求解器的全精度结果。
 
 用法（需要 openpyxl：python -m pip install openpyxl）：
     python tools/make_p1_from_doc.py data/数据.xlsx
-输出：solutions/p1_doc.json
+输出：solutions/q1/p1_doc.json
 """
 
 import json
@@ -16,7 +16,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 EPOCH = datetime(2027, 1, 1)
 
-# docs/第一问总结.md 第 5.1 节
+# docs/q1/v1_第一问总结_zzx.md 第 5.1 节
 DOC = {
     "maneuvers": [
         ("2027-01-01 14:45:24.673", [-4.0240, +0.6984, +0.3073]),
@@ -70,9 +70,9 @@ def main():
         "obs_start_s": sec(DOC["obs_start"]),
         "obs_duration_s": 60,
         "claimed": DOC["claimed"],
-        "note": "由 tools/make_p1_from_doc.py 根据 第一问总结.md 的表格数值生成（Δv 4 位小数、时刻毫秒），不是求解器全精度输出；" + how,
+        "note": "由 tools/make_p1_from_doc.py 根据 v1_第一问总结_zzx.md 的表格数值生成（Δv 4 位小数、时刻毫秒），不是求解器全精度输出；" + how,
     }
-    out = REPO / "solutions" / "p1_doc.json"
+    out = REPO / "solutions" / "q1" / "p1_doc.json"
     out.write_text(json.dumps(sol, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"已写入 {out}")
 

@@ -1,7 +1,7 @@
 """根据第二问方案生成论文配图（纯 SVG，可在 Visio 中打开编辑）。
 
-用法：python tools/make_p2_figs.py solutions/p2_claude_30.json
-输出：docs/fig/p2_lon_time.svg（巡游经度–时间图）、docs/fig/p2_dv_bar.svg（各目标 Δv 分配图）
+用法：python tools/make_p2_figs.py solutions/q2/p2_claude_30.json
+输出：paper/figures/p2_lon_time.svg（巡游经度–时间图）、paper/figures/p2_dv_bar.svg（各目标 Δv 分配图）
 
 只用 line / polyline / circle / rect / text 等基本元素，不用 CSS、clipPath 和嵌入字体，
 字体写成“宋体, Times New Roman”，在 Visio 里可以直接改字、改线型。
@@ -114,8 +114,8 @@ def fig_dv_bar(sol, path):
 
 if __name__ == "__main__":
     sol = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-    d = REPO / "docs" / "fig"
+    d = REPO / "paper" / "figures"
     d.mkdir(parents=True, exist_ok=True)
     fig_lon_time(sol, d / "p2_lon_time.svg")
     fig_dv_bar(sol, d / "p2_dv_bar.svg")
-    print("已生成 docs/fig/p2_lon_time.svg、docs/fig/p2_dv_bar.svg")
+    print("已生成 paper/figures/p2_lon_time.svg、paper/figures/p2_dv_bar.svg")

@@ -10,8 +10,8 @@
 3. 在 0.05 s 网格上认证全部约束（含裕量），取认证通过的最小 Δv 解。
 
 用法（依赖 numpy、scipy、pyerfa、openpyxl）：
-    python code/p1/solver.py --out solutions/p1_claude_limit.json --margin-d 0.001 --margin-a 0.0001
-    python code/p1/solver.py --out solutions/p1_claude_robust.json --margin-d 1 --margin-a 1 --duration 70
+    python code/p1/solver.py --out solutions/q1/p1_claude_limit.json --margin-d 0.001 --margin-a 0.0001
+    python code/p1/solver.py --out solutions/q1/p1_claude_robust.json --margin-d 1 --margin-a 1 --duration 70
 """
 
 import argparse

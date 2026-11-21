@@ -6,9 +6,9 @@ r1 的传播器设为机动规划（Astromaster），段序列为：
 预报段只保留地球中心引力（二体），与题目模型一致。目标星仍是各自独立的二体卫星。
 
 用法（仓库根目录，已设置 ATK_HOME，关闭 ATK 界面）：
-    python tools/build_single_r1.py solutions/p1_claude_robust.json --out results/single_r1_p1
-    python tools/build_single_r1.py solutions/p2_claude_30.json --out results/single_r1_p2
-    python tools/build_single_r1.py solutions/p3_r2.json --name r2 --out results/single_p3_r2   # 第三问
+    python tools/build_single_r1.py solutions/q1/p1_claude_robust.json --out results/q1/single_r1_p1
+    python tools/build_single_r1.py solutions/q2/p2_claude_30.json --out results/q2/single_r1_p2
+    python tools/build_single_r1.py solutions/q3/p3_r2.json --name r2 --out results/q3/single_p3_r2   # 第三问
 输出：<out>/summary.md（每一步的诊断、每次观测的检查）、<out>/raw/ 下的场景文件 single_r1.atk（可在 ATK 界面打开）
 """
 
