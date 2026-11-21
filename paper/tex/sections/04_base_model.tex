@@ -1,0 +1,86 @@
+\section{统一基础模型}
+
+三个问题共用同一套动力学、观测条件和目标函数，区别只在决策变量的范围。本节先给出这套共用的模型，第 5 至 7 节在此基础上分别展开。
+
+\subsection{轨道动力学与脉冲机动}
+
+卫星状态记为 $\bm x = (\bm r, \bm v) \in \mathbb R^6$。在二体模型下，无机动段的运动方程为
+\begin{equation}
+  \ddot{\bm r} = -\frac{\mu}{\|\bm r\|^3}\,\bm r .
+  \label{eq:twobody}
+\end{equation}
+这个方程有解析解，给定初始状态和飞行时间即可由开普勒方程直接求出任意时刻的状态，记为 $\bm x(t) = \Phi(\bm x(t_0),\, t - t_0)$。
+
+观测卫星的机动方案是一列脉冲 $\{(t_k, \Delta\bm v_k)\}_{k=1}^{K}$，满足 $t_1 < t_2 < \cdots < t_K$。脉冲时刻位置不变、速度跳变，即
+\begin{equation}
+  \bm r(t_k^+) = \bm r(t_k^-), \qquad \bm v(t_k^+) = \bm v(t_k^-) + \Delta\bm v_k .
+  \label{eq:impulse}
+\end{equation}
+在相邻两次脉冲之间用 $\Phi$ 传播，于是观测卫星的整条轨迹 $\bm r_O(t)$ 由初始状态和脉冲序列唯一确定。目标卫星不机动，轨迹为 $\bm r_b(t) = \Phi(\bm x_b(0), t)$ 的位置分量。
+
+\subsection{时变可观测区域}
+
+对观测卫星和目标 $b$，相对位置为 $\bm\rho(t) = \bm r_O(t) - \bm r_b(t)$。记目标处指向太阳和指向地心的单位矢量分别为
+\begin{equation}
+  \hat{\bm u}_\odot(t) = \frac{\bm r_\odot - \bm r_b}{\|\bm r_\odot - \bm r_b\|}, \qquad
+  \hat{\bm u}_E(t) = -\frac{\bm r_b}{\|\bm r_b\|} .
+  \label{eq:unitvec}
+\end{equation}
+光照角和侦测角都按有向夹角计算，$\alpha = \arccos(\hat{\bm u}_\odot\cdot\bm\rho/\|\bm\rho\|)$，$\theta = \arccos(\hat{\bm u}_E\cdot\bm\rho/\|\bm\rho\|)$，取值在 $[0^\circ, 180^\circ]$。由于 $\alpha \le 45^\circ$ 等价于 $\hat{\bm u}_\odot\cdot\bm\rho \ge \|\bm\rho\|\cos 45^\circ$，三个观测条件可以写成相对位置所属的一个集合
+\begin{equation}
+  \mathcal C_b(t) = \Big\{\bm\rho \;\Big|\; 10 \le \|\bm\rho\| \le 50,\ \
+  \|\bm\rho\|\cos 45^\circ \le \hat{\bm u}_\odot(t)\cdot\bm\rho,\ \
+  \|\bm\rho\|\cos 45^\circ \le \hat{\bm u}_E(t)\cdot\bm\rho \Big\} .
+  \label{eq:feasset}
+\end{equation}
+后两个不等式都是二阶锥约束，距离上界是球约束，这三者都是凸的。只有距离下界 $\|\bm\rho\| \ge 10$ 是非凸约束，它把集合的中心挖空。
+
+一次有效观测要求在整个观测区间内都满足条件，即存在观测开始时刻 $s$，使得
+\begin{equation}
+  \bm\rho(t) \in \mathcal C_b(t), \qquad \forall\, t \in [s,\ s + \tau],\quad \tau = 60~\mathrm s .
+  \label{eq:validobs}
+\end{equation}
+这是对连续时间区间的约束，属于半无限约束。求解时在时间网格上离散化，再在更细的网格上逐点检验。
+
+\subsection{观测单元}
+
+三个问题都可以看成若干次“转移加观测”的组合。我们把一次转移加观测抽象为观测单元，记作 $\mathcal T(\bm x_0, t_0, b, W)$。它的含义是，观测卫星在 $t_0$ 时刻的状态为 $\bm x_0$，在时间窗 $W$ 内用至多两次脉冲机动到目标 $b$ 附近并完成一次有效观测。观测单元对应的优化问题为
+\begin{equation}
+  \begin{aligned}
+    \min_{t_1,t_2,\Delta\bm v_1,\Delta\bm v_2,s}\quad & \|\Delta\bm v_1\| + \|\Delta\bm v_2\| \\
+    \text{s.t.}\quad & t_0 \le t_1,\quad t_2 - t_1 \ge 3600,\quad t_2 \le s,\quad [s, s+\tau] \subseteq W, \\
+    & \|\Delta\bm v_j\| \le 30~\mathrm{m/s},\quad j = 1, 2, \\
+    & \bm\rho(t) \in \mathcal C_b(t),\quad \forall\, t \in [s, s+\tau] .
+  \end{aligned}
+  \label{eq:unit}
+\end{equation}
+目标函数在 $\Delta\bm v_j = \bm 0$ 处允许取零，所以只用一次脉冲或不机动的方案也包含在内。问题一就是一个观测单元；问题二把若干观测单元首尾相接，上一个单元的观测结束状态就是下一个单元的 $\bm x_0$；问题三再加上第二颗星的初始状态这一设计变量。观测单元的结构和单元之间的衔接如图~\ref{fig:unit} 所示。
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{fig4_unit.pdf}
+  \caption{观测单元与全局时间轴示意}
+  \label{fig:unit}
+\end{figure}
+
+\subsection{机动约束与目标函数}
+
+对每颗观测卫星，全部脉冲都排在同一条时间轴上，需要满足
+\begin{equation}
+  \|\Delta\bm v_k\| \le 30~\mathrm{m/s},\qquad t_{k+1} - t_k \ge 3600~\mathrm s,\qquad
+  J = \sum_k \|\Delta\bm v_k\| \le 300~\mathrm{m/s} .
+  \label{eq:maneuver}
+\end{equation}
+此外，按假设 (5)，相邻两次观测之间的脉冲不超过两次，所有观测须在任务时长 $T$ 内结束。
+
+设方案 $\mathcal P$ 成功观测的不同目标数为 $N(\mathcal P)$，累计速度增量为 $J(\mathcal P)$，第三问中 $J$ 为两颗卫星之和。题目要求先使观测目标数最多，再使速度增量最小，我们用两阶段字典序优化来表达这一要求。第一阶段求最多能观测的目标数
+\begin{equation}
+  N^* = \max_{\mathcal P}\ N(\mathcal P),
+  \label{eq:lex1}
+\end{equation}
+第二阶段在观测数达到 $N^*$ 的方案中最小化速度增量
+\begin{equation}
+  \min_{\mathcal P}\ J(\mathcal P) \quad \text{s.t.}\quad N(\mathcal P) = N^* .
+  \label{eq:lex2}
+\end{equation}
+两个目标之间不引入任何权重，观测数多的方案总是优于观测数少的方案，与燃料多少无关。

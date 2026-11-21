@@ -8,7 +8,7 @@
 | `sections/01_问题重述.md` | 1 问题重述 | `docs/00_题目/` | 2 | Claude | 已定稿 |
 | `sections/02_问题分析.md` | 2 问题分析 | `docs/00_题目/`、`docs/模型/` | 3 | Claude | 正文定稿，配图初稿待审 |
 | `sections/03_假设与符号.md` | 3 模型假设与符号说明 | `docs/00_题目/初步建模_zzx.md`、`CHANGELOG.md` 数据版本 | 2.5 | 待定 | 未开始 |
-| `sections/04_统一基础模型.md` | 4 统一基础模型 | `docs/模型/v1_模型抽象_claude.md` | 4 | Claude | 未开始 |
+| `sections/04_统一基础模型.md` | 4 统一基础模型 | `docs/模型/v1_模型抽象_claude.md` | 4 | Claude | 已入 LaTeX |
 | `sections/05_第一问.md` | 5 问题一 | `docs/q1/` | 4 | 待定 | 未开始 |
 | `sections/06_第二问.md` | 6 问题二 | `docs/q2/`，已有初稿 | 9 | 待定 | 初稿（需按新大纲改） |
 | `sections/07_第三问.md` | 7 问题三 | `docs/q3/` | 7.5 | 待定 | 未开始 |
