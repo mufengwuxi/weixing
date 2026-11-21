@@ -281,9 +281,7 @@ def fig2():
 <stop offset="0" stop-color="#8EC9F2"/><stop offset="0.55" stop-color="#2E6FB7"/><stop offset="1" stop-color="#0D2E5C"/>
 </radialGradient>
 </defs>"""]
-    xb = 1.6
-    for a0, a1, col in ((-span, xb, "#FBEFE4"), (xb, span, "#E6EFF8")):
-        body.append(poly(ring(lo, a0, a1) + ring(hi, a0, a1)[::-1], fill=col, stroke="none"))
+    body.append(poly(ring(lo) + ring(hi)[::-1], fill="#F3F6FA", stroke="none"))
     body.append(poly(ring(lo) + ring(hi)[::-1], stroke="#000000", w=1.0))
     for d in range(-20, 21, 5):
         x1, y1 = P(d, lo)
@@ -302,13 +300,6 @@ def fig2():
             body.append(text(x + 6, y + 4, lab, 11, "start", "#555555"))
         else:
             body.append(f'<text x="{x + 6:.1f}" y="{y + 4:.1f}" font-family="{FONT}" font-size="12" text-anchor="start">a<tspan baseline-shift="sub" font-size="9">GEO</tspan></text>')
-    x1, y1 = P(xb, lo)
-    x2, y2 = P(xb, hi)
-    body.append(line(x1, y1, x2, y2, "#000000", 1.1, "6,4"))
-    x, y = P(-11, lo + 1.4)
-    body.append(text(x, y, "西侧 10 颗（第三问由 R1 观测）", 13, "middle", "#B5651D", rot=-11))
-    x, y = P(12, lo + 1.4)
-    body.append(text(x, y, "东侧 20 颗（第三问由 R2 观测）", 13, "middle", "#1F4E79", rot=12))
     # 运动方向
     pa = [P(d, hi + 3.2) for d in np.linspace(11, 19, 30)]
     body.append(poly(pa, stroke="#000000", w=1.2, closed=False))
