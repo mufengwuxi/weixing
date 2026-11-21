@@ -428,8 +428,181 @@ def fig3():
     save("fig3_framework.svg", W, by0 + 175, body)
 
 
+# ---------------- 图 4：观测单元与全局时间轴 ----------------
+DEFS3D = """<defs>
+<linearGradient id="gPanel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B8FD6"/><stop offset="1" stop-color="#14356B"/></linearGradient>
+<linearGradient id="gRedF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6B6B"/><stop offset="1" stop-color="#B01818"/></linearGradient>
+<linearGradient id="gRedT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB3B3"/><stop offset="1" stop-color="#E04848"/></linearGradient>
+<linearGradient id="gRedS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8E1010"/><stop offset="1" stop-color="#5E0A0A"/></linearGradient>
+<linearGradient id="gBluF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6FA8E8"/><stop offset="1" stop-color="#1D4E8F"/></linearGradient>
+<linearGradient id="gBluT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFE3FA"/><stop offset="1" stop-color="#7FB0E6"/></linearGradient>
+<linearGradient id="gBluS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#163C70"/><stop offset="1" stop-color="#0E284D"/></linearGradient>
+<radialGradient id="gFlame" cx="0.5" cy="0.25" r="0.75"><stop offset="0" stop-color="#FFFBE0"/><stop offset="0.35" stop-color="#FFD23F"/><stop offset="0.75" stop-color="#FF7A1A"/><stop offset="1" stop-color="#D93A0B"/></radialGradient>
+<radialGradient id="gBall" cx="0.35" cy="0.3" r="0.75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#7FD3C6"/><stop offset="1" stop-color="#1E5B56"/></radialGradient>
+<linearGradient id="gBeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFD23F" stop-opacity="0.75"/><stop offset="1" stop-color="#FFD23F" stop-opacity="0.08"/></linearGradient>
+<linearGradient id="gUnit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E8F1F0"/></linearGradient>
+<linearGradient id="gObs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE48A"/><stop offset="1" stop-color="#F2A515"/></linearGradient>
+<linearGradient id="gArrow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A90D9"/><stop offset="1" stop-color="#1F4E79"/></linearGradient>
+</defs>"""
+
+
+def sat3d(x, y, kind="red", s=1.0):
+    """立体卫星：等轴测立方体本体（正面、顶面、侧面三种明暗）+ 两侧带分格的太阳翼 + 抛物面天线。"""
+    F, T_, S = ("url(#gRedF)", "url(#gRedT)", "url(#gRedS)") if kind == "red" else ("url(#gBluF)", "url(#gBluT)", "url(#gBluS)")
+    g = [f'<g transform="translate({x:.1f} {y:.1f}) scale({s})">']
+    # 太阳翼（平行四边形，带分格）
+    for sx in (-1, 1):
+        x0 = 13 if sx > 0 else -47
+        pts = [(x0, -3), (x0 + 34, -3), (x0 + 30, 9), (x0 - 4, 9)]
+        g.append('<polygon points="' + " ".join(f"{a},{b}" for a, b in pts) + '" fill="url(#gPanel)" stroke="#0B1F3F" stroke-width="0.8"/>')
+        for k in (1, 2, 3):
+            xa = x0 + 34 * k / 4
+            g.append(f'<line x1="{xa:.1f}" y1="-3" x2="{xa - 4:.1f}" y2="9" stroke="#A9C6EE" stroke-width="0.5"/>')
+        g.append(f'<line x1="{x0 - 2:.1f}" y1="3" x2="{x0 + 32:.1f}" y2="3" stroke="#A9C6EE" stroke-width="0.5"/>')
+        xb = (9, 13) if sx > 0 else (-13, -9)
+        g.append(f'<line x1="{xb[0]}" y1="3" x2="{xb[1]}" y2="3" stroke="#333333" stroke-width="1.6"/>')
+    # 本体：顶面、侧面、正面
+    g.append('<polygon points="-9,-6 -3,-12 15,-12 9,-6" fill="' + T_ + '" stroke="#3A0A0A" stroke-width="0.6"/>')
+    g.append('<polygon points="9,-6 15,-12 15,6 9,12" fill="' + S + '" stroke="#3A0A0A" stroke-width="0.6"/>')
+    g.append('<rect x="-9" y="-6" width="18" height="18" fill="' + F + '" stroke="#3A0A0A" stroke-width="0.6"/>')
+    g.append('<rect x="-6" y="-3" width="5" height="5" fill="#FFFFFF" fill-opacity="0.35"/>')
+    # 天线
+    g.append('<line x1="3" y1="-12" x2="3" y2="-17" stroke="#333333" stroke-width="1"/>')
+    g.append('<polygon points="-3,-18 9,-18 6,-22 0,-22" fill="#D9D9D9" stroke="#555555" stroke-width="0.6"/>')
+    g.append("</g>")
+    return "\n".join(g)
+
+
+def flame(x, y, ang, L=26, Wd=11):
+    """火焰：朝 ang 方向（度，数学角）喷出的水滴形，渐变填充。"""
+    t = np.radians(ang)
+    ux, uy = np.cos(t), -np.sin(t)
+    px, py = -uy, ux
+    pts = []
+    for k in np.linspace(0, np.pi, 24):
+        r = Wd / 2 * np.sin(k) * (1 - 0.15 * k)
+        d = L * (1 - np.cos(k)) / 2
+        pts.append((x + ux * d + px * r, y + uy * d + py * r))
+    for k in np.linspace(np.pi, 0, 24):
+        r = Wd / 2 * np.sin(k) * (1 - 0.15 * k)
+        d = L * (1 - np.cos(k)) / 2
+        pts.append((x + ux * d - px * r, y + uy * d - py * r))
+    return poly(pts, fill="url(#gFlame)", stroke="#D93A0B", w=0.5)
+
+
+def fat_arrow(x1, y1, x2, y2, w=7, head=14, fill="url(#gArrow)"):
+    ang = np.arctan2(y2 - y1, x2 - x1)
+    ux, uy = np.cos(ang), np.sin(ang)
+    px, py = -uy, ux
+    L = np.hypot(x2 - x1, y2 - y1) - head
+    bx, by = x1 + ux * L, y1 + uy * L
+    pts = [(x1 + px * w / 2, y1 + py * w / 2), (bx + px * w / 2, by + py * w / 2), (bx + px * w * 1.3, by + py * w * 1.3),
+           (x2, y2), (bx - px * w * 1.3, by - py * w * 1.3), (bx - px * w / 2, by - py * w / 2), (x1 - px * w / 2, y1 - py * w / 2)]
+    return poly(pts, fill=fill, stroke="#163A5C", w=0.6)
+
+
+def fig4():
+    W, H = 1000, 470
+    body = [DEFS3D]
+    DK = "#1E5B56"
+    ya = 300                      # 时间轴
+    # 两个观测单元的背景卡片（带阴影）
+    units = [(30, 470, "观测单元 k"), (520, 975, "观测单元 k+1")]
+    for x0, x1, lab in units:
+        body.append(f'<rect x="{x0 + 5}" y="{48 + 5}" width="{x1 - x0}" height="{ya - 18}" rx="10" ry="10" fill="#000000" fill-opacity="0.10"/>')
+        body.append(f'<rect x="{x0}" y="48" width="{x1 - x0}" height="{ya - 18}" rx="10" ry="10" fill="url(#gUnit)" stroke="#9DB7B4" stroke-width="1"/>')
+        body.append(f'<rect x="{x0}" y="48" width="{x1 - x0}" height="30" rx="10" ry="10" fill="{DK}"/>')
+        body.append(f'<rect x="{x0}" y="66" width="{x1 - x0}" height="12" fill="{DK}"/>')
+        body.append(text((x0 + x1) / 2, 69, lab, 15, color="#FFFFFF"))
+    # 时间轴
+    body.append(line(20, ya, W - 30, ya, "#333333", 2.2))
+    body.append(poly([(W - 30, ya - 6), (W - 16, ya), (W - 30, ya + 6)], fill="#333333", stroke="#333333", w=1))
+    body.append(text(W - 14, ya + 24, "t", 15, "middle", italic=True))
+
+    def tick(x, lab):
+        body.append(line(x, ya - 6, x, ya + 6, "#333333", 1.6))
+        body.append(f'<text x="{x:.1f}" y="{ya + 24:.1f}" font-family="{FONT}" font-size="14" text-anchor="middle">{lab}</text>')
+
+    def burn(x, y, lab, ang=200):
+        body.append(line(x, y + 16, x, ya - 6, "#7F7F7F", 1.0, "3,3"))
+        body.append(flame(x - 6, y + 10, 215, L=34, Wd=13))
+        body.append(sat3d(x, y, "red", 1.0))
+        body.append(fat_arrow(x + 4, y - 26, x + 52, y - 50))
+        body.append(text(x + 58, y - 52, lab, 14, "start"))
+
+    def observe(x0, x1, ys, tgt, lab, sc=0.8):
+        body.append(f'<rect x="{x0 + 2}" y="{ya - 11 + 2}" width="{x1 - x0}" height="22" rx="4" ry="4" fill="#000000" fill-opacity="0.15"/>')
+        body.append(f'<rect x="{x0}" y="{ya - 11}" width="{x1 - x0}" height="22" rx="4" ry="4" fill="url(#gObs)" stroke="#B5770A" stroke-width="0.8"/>')
+        xm = (x0 + x1) / 2
+        body.append(text(xm, ya + 4.5, "τ", 13, italic=True))
+        # 观测卫星 R 与目标 B，光束
+        rx_, ry_ = xm - 24, ys + 52
+        bx, by = xm + 30, ys
+        body.append(poly([(rx_ + 6, ry_ - 8), (bx - 6, by + 2), (bx + 8, by + 12), (rx_ + 10, ry_ - 2)], fill="url(#gBeam)", stroke="none"))
+        body.append(sat3d(rx_, ry_, "red", sc))
+        body.append(sat3d(bx, by, "blue", sc))
+        body.append(text(bx + 4, by - 22 * sc - 6, tgt, 13, "middle", "#1D4E8F"))
+        body.append(line(xm, ry_ + 16, xm, ya - 11, "#B5770A", 1.0, "3,3"))
+        body.append(text(xm, ya + 46, lab, 12.5, "middle", "#8A5A00"))
+
+    # 单元 k
+    tick(62, "t<tspan baseline-shift=\"sub\" font-size=\"10\">0</tspan>")
+    body.append(f'<circle cx="62" cy="{ya}" r="11" fill="url(#gBall)" stroke="{DK}" stroke-width="0.8"/>')
+    body.append(f'<text x="62" y="{ya - 18}" font-family="{FONT}" font-size="14" text-anchor="middle" font-style="italic">x<tspan baseline-shift="sub" font-size="10">0</tspan></text>')
+    burn(140, 190, "Δv<tspan baseline-shift=\"sub\" font-size=\"10\">1</tspan>")
+    tick(140, "t<tspan baseline-shift=\"sub\" font-size=\"10\">1</tspan>")
+    burn(275, 190, "Δv<tspan baseline-shift=\"sub\" font-size=\"10\">2</tspan>")
+    tick(275, "t<tspan baseline-shift=\"sub\" font-size=\"10\">2</tspan>")
+    # 间隔标注
+    yb = 248
+    body.append(line(140, yb, 275, yb, DK, 1.1))
+    for xx in (140, 275):
+        body.append(line(xx, yb - 5, xx, yb + 5, DK, 1.1))
+    body.append(f'<rect x="{207 - 42}" y="{yb - 10}" width="84" height="20" rx="3" ry="3" fill="#FFFFFF"/>')
+    body.append(text(207, yb + 5, "≥ 3600 s", 13, color=DK))
+    # 自由飞行
+    body.append(text(338, ya - 14, "自由飞行", 12.5, color="#555555"))
+    observe(375, 445, 118, "B", "[s, s+τ]", 0.75)
+    # 交接箭头：单元 k 的观测结束状态 → 单元 k+1 的 x0
+    pts = [(445, ya - 12)] + [(445 + (565 - 445) * u, ya - 12 - 70 * np.sin(np.pi * u)) for u in np.linspace(0, 1, 30)][1:]
+    body.append(poly(pts, stroke="#1F4E79", w=2.2, closed=False, dash="7,4"))
+    body.append(poly([(565, ya - 12), (553, ya - 26), (568, ya - 26)], fill="#1F4E79", stroke="#1F4E79", w=0.8))
+    body.append(f'<circle cx="565" cy="{ya}" r="11" fill="url(#gBall)" stroke="{DK}" stroke-width="0.8"/>')
+    body.append(f'<rect x="{505 - 70}" y="{ya - 110}" width="140" height="40" rx="5" ry="5" fill="#FFFFFF" stroke="#1F4E79" stroke-width="0.8"/>')
+    body.append(text(505, ya - 94, "观测结束状态", 12.5, color="#1F4E79"))
+    body.append(f'<text x="505" y="{ya - 77}" font-family="{FONT}" font-size="12.5" text-anchor="middle" fill="#1F4E79">作为下一单元的 x<tspan baseline-shift="sub" font-size="9">0</tspan></text>')
+    # 单元 k+1：两次脉冲后，同一次飞越连续观测两颗目标
+    burn(605, 190, "Δv<tspan baseline-shift=\"sub\" font-size=\"10\">3</tspan>")
+    tick(605, "t<tspan baseline-shift=\"sub\" font-size=\"10\">3</tspan>")
+    burn(712, 190, "Δv<tspan baseline-shift=\"sub\" font-size=\"10\">4</tspan>")
+    tick(712, "t<tspan baseline-shift=\"sub\" font-size=\"10\">4</tspan>")
+    observe(790, 850, 118, "B′", "观测 B′", 0.75)
+    observe(892, 952, 118, "B″", "观测 B″", 0.75)
+    body.append(f'<rect x="{871 - 90}" y="{ya - 60}" width="180" height="22" rx="4" ry="4" fill="#FFFFFF" stroke="#B5770A" stroke-width="0.8"/>')
+    body.append(text(871, ya - 44, "同一次飞越，中间不再机动", 12, color="#8A5A00"))
+    # 底部：全局时间轴
+    yg = 410
+    body.append(text(W / 2, yg - 24, "全部脉冲排在同一条时间轴上：相邻脉冲间隔 ≥ 3600 s，累计 Δv ≤ 300 m/s，全部观测在任务时长 T 内完成", 13))
+    body.append(line(40, yg, W - 40, yg, DK, 1.6))
+    for xx in (40, W - 40):
+        body.append(line(xx, yg - 7, xx, yg + 7, DK, 1.6))
+    body.append(text(40, yg + 22, "0", 13))
+    body.append(text(W - 40, yg + 22, "T", 13, italic=True))
+    for xx in np.r_[np.linspace(90, 920, 16)]:
+        body.append(poly([(xx, yg - 2), (xx - 5, yg - 12), (xx + 5, yg - 12)], fill="#E04848", stroke="#8E1010", w=0.5))
+    for xx in np.linspace(130, 940, 10):
+        body.append(f'<rect x="{xx - 6:.1f}" y="{yg + 3}" width="12" height="7" fill="url(#gObs)" stroke="#B5770A" stroke-width="0.5"/>')
+    lx = W - 300
+    body.append(poly([(lx, yg + 38), (lx - 5, yg + 28), (lx + 5, yg + 28)], fill="#E04848", stroke="#8E1010", w=0.5))
+    body.append(text(lx + 12, yg + 38, "脉冲", 12, "start"))
+    body.append(f'<rect x="{lx + 60}" y="{yg + 28}" width="14" height="9" fill="url(#gObs)" stroke="#B5770A" stroke-width="0.5"/>')
+    body.append(text(lx + 80, yg + 38, "观测", 12, "start"))
+    save("fig4_unit.svg", W, H, body)
+
+
 if __name__ == "__main__":
     fig1a()
     fig1b()
     fig2()
     fig3()
+    fig4()
