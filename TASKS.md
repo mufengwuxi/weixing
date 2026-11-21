@@ -4,36 +4,38 @@
 
 **2026-11-20 仓库目录已重整**：方案按问题放进 `solutions/q1/`、`q2/`、`q3/`，结果写进 `results/q1/`、`q2/`、`q3/`，日志和截图放到 `report/tasks/`。开工前先 `git pull`，然后照抄下面的新命令。如果手上有按旧路径做了一半的任务，就按新路径重跑；已经提交了的 PR 也请改成新路径。
 
-## 任务 17（最优先）：新数据下第一问 v4、第三问 v3 的 ATK 复核
+## 任务 17（最优先）：当前最优方案的 ATK 复核（新数据）
 
-数据已更新为高精度版（任务 16）。下面这些方案都是用新数据求解的，旧数据的任务 13、14、15 可以不做了。
+数据已更新为高精度版（任务 16）。下面四个方案是目前各问的最优版本，都用新数据求解。旧数据的任务 13、14、15 不用再做。
 
-1. `git pull`，切到新分支 `verify-v3-xiehuiyu`，关掉 ATK 界面。
-2. 第一问（约 1 分钟）：
+| 问题 | 方案文件 | 预期结果 |
+|---|---|---|
+| 第一问 v4 | `solutions/q1/p1_claude_v4.json` | 5.212815 m/s |
+| 第二问 v3-C | `solutions/q2/v3c_p2_lns_scp.json` | 30 颗，176.312 m/s |
+| 第三问 v4 r1 | `solutions/q3/v4_p3_r1.json` | 10 颗，18.148 m/s |
+| 第三问 v4 r2 | `solutions/q3/v4_p3_r2.json` | 20 颗，15.956 m/s |
+
+1. `git pull`，切到新分支 `verify-best-xiehuiyu`，关掉 ATK 界面。
+2. 第一问：
    ```
    python tools/verify_p1_atk.py solutions/q1/p1_claude_v4.json --out results/q1/p1_verify_v4
    ```
-   预期：ATK 轨道上的观测检查全部为"是"，最大侦测角和光照角不超过 45°（方案内部留了 0.01° 余量）。
-3. 第三问两颗星的接力复核：
-   ```
-   python tools/verify_p2.py solutions/q3/v3_p3_r1.json --out results/q3/verify_v3_r1
-   python tools/verify_p2.py solutions/q3/v3_p3_r2.json --out results/q3/verify_v3_r2
-   ```
-   预期：分别为 10/10、20/20，累计 Δv 约 18.943 和 16.907 m/s。
-4. 第三问用单颗卫星的 MCS 段序列复现，每条命令是一个独立进程：
-   ```
-   python tools/build_single_r1.py solutions/q3/v3_p3_r1.json --out results/q3/single_v3_r1
-   python tools/build_single_r1.py solutions/q3/v3_p3_r2.json --name r2 --out results/q3/single_v3_r2
-   ```
-   预期：第 3 节分别为 10/10、20/20。用 ATK 界面打开 `results/q3/single_v3_r2/raw/single_r1.atk`，展开 r2 的机动规划段列表，截图存为 `report/tasks/task17_r2_gui.png`。
-5. 追加（新模型结果，命令格式同上）：
+   预期：ATK 轨道上的观测检查全部为"是"，最大侦测角和光照角都不超过 45°。
+3. 第二问、第三问的接力复核（每条命令单独运行）：
    ```
    python tools/verify_p2.py solutions/q2/v3c_p2_lns_scp.json --out results/q2/verify_v3c
    python tools/verify_p2.py solutions/q3/v4_p3_r1.json --out results/q3/verify_v4_r1
    python tools/verify_p2.py solutions/q3/v4_p3_r2.json --out results/q3/verify_v4_r2
    ```
-   预期：30/30 → 176.312 m/s；10/10 → 18.148 m/s；20/20 → 15.956 m/s。
-6. 提交 `results/` 下各 `summary.md`、截图和控制台输出 `report/tasks/task17_console.txt`，提 PR。
+   预期：上表中的观测数和 Δv，ATK 与 Python 的位置差在米级。
+4. 用单颗卫星的 MCS 段序列复现（每条命令单独运行）：
+   ```
+   python tools/build_single_r1.py solutions/q2/v3c_p2_lns_scp.json --out results/q2/single_v3c
+   python tools/build_single_r1.py solutions/q3/v4_p3_r1.json --out results/q3/single_v4_r1
+   python tools/build_single_r1.py solutions/q3/v4_p3_r2.json --name r2 --out results/q3/single_v4_r2
+   ```
+   预期：第 3 节分别为 30/30、10/10、20/20。用 ATK 界面打开 `results/q2/single_v3c/raw/single_r1.atk` 和 `results/q3/single_v4_r2/raw/single_r1.atk`，展开机动规划段列表，截图存为 `report/tasks/task17_p2_gui.png`、`report/tasks/task17_r2_gui.png`。
+5. 提交 `results/` 下各 `summary.md`、两张截图，以及控制台输出 `report/tasks/task17_console.txt`，提 PR。出错时把完整报错写进 `task17_console.txt`，同样提交。
 
 ## 任务 16（最优先）：上传组委会更新后的高精度数据
 
