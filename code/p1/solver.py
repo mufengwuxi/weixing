@@ -179,6 +179,24 @@ def search(P, starts, seed, log=print):
     return best
 
 
+def warm(P, path):
+    """从已有方案出发精修（用于裕量延拓）。先按给定裕量精修，认证不过就把优化裕量略微加大再试。"""
+    d = json.load(open(path, encoding="utf-8"))
+    m = d["maneuvers"]
+    x0 = np.r_[m[0]["t_s"] / 3600, m[1]["t_s"] / 3600, np.array(m[0]["dv_km_s"]) * 1000,
+               np.array(m[1]["dv_km_s"]) * 1000, d["obs_start_s"] / 3600]
+    md, ma = P.md, P.ma
+    for extra in (0.0, 0.005, 0.02, 0.05):
+        P.md, P.ma = md + extra, ma + extra
+        f = solve_full(P, x0)
+        P.md, P.ma = md, ma
+        c = certify(P, f.x)
+        print(f"  热启动（优化裕量 +{extra}）：J = {c['J']:.6f} m/s，认证{'通过' if c['ok'] else '未通过'}")
+        if c["ok"]:
+            return f.x, c
+    return None
+
+
 def to_json(P, x, c, note):
     t1, t2, d1, d2, s = unpack(x)
     return {
@@ -202,11 +220,12 @@ def main():
     ap.add_argument("--duration", type=float, default=60.0, help="要求的连续观测时长 s")
     ap.add_argument("--starts", type=int, default=200)
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--init", default=None, help="热启动：以已有方案（本脚本输出的 JSON）为初值，直接精修并认证")
     a = ap.parse_args()
 
     P = Problem(a.data, a.margin_d, a.margin_a, a.duration)
     print(f"裕量：距离 {a.margin_d} km，角度 {a.margin_a}°，时长 {a.duration} s；起点 {a.starts} 个")
-    best = search(P, a.starts, a.seed)
+    best = warm(P, a.init) if a.init else search(P, a.starts, a.seed)
     if best is None:
         raise SystemExit("没有找到通过认证的解，请增加 --starts")
     x, c = best
