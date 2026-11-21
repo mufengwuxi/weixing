@@ -4,6 +4,20 @@
 
 **2026-11-20 仓库目录已重整**：方案按问题放进 `solutions/q1/`、`q2/`、`q3/`，结果写进 `results/q1/`、`q2/`、`q3/`，日志和截图放到 `report/tasks/`。开工前先 `git pull`，然后照抄下面的新命令。如果手上有按旧路径做了一半的任务，就按新路径重跑；已经提交了的 PR 也请改成新路径。
 
+## 任务 16（最优先）：上传组委会更新后的高精度数据
+
+题目数据更新了，数值的小数位比原来更多。这个任务只换数据，不跑别的复核。
+
+1. `git pull`，切到新分支 `data-update-xiehuiyu`。
+2. 用新文件**直接覆盖**仓库里的 `data/数据.xlsx`。新文件在本机 `I:\建模比赛2\数据.xlsx`，以队员告诉你的实际路径为准。只复制文件，不要用 Excel 打开后另存，也不要改单元格格式。
+3. 导出全精度 CSV，并检查数据：
+   ```
+   python tools/dump_data.py data/数据.xlsx > report/tasks/task16_console.txt
+   python tools/check_data.py data/数据.xlsx >> report/tasks/task16_console.txt
+   ```
+   打开 `report/tasks/task16_console.txt` 看一下：每行的单元格类型应该是 `['float']`；如果出现 `str`，说明数值存成了文本，要在 PR 里写明。
+4. 提交 `data/数据.xlsx`、`data/数据_全精度.csv`、`report/tasks/data_check.md`、`report/tasks/task16_console.txt`，推送后提 PR，标题写"任务16：更新高精度数据"。
+
 ## 任务 13：复核第二问 30 颗版本（优先做这个，任务 11、12 可以跳过）
 
 1. `git pull`，切到新分支 `p2-claude30-verify-xiehuiyu`，关掉 ATK 界面，然后运行：
