@@ -32,7 +32,9 @@ def main():
         if name is None or any(v is None for v in vals):
             out.append(f"| {r} | {name} | 空 | | | | | |")
             continue
-        x = [float(v) for v in vals]
+        x = [float(str(v).strip()) for v in vals]
+        if math.sqrt(x[0] ** 2 + x[1] ** 2 + x[2] ** 2) > 1e6:  # 高精度版数据单位为 m、m/s
+            x = [t / 1000.0 for t in x]
         states[str(name).strip()] = x
         el = elements(x[:3], x[3:], MU)
         circ = [-W_E * x[1], W_E * x[0]]
@@ -53,10 +55,15 @@ def main():
         for key, label in (("r1_original_km", "旧 数据.xlsx 原始值"), ("r1_used_km", "第一问方案实际使用值（zzx 修正）")):
             v = o[key]
             out.append(f"- 与{label}：位置差 {norm(sub(r1[:3], v[:3])):.6f} km，速度差 {norm(sub(r1[3:], v[3:])) * 1000:.6f} m/s")
-        same = norm(sub(r1[:3], o["r1_used_km"][:3])) < 1e-6 and norm(sub(r1[3:], o["r1_used_km"][3:])) < 1e-9
+        dp = norm(sub(r1[:3], o["r1_used_km"][:3]))
+        dvv = norm(sub(r1[3:], o["r1_used_km"][3:]))
         out.append("")
-        out.append("**结论：新 r1 与第一问方案使用的 r1 一致，现有机动方案可以直接复核。**" if same else
-                   "**结论：新 r1 与第一问方案使用的 r1 不一致，现有机动方案是按旧数据求的，不能直接套用，第一问需要用新数据重新求解。**")
+        if dp < 1e-6 and dvv < 1e-9:
+            out.append("**结论：新 r1 与第一问方案使用的 r1 完全一致，现有机动方案可以直接复核。**")
+        elif dp < 1e-3 and dvv < 1e-6:
+            out.append("**结论：新 r1 与第一问方案使用的 r1 只差旧数据的舍入误差（米级以下），轨道相同；正式结果应以新数据重新求解。**")
+        else:
+            out.append("**结论：新 r1 与第一问方案使用的 r1 不一致，现有机动方案是按旧数据求的，不能直接套用，第一问需要用新数据重新求解。**")
     if "b1" in states and old.exists():
         o = json.loads(old.read_text(encoding="utf-8"))
         out.append(f"- b1 与旧数据位置差 {norm(sub(states['b1'][:3], o['b1_km'][:3])):.6f} km")

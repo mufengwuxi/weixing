@@ -34,10 +34,11 @@ REPO = Path(__file__).resolve().parents[2]
 
 # ---------------- 数据 ----------------
 def load_states(xlsx):
-    import openpyxl
-    ws = openpyxl.load_workbook(xlsx, data_only=True).worksheets[0]
-    row = lambda r: np.array([float(ws.cell(row=r, column=c).value) for c in range(2, 8)])  # noqa: E731
-    return row(4), row(6)  # r1, b1
+    import sys
+    sys.path.insert(0, str(REPO / "code"))
+    from datafile import read_states  # 自动识别 km 或 m 单位
+    R1, TG = read_states(xlsx)
+    return R1, TG["b1"]
 
 
 # ---------------- 动力学 ----------------

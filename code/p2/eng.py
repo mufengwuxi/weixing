@@ -5,9 +5,9 @@ warnings.filterwarnings('ignore')
 MU=398600.4418; AU=149597870.7; T_END=2592000.0; EPS=1e-6
 import os
 XLSX=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','..','data','数据.xlsx')
-ws=openpyxl.load_workbook(XLSX,data_only=True).worksheets[0]
-row=lambda r: np.array([float(ws.cell(row=r,column=c).value) for c in range(2,8)])
-R1=row(4); TG={str(ws.cell(row=r,column=1).value).strip(): row(r) for r in range(6,36)}
+import sys; sys.path.insert(0,os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
+from datafile import read_states  # 自动识别 km 或 m 单位
+R1,TG=read_states(XLSX)
 NAMES=list(TG)
 
 def kepler(r0,v0,dt):
