@@ -246,13 +246,14 @@ def fig1b():
 # ---------------- 图 2：目标分布 ----------------
 # 参照同步带目标统计文献的画法：以相位（经度）为横轴，分别画半长轴偏差和倾角两幅散点图，用实心、空心符号区分分组。
 def fig2():
+    """同步带扇形图：周向为相对 R1 的相位（真实角度），径向为 a − a_GEO（放大显示）；左下角插图标出放大区域在整个同步带上的位置。"""
     R1, TG = read_states(str(REPO / "data" / "数据.xlsx"))
 
     def el(x):
         r, v = x[:3], x[3:]
         a = 1 / (2 / np.linalg.norm(r) - v @ v / MU)
-        h = np.cross(r, v)
-        inc = np.degrees(np.arccos(h[2] / np.linalg.norm(h)))
+        hv = np.cross(r, v)
+        inc = np.degrees(np.arccos(hv[2] / np.linalg.norm(hv)))
         return a - A_GEO, inc, np.degrees(np.arctan2(r[1], r[0]))
 
     da0, i0, l0 = el(np.array(R1))
@@ -261,49 +262,100 @@ def fig2():
     for k, x in TG.items():
         da, inc, lon = el(np.array(x))
         pts.append((k.upper(), (lon - l0 + 180) % 360 - 180, da, inc, k in west))
-    W, H = 720, 520
-    L, R = 80, 20
-    X = lambda d: L + (d + 21) / 42 * (W - L - R)  # noqa: E731
-    panels = [  # (上边界, 下边界, 取值函数, 纵轴范围, 刻度, 纵轴名称, 子图名, R1 取值, 标注目标)
-        (30, 225, lambda p: p[2], (-7, 6), range(-6, 7, 3), "a − a<tspan baseline-shift=\"sub\" font-size=\"10\">GEO</tspan> / km", "(a)", da0,
-         ("B30", "B21", "B11")),
-        (285, 470, lambda p: p[3], (0, 10), range(0, 11, 2), "倾角 / (°)", "(b)", i0, ("B18", "B30", "B21")),
-    ]
-    body = []
-    for top, bot, f, (lo, hi), ticks, ylab, tag, r1v, lab in panels:
-        Y = lambda v, top=top, bot=bot, lo=lo, hi=hi: bot - (v - lo) / (hi - lo) * (bot - top)  # noqa: E731
-        body.append(f'<rect x="{L}" y="{top}" width="{W - L - R}" height="{bot - top}" fill="none" stroke="#000000" stroke-width="1"/>')
-        for v in ticks:
-            body.append(line(L, Y(v), L + 5, Y(v)))
-            body.append(line(W - R, Y(v), W - R - 5, Y(v)))
-            body.append(text(L - 7, Y(v) + 4, str(v).replace("-", "−"), 12, "end"))
-        for d in range(-20, 21, 5):
-            body.append(line(X(d), bot, X(d), bot - 5))
-            body.append(line(X(d), top, X(d), top + 5))
-            body.append(text(X(d), bot + 18, str(d).replace("-", "−"), 12))
-        body.append(line(X(1.6), top, X(1.6), bot, GRAY, 0.9, "5,4"))
-        for k, dl, da, inc, w in pts:
-            v = f((k, dl, da, inc))
-            if w:
-                body.append(f'<circle cx="{X(dl):.1f}" cy="{Y(v):.1f}" r="4.2" fill="#FFFFFF" stroke="#000000" stroke-width="1.1"/>')
-            else:
-                body.append(f'<circle cx="{X(dl):.1f}" cy="{Y(v):.1f}" r="4.2" fill="#000000" stroke="#000000" stroke-width="1.1"/>')
-            if k in lab:
-                body.append(text(X(dl) + 7, Y(v) - 6, k, 11, "start"))
-        rx, ry = X(0), Y(r1v)
-        body.append(poly([(rx, ry - 7), (rx + 6.5, ry + 4.5), (rx - 6.5, ry + 4.5)], fill=ORANGE, stroke="#000000", w=0.8))
-        body.append(text(rx - 9, ry + 4, "R1", 11, "end", ORANGE))
-        cy = (top + bot) / 2
-        body.append(f'<text x="28" y="{cy:.1f}" font-family="{FONT}" font-size="13" text-anchor="middle" transform="rotate(-90 28 {cy:.1f})">{ylab}</text>')
-        body.append(text(L + 8, top + 18, tag, 13, "start"))
-    body.append(text((L + W - R) / 2, H - 16, "初始时刻相对 R1 的相位差 / (°)", 13))
-    # 图例放在 (a) 子图右下角
-    lx, ly = W - R - 200, 195
-    body.append(f'<rect x="{lx - 8}" y="{ly - 16}" width="196" height="24" fill="#FFFFFF" stroke="none"/>')
-    body.append(f'<circle cx="{lx}" cy="{ly - 4}" r="4.2" fill="#FFFFFF" stroke="#000000" stroke-width="1.1"/>')
-    body.append(text(lx + 9, ly, "西侧 10 颗", 12, "start"))
-    body.append(f'<circle cx="{lx + 90}" cy="{ly - 4}" r="4.2" fill="#000000"/>')
-    body.append(text(lx + 99, ly, "东侧 20 颗", 12, "start"))
+
+    W, H = 940, 480
+    cx, cy = 455, 1265          # 地心在画面下方很远处
+    R0, K = 1100, 12.0          # 同步轨道半径（像素）、半长轴偏差放大系数（像素/km）
+    span, lo, hi = 22, -8.0, 7.0
+
+    def P(dl, da):
+        th = np.radians(90 - dl)
+        r = R0 + K * da
+        return cx + r * np.cos(th), cy - r * np.sin(th)
+
+    def ring(da, a0=-span, a1=span, n=160):
+        return [P(d, da) for d in np.linspace(a0, a1, n)]
+
+    body = ["""<defs>
+<radialGradient id="gEarth2" cx="0.38" cy="0.3" r="0.75">
+<stop offset="0" stop-color="#8EC9F2"/><stop offset="0.55" stop-color="#2E6FB7"/><stop offset="1" stop-color="#0D2E5C"/>
+</radialGradient>
+</defs>"""]
+    xb = 1.6
+    for a0, a1, col in ((-span, xb, "#FBEFE4"), (xb, span, "#E6EFF8")):
+        body.append(poly(ring(lo, a0, a1) + ring(hi, a0, a1)[::-1], fill=col, stroke="none"))
+    body.append(poly(ring(lo) + ring(hi)[::-1], stroke="#000000", w=1.0))
+    for d in range(-20, 21, 5):
+        x1, y1 = P(d, lo)
+        x2, y2 = P(d, hi)
+        body.append(line(x1, y1, x2, y2, "#D5D5D5", 0.7))
+        x2b, y2b = P(d, hi + 0.5)
+        body.append(line(x2, y2, x2b, y2b, "#000000", 1.0))
+        tx_, ty_ = P(d, hi + 1.5)
+        body.append(text(tx_, ty_, (f"{d:+d}°" if d else "0°").replace("-", "−"), 12, rot=d))
+    for da in (-5, 0, 5):
+        body.append(poly(ring(da), stroke="#000000" if da == 0 else "#8A8A8A", w=1.3 if da == 0 else 0.7,
+                         closed=False, dash=None if da == 0 else "4,3"))
+        x, y = P(span, da)
+        lab = {-5: "−5 km", 5: "+5 km"}.get(da)
+        if lab:
+            body.append(text(x + 6, y + 4, lab, 11, "start", "#555555"))
+        else:
+            body.append(f'<text x="{x + 6:.1f}" y="{y + 4:.1f}" font-family="{FONT}" font-size="12" text-anchor="start">a<tspan baseline-shift="sub" font-size="9">GEO</tspan></text>')
+    x1, y1 = P(xb, lo)
+    x2, y2 = P(xb, hi)
+    body.append(line(x1, y1, x2, y2, "#000000", 1.1, "6,4"))
+    x, y = P(-11, lo + 1.4)
+    body.append(text(x, y, "西侧 10 颗（第三问由 R1 观测）", 13, "middle", "#B5651D", rot=-11))
+    x, y = P(12, lo + 1.4)
+    body.append(text(x, y, "东侧 20 颗（第三问由 R2 观测）", 13, "middle", "#1F4E79", rot=12))
+    # 运动方向
+    pa = [P(d, hi + 3.2) for d in np.linspace(11, 19, 30)]
+    body.append(poly(pa, stroke="#000000", w=1.2, closed=False))
+    body.append(arrow(*pa[-2], *pa[-1], "#000000", 1.2, 7))
+    x, y = P(15, hi + 3.8)
+    body.append(text(x, y, "卫星运动方向（向东）", 12, rot=15))
+    # 目标
+    bins = [(0, 1, "#C6DBEF"), (1, 3, "#6BAED6"), (3, 6, "#2171B5"), (6, 10, "#08306B")]
+
+    def col(inc):
+        return next((c for a_, b_, c in bins if a_ <= inc < b_), bins[-1][2])
+
+    for k, dl, da, inc, w in pts:
+        x, y = P(dl, da)
+        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{col(inc)}" stroke="#1A1A1A" stroke-width="0.8"/>')
+    offs = {"B30": (9, 4), "B18": (9, -7), "B21": (9, -6), "B11": (9, 11), "B26": (-9, -7), "B28": (9, 12),
+            "B17": (0, 18), "B6": (-8, -8)}
+    for k, dl, da, inc, w in pts:
+        if k in offs:
+            x, y = P(dl, da)
+            ox, oy = offs[k]
+            body.append(text(x + ox, y + oy, k, 11, "start" if ox > 0 else ("end" if ox < 0 else "middle")))
+    x, y = P(12.03, 2.03)
+    body.append(line(x, y - 6, x - 6, y - 30, "#000000", 0.7))
+    body.append(text(x - 8, y - 33, "B19、B20", 11, "middle"))
+    # R1
+    x, y = P(0, da0)
+    body.append(satellite(x, y + 36, "#D62828", "#8C1C13", 0.55, 0))
+    body.append(line(x, y, x, y + 27, "#D62828", 0.8))
+    body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="#D62828" stroke="#1A1A1A" stroke-width="0.6"/>')
+    body.append(text(x - 26, y + 40, "R1", 12, "end", "#D62828"))
+    # 左下角插图：整个同步带与放大区域
+    ix, iy, re, rg = 82, 398, 22, 58
+    body.append(f'<circle cx="{ix}" cy="{iy}" r="{rg}" fill="none" stroke="#000000" stroke-width="0.9"/>')
+    body.append(f'<circle cx="{ix}" cy="{iy}" r="{re}" fill="url(#gEarth2)" stroke="#0D2E5C" stroke-width="0.6"/>')
+    sec = [(ix + rg * np.cos(np.radians(90 - d)), iy - rg * np.sin(np.radians(90 - d))) for d in np.linspace(-19, 19, 20)]
+    body.append(poly([(ix, iy)] + sec, fill="#D62828", stroke="#D62828", w=0.8, opacity=0.25))
+    body.append(poly(sec, stroke="#D62828", w=2.4, closed=False))
+    body.append(text(ix, iy + rg + 18, "同步带与放大区域", 11))
+    # 图例（右下）
+    lx, ly = W - 150, 352
+    body.append(text(lx, ly, "目标倾角", 12, "start"))
+    for n, (a_, b_, c) in enumerate(bins):
+        yy = ly + 20 + n * 19
+        body.append(f'<circle cx="{lx + 7}" cy="{yy - 4}" r="5.5" fill="{c}" stroke="#1A1A1A" stroke-width="0.8"/>')
+        body.append(text(lx + 18, yy, f"{a_}°–{b_}°", 12, "start"))
+    body.append(text(W / 2, H - 8, f"周向为相对 R1 的相位（真实角度），径向为半长轴偏差（放大约 {K * 42164 / R0:.0f} 倍显示）；R1 倾角 {i0:.2f}°", 11, "middle", "#555555"))
     save("fig2_targets.svg", W, H, body)
 
 
