@@ -1,0 +1,1016 @@
+# 第一问方案 ATK 独立复核
+
+- 方案文件：`solutions/q1/p1_claude_v4.json`，历元 2027-01-01T00:00:00 UTC，μ = 398600.4418 km³/s²
+- 观测段：2027-01-02T14:25:46.633 起 60.0 s，检查网格 0.05 s，ATK 星历步长 1.0 s
+- 方案说明：code/p1/solver.py 求解（seed=2, starts=300），裕量 距离 0.01 km、角度 0.01°、时长 60.0 s；0.05 s 网格认证通过
+
+## 1. 初始数据检查
+| 对象 | a (km) | e | i (°) | RAAN (°) | 近地点地心距 (km) | 周期 (h) |
+|---|---|---|---|---|---|---|
+| r1_original_km | 42165.941 | 0.001126 | 4.3791 | 76.968 | 42118.477 | 23.9360 |
+| r1_used_km | 42165.941 | 0.001126 | 4.3791 | 76.968 | 42118.477 | 23.9360 |
+| b1_km | 42166.908 | 0.000046 | 0.1729 | 79.460 | 42164.951 | 23.9368 |
+
+## 2. 太阳位置来源
+- 观测开始时 ERFA 地心太阳距离 147104675 km；几何方向与视方向（含光行时和光行差）相差 20.84 角秒
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing\tools\verify_p1_atk.py:42: RuntimeWarning: invalid value encountered in scalar divide
+  c = dot(u, v) / (norm(u) * norm(v))
+- ATK 太阳对象：CBI 读数长度 0 km，与 ERFA 几何方向相差 0.00 角秒
+- ATK 太阳读数不是地心太阳位置，弃用（上一版脚本直接用了这个读数，光照角结果作废）
+
+## 3. ATK 与解析传播一致性
+- 坐标系：使用 CBI 读数（历元时刻与 ICRF 赋值相差 0.000000 m）
+- t = 3600.500 s：ATK 与开普勒位置差 0.0011 m
+- t = 86400.250 s：ATK 与开普勒位置差 0.3997 m
+- t = 138346.659 s：ATK 与开普勒位置差 0.6809 m
+- 累计 Δv = 5.212815 m/s
+
+## 4. 观测段 60 s 检查
+| 轨道 | 太阳 | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 60 s 全程满足 |
+|---|---|---|---|---|---|
+| 方案声称 | | 10.279507499000603–14.051259902126118 | 44.98999998721972 | 44.99000000190727 | 是 |
+| 开普勒 | ERFA 几何 | 10.2795–14.0513 | 44.990000 | 44.990000 | 是 |
+| 开普勒 | ERFA 视方向 | 10.2795–14.0513 | 44.988778 | 44.990000 | 是 |
+| ATK | ERFA 几何 | 10.2795–14.0513 | 44.989773 | 44.990142 | 是 |
+| ATK | ERFA 视方向 | 10.2795–14.0513 | 44.988551 | 44.990142 | 是 |
+| ATK，Δv 4 位小数 | ERFA 几何 | 10.2810–14.0521 | 44.992364 | 44.982373 | 是 |
+| ATK，Δv 4 位小数 | ERFA 视方向 | 10.2810–14.0521 | 44.991140 | 44.982373 | 是 |
+
+## 5. 观测开始时刻的调整空间（ATK 轨道）
+- ERFA 几何：连续满足区间 2027-01-02T14:25:46.633 至 2027-01-02T14:26:46.633，约 60.0 s
+  - 方案原定开始时刻：角度裕量 0.0099°，距离裕量 0.280 km
+  - 开始时刻改为 2027-01-02T14:25:46.633（后移 0.0 s）：角度裕量 0.0099°，距离裕量 0.280 km，Δv 不变
+- ERFA 视方向：连续满足区间 2027-01-02T14:25:46.633 至 2027-01-02T14:26:46.633，约 60.0 s
+  - 方案原定开始时刻：角度裕量 0.0099°，距离裕量 0.280 km
+  - 开始时刻改为 2027-01-02T14:25:46.633（后移 0.0 s）：角度裕量 0.0099°，距离裕量 0.280 km，Δv 不变
+
+场景已保存到 `results\q1\p1_verify_v4\P1Verify.atk`，可以在 ATK 界面里打开查看轨道（b1、r1_full_arc2 等）。
+
+明细：samples.csv（0.05 s 网格，全部组合），scan.csv（0.5 s 扫描）。
+new objvgt: 000002CBA66C0950
+new objvgt: 000002CBA66BF780
+new objvgt: 000002CBA66BFA50
+new objvgt: 000002CBA6A1E030
+new objvgt: 000002CBA6A1E3C0
+new objvgt: 000002CBA6BA6AB0
+=== Q2 v3-C relay ===
+# 第二问方案复核
+
+- 方案文件：`solutions/q2/v3c_p2_lns_scp.json`；目标 30 颗（去重后 30 颗），机动 58 次
+
+## 1. 机动约束
+- 累计 Δv：176.3117 m/s（上限 300）
+- 单次最大：25.7062 m/s（上限 30）；有效机动（> 1 mm/s）41 次，其余 17 次小于 1 mm/s
+- 相邻机动最小间隔：3600.000000 s（要求 ≥ 3600）
+- 每次观测对应的机动次数最大值：2（要求 ≤ 2）
+- 观测期间发生机动：无
+- 最后一次观测结束：29.5182 天（要求 ≤ 30）
+
+## 2. 逐次观测检查（Python 解析重放，0.05 s 网格）
+| # | 目标 | 开始（UTC） | 距离 (km) | 最大光照角 几何/视方向 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b2 | 01-01 14:00:53 | 10.068–10.880 | 44.9500 / 44.9518 | 44.9500 | 是 |
+| 2 | b3 | 01-02 14:36:43 | 19.130–24.475 | 44.9500 / 44.9445 | 44.9500 | 是 |
+| 3 | b9 | 01-03 14:28:49 | 14.032–15.913 | 44.9500 / 44.9447 | 34.6889 | 是 |
+| 4 | b18 | 01-06 12:50:20 | 17.542–20.881 | 44.9500 / 44.9474 | 44.9500 | 是 |
+| 5 | b30 | 01-08 19:06:54 | 46.459–49.950 | 31.2052 / 31.2095 | 22.0870 | 是 |
+| 6 | b26 | 01-09 15:03:55 | 49.449–49.950 | 38.3870 / 38.3838 | 11.5010 | 是 |
+| 7 | b17 | 01-12 14:21:42 | 48.939–49.429 | 44.9500 / 44.9460 | 8.3950 | 是 |
+| 8 | b8 | 01-13 14:07:05 | 49.484–49.950 | 31.9771 / 31.9751 | 23.2664 | 是 |
+| 9 | b5 | 01-14 13:51:47 | 43.227–49.950 | 44.9500 / 44.9446 | 37.7473 | 是 |
+| 10 | b1 | 01-15 13:38:06 | 49.484–49.950 | 34.1452 / 34.1426 | 20.5949 | 是 |
+| 11 | b4 | 01-17 13:06:36 | 40.473–46.436 | 44.9500 / 44.9442 | 34.3423 | 是 |
+| 12 | b11 | 01-18 12:56:32 | 46.261–49.950 | 44.9500 / 44.9446 | 24.4538 | 是 |
+| 13 | b6 | 01-18 16:40:13 | 48.600–49.950 | 44.9500 / 44.9549 | 23.9428 | 是 |
+| 14 | b7 | 01-18 21:45:36 | 49.710–49.950 | 44.9500 / 44.9558 | 44.8688 | 是 |
+| 15 | b10 | 01-19 12:46:40 | 48.323–49.950 | 44.9500 / 44.9473 | 22.0359 | 是 |
+| 16 | b12 | 01-20 12:39:42 | 48.370–49.950 | 42.9460 / 42.9435 | 24.2839 | 是 |
+| 17 | b13 | 01-21 12:35:02 | 28.441–36.362 | 44.9500 / 44.9451 | 44.9500 | 是 |
+| 18 | b15 | 01-22 12:10:12 | 48.633–49.950 | 34.4947 / 34.4940 | 41.4315 | 是 |
+| 19 | b14 | 01-23 12:06:41 | 18.528–21.576 | 44.9500 / 44.9445 | 35.9709 | 是 |
+| 20 | b16 | 01-23 16:50:23 | 48.353–49.950 | 31.0943 / 31.1000 | 22.2155 | 是 |
+| 21 | b19 | 01-24 12:01:26 | 34.716–39.060 | 44.9500 / 44.9443 | 30.0315 | 是 |
+| 22 | b20 | 01-24 12:12:26 | 49.460–49.950 | 27.0369 / 27.0374 | 44.9500 | 是 |
+| 23 | b21 | 01-24 17:01:20 | 47.308–49.950 | 44.9500 / 44.9557 | 22.3230 | 是 |
+| 24 | b23 | 01-25 12:00:09 | 49.485–49.950 | 43.6502 / 43.6466 | 17.7084 | 是 |
+| 25 | b22 | 01-26 17:48:44 | 48.367–49.950 | 26.7522 / 26.7538 | 39.5319 | 是 |
+| 26 | b24 | 01-27 11:29:20 | 48.464–49.950 | 44.9500 / 44.9445 | 19.6203 | 是 |
+| 27 | b25 | 01-27 15:36:18 | 48.072–49.950 | 44.9500 / 44.9555 | 33.0876 | 是 |
+| 28 | b27 | 01-28 11:34:09 | 49.202–49.950 | 44.9500 / 44.9462 | 17.6400 | 是 |
+| 29 | b29 | 01-29 13:07:58 | 15.098–19.881 | 44.9500 / 44.9512 | 44.9500 | 是 |
+| 30 | b28 | 01-30 12:25:14 | 48.189–49.950 | 44.9500 / 44.9458 | 16.2535 | 是 |
+
+Python 复核：30/30 次观测满足全部约束。
+全程最低地心距（1 h 采样）：41748.5 km
+
+## 3. ATK 复核（r1 分段接力传播，0.2 s 网格，太阳用 ERFA 几何方向）
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+- b2：距离 10.068–10.879 km，光照角 44.9413°，侦测角 44.9494°，满足
+- b3：距离 19.132–24.475 km，光照角 44.9226°，侦测角 44.9501°，满足
+- b9：距离 14.032–15.913 km，光照角 44.9244°，侦测角 34.6890°，满足
+- b18：距离 17.542–20.866 km，光照角 44.9504°，侦测角 44.9161°，满足
+- b30：距离 46.458–49.950 km，光照角 31.1687°，侦测角 22.0874°，满足
+- b26：距离 49.449–49.950 km，光照角 38.3671°，侦测角 11.4830°，满足
+- b17：距离 48.939–49.426 km，光照角 44.9339°，侦测角 8.3693°，满足
+- b8：距离 49.483–49.950 km，光照角 31.9550°，侦测角 23.2574°，满足
+- b5：距离 43.236–49.950 km，光照角 44.9509°，侦测角 37.7478°，满足
+- b1：距离 49.484–49.950 km，光照角 34.1254°，侦测角 20.5942°，满足
+- b4：距离 40.480–46.436 km，光照角 44.9472°，侦测角 34.3429°，满足
+- b11：距离 46.264–49.950 km，光照角 44.9429°，侦测角 24.4544°，满足
+- b6：距离 48.600–49.950 km，光照角 44.9198°，侦测角 23.9170°，满足
+- b7：距离 49.711–49.951 km，光照角 44.9483°，侦测角 44.8699°，满足
+- b10：距离 48.322–49.944 km，光照角 44.9318°，侦测角 22.0166°，满足
+- b12：距离 48.370–49.944 km，光照角 42.9278°，侦测角 24.2665°，满足
+- b13：距离 28.450–36.363 km，光照角 44.9544°，侦测角 44.9504°，满足
+- b15：距离 48.631–49.940 km，光照角 34.4603°，侦测角 41.4188°，满足
+- b14：距离 18.531–21.576 km，光照角 44.9604°，侦测角 35.9701°，满足
+- b16：距离 48.352–49.946 km，光照角 31.0899°，侦测角 22.2046°，满足
+- b19：距离 34.722–39.060 km，光照角 44.9568°，侦测角 30.0312°，满足
+- b20：距离 49.457–49.947 km，光照角 27.0121°，侦测角 44.9414°，满足
+- b21：距离 47.307–49.949 km，光照角 44.9282°，侦测角 22.3199°，满足
+- b23：距离 49.484–49.949 km，光照角 43.6403°，侦测角 17.6889°，满足
+- b22：距离 48.372–49.950 km，光照角 26.7271°，侦测角 39.5324°，满足
+- b24：距离 48.464–49.948 km，光照角 44.9590°，侦测角 19.6149°，满足
+- b25：距离 48.067–49.945 km，光照角 44.9197°，侦测角 33.0790°，满足
+- b27：距离 49.199–49.947 km，光照角 44.9467°，侦测角 17.6155°，满足
+- b29：距离 15.092–19.877 km，光照角 44.8580°，侦测角 44.9384°，满足
+- b28：距离 48.189–49.950 km，光照角 44.9446°，侦测角 16.2538°，满足
+
+ATK 复核：30/30 次观测满足全部约束。
+
+## 结论：机动约束全部满足；成功观测 30 颗不同目标，累计 Δv 176.3117 m/s。
+new objvgt: 0000021154C65C10
+new objvgt: 0000021154C663B0
+new objvgt: 0000021154DEF700
+new objvgt: 0000021154DFE510
+new objvgt: 000002115513E990
+new objvgt: 00000211550F9AC0
+new objvgt: 0000021166CEEEF0
+new objvgt: 0000021166CEF100
+new objvgt: 0000021166CEFB50
+new objvgt: 0000021166D0B5C0
+new objvgt: 0000021166D0B470
+new objvgt: 0000021166D0E160
+new objvgt: 0000021167007C60
+new objvgt: 0000021167106B60
+new objvgt: 0000021167113410
+new objvgt: 0000021167113C50
+new objvgt: 0000021167127350
+new objvgt: 0000021167127D10
+new objvgt: 0000021167127B60
+new objvgt: 00000211671284F0
+new objvgt: 00000211671572B0
+new objvgt: 00000211671585D0
+new objvgt: 0000021167158120
+new objvgt: 0000021167158C00
+new objvgt: 0000021154BE8EE0
+new objvgt: 0000021154BE9510
+new objvgt: 0000021154BE7DD0
+new objvgt: 0000021154BE8610
+new objvgt: 0000021166B7B860
+new objvgt: 0000021166B7C910
+new objvgt: 0000021166B7B140
+new objvgt: 0000021166B7B410
+new objvgt: 0000021166BB0410
+new objvgt: 0000021166BB0C80
+new objvgt: 0000021166BB0F50
+new objvgt: 0000021166BB1BE0
+new objvgt: 0000021166BB1970
+new objvgt: 0000021166BB2330
+new objvgt: 0000021166BB2F30
+new objvgt: 0000021166BAFCC0
+new objvgt: 00000211068579D0
+new objvgt: 00000211068581E0
+new objvgt: 0000021106858C60
+new objvgt: 0000021106858F00
+new objvgt: 0000021106859830
+new objvgt: 000002110685A640
+new objvgt: 000002110685A850
+new objvgt: 0000021106856D40
+new objvgt: 00000211679210D0
+new objvgt: 0000021167920D10
+new objvgt: 0000021167921640
+new objvgt: 00000211679215E0
+new objvgt: 0000021167922B40
+new objvgt: 0000021167922F90
+new objvgt: 0000021167923740
+new objvgt: 0000021167920410
+new objvgt: 0000021167920350
+new objvgt: 00000211067640A0
+new objvgt: 0000021106764D60
+new objvgt: 0000021106764CD0
+new objvgt: 0000021106765C60
+new objvgt: 0000021106766680
+new objvgt: 0000021106766E90
+new objvgt: 0000021106767490
+new objvgt: 0000021106767D00
+new objvgt: 00000211CB2588F0
+new objvgt: 00000211CB258B30
+new objvgt: 00000211CB259910
+new objvgt: 00000211CB25A6F0
+new objvgt: 00000211CB25A540
+new objvgt: 00000211CB25AB10
+new objvgt: 00000211CB25BA40
+new objvgt: 00000211CB25BCB0
+new objvgt: 00000211CB25CCA0
+new objvgt: 00000211CB25D0F0
+new objvgt: 00000211CB25D900
+new objvgt: 00000211CB25E3E0
+new objvgt: 00000211CB25EB00
+new objvgt: 00000211CB25E7D0
+new objvgt: 00000211CB25F790
+new objvgt: 00000211CB25F400
+new objvgt: 00000211CB25A1E0
+new objvgt: 00000212322D8480
+new objvgt: 00000212322D8B10
+new objvgt: 00000212322D87B0
+new objvgt: 00000212322D9620
+new objvgt: 00000212322DA7F0
+new objvgt: 00000212322DA0D0
+new objvgt: 00000212322DB060
+q2 exit=0
+=== Q3 v4 r1 relay ===
+# 第二问方案复核
+
+- 方案文件：`solutions/q3/v4_p3_r1.json`；目标 10 颗（去重后 10 颗），机动 20 次
+
+## 1. 机动约束
+- 累计 Δv：18.1475 m/s（上限 300）
+- 单次最大：3.3408 m/s（上限 30）；有效机动（> 1 mm/s）13 次，其余 7 次小于 1 mm/s
+- 相邻机动最小间隔：3600.000002 s（要求 ≥ 3600）
+- 每次观测对应的机动次数最大值：2（要求 ≤ 2）
+- 观测期间发生机动：无
+- 最后一次观测结束：18.6011 天（要求 ≤ 30）
+
+## 2. 逐次观测检查（Python 解析重放，0.05 s 网格）
+| # | 目标 | 开始（UTC） | 距离 (km) | 最大光照角 几何/视方向 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b2 | 01-02 13:47:37 | 10.070–10.799 | 44.9500 / 44.9513 | 44.9500 | 是 |
+| 2 | b1 | 01-03 14:22:01 | 12.986–16.868 | 34.2384 / 34.2377 | 44.9500 | 是 |
+| 3 | b3 | 01-06 14:20:32 | 11.245–14.608 | 44.9502 / 44.9486 | 42.7322 | 是 |
+| 4 | b5 | 01-07 14:19:28 | 46.336–46.988 | 33.5359 / 33.5389 | 44.9499 | 是 |
+| 5 | b8 | 01-10 14:16:00 | 31.535–38.055 | 44.9503 / 44.9445 | 40.8546 | 是 |
+| 6 | b9 | 01-11 13:56:30 | 49.716–49.950 | 27.0585 / 27.0605 | 44.9499 | 是 |
+| 7 | b17 | 01-13 14:15:36 | 19.784–26.398 | 34.2745 / 34.2701 | 44.9501 | 是 |
+| 8 | b18 | 01-16 12:13:29 | 27.859–31.721 | 44.9503 / 44.9456 | 41.4833 | 是 |
+| 9 | b30 | 01-18 18:24:09 | 48.604–49.950 | 29.9560 / 29.9575 | 19.8025 | 是 |
+| 10 | b26 | 01-19 14:24:31 | 49.404–49.950 | 30.8487 / 30.8474 | 32.1538 | 是 |
+
+Python 复核：10/10 次观测满足全部约束。
+全程最低地心距（1 h 采样）：42114.5 km
+
+## 3. ATK 复核（r1 分段接力传播，0.2 s 网格，太阳用 ERFA 几何方向）
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+- b2：距离 10.070–10.798 km，光照角 44.9393°，侦测角 44.9469°，满足
+- b1：距离 12.986–16.868 km，光照角 34.1451°，侦测角 44.9501°，满足
+- b3：距离 11.245–14.608 km，光照角 44.8577°，侦测角 42.7327°，满足
+- b5：距离 46.336–46.984 km，光照角 33.5105°，侦测角 44.9459°，满足
+- b8：距离 31.542–38.055 km，光照角 44.9427°，侦测角 40.8549°，满足
+- b9：距离 49.716–49.949 km，光照角 27.0439°，侦测角 44.9499°，满足
+- b17：距离 19.789–26.399 km，光照角 34.2747°，侦测角 44.9507°，满足
+- b18：距离 27.859–31.708 km，光照角 44.9506°，侦测角 41.4598°，满足
+- b30：距离 48.604–49.950 km，光照角 29.9127°，侦测角 19.7729°，满足
+- b26：距离 49.404–49.946 km，光照角 30.8247°，侦测角 32.1540°，满足
+
+ATK 复核：10/10 次观测满足全部约束。
+
+## 结论：机动约束全部满足；成功观测 10 颗不同目标，累计 Δv 18.1475 m/s。
+new objvgt: 00000287A68764E0
+new objvgt: 00000287A6876F90
+new objvgt: 00000287A68774A0
+new objvgt: 00000287A68776E0
+new objvgt: 00000287A6867FF0
+new objvgt: 00000287A68687D0
+new objvgt: 00000287A6868620
+new objvgt: 00000287A6869970
+new objvgt: 00000287A6869B80
+new objvgt: 00000287A686A060
+new objvgt: 00000287A686B260
+new objvgt: 00000287A686B650
+new objvgt: 00000287A686C460
+new objvgt: 00000287A686C5E0
+new objvgt: 00000287A686CFD0
+new objvgt: 00000287A686E530
+new objvgt: 00000287A686DDE0
+new objvgt: 00000287A686EB30
+new objvgt: 00000287A686F250
+new objvgt: 00000287A686FD60
+new objvgt: 00000287A68706C0
+new objvgt: 00000287A68779B0
+new objvgt: 00000287A63E9C20
+new objvgt: 00000287A63EA7F0
+new objvgt: 00000287A63EAC70
+new objvgt: 00000287A63E7070
+new objvgt: 00000287A2459F70
+new objvgt: 00000287B5D9F470
+new objvgt: 00000287B5D9FF80
+new objvgt: 00000287B5DA0670
+new objvgt: 00000287B5DA1420
+r1 exit=0
+=== Q3 v4 r2 relay ===
+# 第二问方案复核
+
+- 方案文件：`solutions/q3/v4_p3_r2.json`；目标 20 颗（去重后 20 颗），机动 39 次
+
+## 1. 机动约束
+- 累计 Δv：15.9557 m/s（上限 300）
+- 单次最大：2.8786 m/s（上限 30）；有效机动（> 1 mm/s）24 次，其余 15 次小于 1 mm/s
+- 相邻机动最小间隔：3600.000000 s（要求 ≥ 3600）
+- 每次观测对应的机动次数最大值：2（要求 ≤ 2）
+- 观测期间发生机动：无
+- 最后一次观测结束：29.5155 天（要求 ≤ 30）
+
+## 2. 逐次观测检查（Python 解析重放，0.05 s 网格）
+| # | 目标 | 开始（UTC） | 距离 (km) | 最大光照角 几何/视方向 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b4 | 01-01 14:07:49 | 11.674–16.312 | 44.9500 / 44.9463 | 44.9500 | 是 |
+| 2 | b11 | 01-04 13:51:05 | 32.919–33.825 | 44.9500 / 44.9468 | 13.4290 | 是 |
+| 3 | b7 | 01-05 14:58:30 | 49.720–49.950 | 26.1961 / 26.2016 | 44.9500 | 是 |
+| 4 | b6 | 01-06 17:24:14 | 45.765–47.271 | 35.8140 / 35.8122 | 42.4726 | 是 |
+| 5 | b10 | 01-08 13:25:40 | 30.051–36.395 | 44.9500 / 44.9442 | 39.5077 | 是 |
+| 6 | b12 | 01-11 13:11:50 | 40.435–41.024 | 31.3850 / 31.3874 | 44.9502 | 是 |
+| 7 | b13 | 01-12 13:07:24 | 37.590–43.722 | 44.9500 / 44.9442 | 36.4865 | 是 |
+| 8 | b15 | 01-14 12:38:48 | 48.824–49.950 | 32.5200 / 32.5210 | 44.9502 | 是 |
+| 9 | b14 | 01-15 12:32:34 | 18.097–22.325 | 44.9501 / 44.9451 | 44.2340 | 是 |
+| 10 | b16 | 01-15 17:21:55 | 23.678–23.894 | 32.9449 / 32.9429 | 44.9504 | 是 |
+| 11 | b19 | 01-18 12:20:35 | 49.529–49.950 | 27.3908 / 27.3917 | 44.9504 | 是 |
+| 12 | b20 | 01-19 12:26:16 | 21.270–28.552 | 44.9502 / 44.9453 | 44.9507 | 是 |
+| 13 | b21 | 01-20 17:13:59 | 48.743–49.950 | 32.1780 / 32.1763 | 44.9504 | 是 |
+| 14 | b23 | 01-22 12:06:58 | 49.350–49.949 | 34.3941 / 34.3919 | 29.3098 | 是 |
+| 15 | b22 | 01-23 17:57:51 | 15.271–17.196 | 44.9503 / 44.9555 | 28.6626 | 是 |
+| 16 | b24 | 01-25 11:28:07 | 17.231–17.655 | 33.1527 / 33.1519 | 44.9519 | 是 |
+| 17 | b25 | 01-26 15:36:10 | 23.711–26.653 | 44.9511 / 44.9483 | 44.9513 | 是 |
+| 18 | b27 | 01-28 11:29:06 | 41.564–42.501 | 38.7388 / 38.7363 | 30.7436 | 是 |
+| 19 | b29 | 01-29 13:04:07 | 33.883–35.583 | 36.4597 / 36.4631 | 44.9511 | 是 |
+| 20 | b28 | 01-30 12:21:18 | 48.748–49.949 | 44.9500 / 44.9461 | 14.8260 | 是 |
+
+Python 复核：20/20 次观测满足全部约束。
+全程最低地心距（1 h 采样）：42048.7 km
+
+## 3. ATK 复核（r1 分段接力传播，0.2 s 网格，太阳用 ERFA 几何方向）
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+- b4：距离 11.674–16.312 km，光照角 44.8721°，侦测角 44.9500°，满足
+- b11：距离 32.919–33.819 km，光照角 44.9207°，侦测角 13.3914°，满足
+- b7：距离 49.721–49.950 km，光照角 26.1958°，侦测角 44.9499°，满足
+- b6：距离 45.765–47.262 km，光照角 35.7733°，侦测角 42.4602°，满足
+- b10：距离 30.058–36.395 km，光照角 44.9396°，侦测角 39.5080°，满足
+- b12：距离 40.435–41.024 km，光照角 31.3543°，侦测角 44.9502°，满足
+- b13：距离 37.597–43.722 km，光照角 44.9432°，侦测角 36.4868°，满足
+- b15：距离 48.824–49.950 km，光照角 32.4813°，侦测角 44.9504°，满足
+- b14：距离 18.102–22.325 km，光照角 44.9502°，侦测角 44.2344°，满足
+- b16：距离 23.678–23.893 km，光照角 32.9453°，侦测角 44.9505°，满足
+- b19：距离 49.529–49.948 km，光照角 27.3718°，侦测角 44.9476°，满足
+- b20：距离 21.277–28.552 km，光照角 44.9504°，侦测角 44.9514°，满足
+- b21：距离 48.743–49.943 km，光照角 32.1481°，侦测角 44.9424°，满足
+- b23：距离 49.350–49.946 km，光照角 34.3726°，侦测角 29.3018°，满足
+- b22：距离 15.271–17.196 km，光照角 44.9017°，侦测角 28.6644°，满足
+- b24：距离 17.231–17.652 km，光照角 33.1242°，侦测角 44.9431°，满足
+- b25：距离 23.711–26.654 km，光照角 44.8974°，侦测角 44.9525°，满足
+- b27：距离 41.564–42.496 km，光照角 38.7159°，侦测角 30.7317°，满足
+- b29：距离 33.882–35.572 km，光照角 36.4086°，侦测角 44.9331°，满足
+- b28：距离 48.748–49.949 km，光照角 44.9280°，侦测角 14.8274°，满足
+
+ATK 复核：20/20 次观测满足全部约束。
+
+## 结论：机动约束全部满足；成功观测 20 颗不同目标，累计 Δv 15.9557 m/s。
+new objvgt: 000002434E4DCF20
+new objvgt: 000002434E4DDC70
+new objvgt: 000002434E4DEBD0
+new objvgt: 000002434E4DE570
+new objvgt: 000002434E4DF020
+new objvgt: 000002434E4E7000
+new objvgt: 000002434E4E6550
+new objvgt: 000002434E4E8F50
+new objvgt: 000002434E97EFC0
+new objvgt: 000002434E97FDD0
+new objvgt: 000002434E97F380
+new objvgt: 000002434E980520
+new objvgt: 000002434E981480
+new objvgt: 000002434E980C10
+new objvgt: 000002434E981FC0
+new objvgt: 000002434E981A80
+new objvgt: 000002434E982680
+new objvgt: 000002434E983940
+new objvgt: 000002434E983880
+new objvgt: 000002434E983BB0
+new objvgt: 000002434E985170
+new objvgt: 000002434E9848A0
+new objvgt: 000002434E985A40
+new objvgt: 000002434E986280
+new objvgt: 000002434E986460
+new objvgt: 000002434E986A90
+new objvgt: 000002434E987FF0
+new objvgt: 000002434E988170
+new objvgt: 000002434E988C80
+new objvgt: 000002434E988E90
+new objvgt: 000002434E989760
+new objvgt: 000002434E989DF0
+new objvgt: 000002434E989EB0
+new objvgt: 000002434E98A720
+new objvgt: 000002434E98BA10
+new objvgt: 000002434E98B920
+new objvgt: 000002434E98C1C0
+new objvgt: 000002434E98CFA0
+new objvgt: 000002434E98D1B0
+new objvgt: 000002434E98DCF0
+new objvgt: 000002434E97E1B0
+new objvgt: 000002434E97E510
+new objvgt: 0000024358E12D90
+new objvgt: 0000024358E137E0
+new objvgt: 0000024358E13D80
+new objvgt: 0000024358E145F0
+new objvgt: 0000024358E150A0
+new objvgt: 0000024358E156D0
+new objvgt: 0000024358E15EB0
+new objvgt: 0000024358E15FD0
+new objvgt: 0000024358E16D50
+new objvgt: 0000024358E17AA0
+new objvgt: 0000024358E17920
+new objvgt: 0000024358E17FB0
+new objvgt: 0000024358E18A30
+new objvgt: 0000024358E191E0
+new objvgt: 0000024358E19630
+new objvgt: 0000024358E1A5F0
+new objvgt: 0000024358E1A380
+new objvgt: 0000024358E1B880
+r2 exit=0
+=== Q2 v3-C single ===
+# 单颗 r1 的 ATK 机动规划复核
+
+- 方案：`solutions/q2/v3c_p2_lns_scp.json`；脉冲 58 次，观测 30 次
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+
+## 1. 脉冲坐标约定
+- 采用标准 VNC：V 沿速度，N 沿轨道角动量，C = V × N（任务 14 标定误差 0.000 m）
+
+## 2. 搭建单颗 r1
+- 首脉冲在历元时刻，已并入初始状态速度
+new objvgt: 000001BA9E68C770
+new objvgt: 000001BA9E68CFE0
+new objvgt: 000001BA9E68D9D0
+new objvgt: 000001BA9E68DDF0
+new objvgt: 000001BA9E68E960
+new objvgt: 000001BA9E696580
+new objvgt: 000001BA9E695DD0
+new objvgt: 000001BA9F0E2600
+new objvgt: 000001BA9F0E36E0
+new objvgt: 000001BA9F0E3860
+new objvgt: 000001BA9F0E46D0
+new objvgt: 000001BA9F0E47C0
+new objvgt: 000001BA9F0E4970
+new objvgt: 000001BA9F0E6020
+new objvgt: 000001BA9F0E5A20
+new objvgt: 000001BA9F0E6290
+new objvgt: 000001BA9F0E6F20
+new objvgt: 000001BA9F0E7460
+new objvgt: 000001BA9F0E82A0
+new objvgt: 000001BA9F0E8720
+new objvgt: 000001BA9F0E8780
+new objvgt: 000001BA9F0E9BC0
+new objvgt: 000001BA9F0EA8B0
+new objvgt: 000001BA9F0EA670
+new objvgt: 000001BA9F0EAFD0
+new objvgt: 000001BA9F0EB390
+new objvgt: 000001BA9F0EC080
+new objvgt: 000001BA9F0EC980
+new objvgt: 000001BA9F0ECAD0
+new objvgt: 000001BA9F0ED520
+new objvgt: 000001BA9F0ED9A0
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can - 段序列：初始状态 + 58 × (预报段 + 机动段) + 结束预报段，RunMCS 完成
+- 第一次脉冲后 3 h，ATK 与解析重放位置差 0.000 m
+
+## 3. 逐次观测检查（ATK 单颗 r1 传播，0.2 s 网格，太阳为 ERFA 几何方向）
+| # | 目标 | 与解析重放位置差 (m) | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b2 | 0.00 | 10.068–10.879 | 44.9413 | 44.9483 | 是 |
+| 2 | b3 | 0.00 | 19.132–24.475 | 44.9245 | 44.9503 | 是 |
+| 3 | b9 | 0.00 | 14.032–15.914 | 44.9283 | 34.6896 | 是 |
+| 4 | b18 | 0.00 | 17.541–20.865 | 44.9547 | 44.9131 | 是 |
+| 5 | b30 | 0.00 | 46.459–49.950 | 31.1664 | 22.0882 | 是 |
+| 6 | b26 | 0.00 | 49.449–49.950 | 38.3698 | 11.4804 | 是 |
+| 7 | b17 | 0.00 | 48.939–49.426 | 44.9377 | 8.3684 | 是 |
+| 8 | b8 | 0.00 | 49.482–49.948 | 31.9577 | 23.2530 | 是 |
+| 9 | b5 | 0.00 | 43.236–49.951 | 44.9561 | 37.7484 | 是 |
+| 10 | b1 | 0.00 | 49.482–49.948 | 34.1290 | 20.5893 | 是 |
+| 11 | b4 | 0.00 | 40.480–46.436 | 44.9548 | 34.3434 | 是 |
+| 12 | b11 | 0.00 | 46.264–49.950 | 44.9497 | 24.4545 | 是 |
+| 13 | b6 | 0.00 | 48.598–49.948 | 44.9159 | 23.9125 | 是 |
+| 14 | b7 | 0.00 | 49.715–49.955 | 44.9440 | 44.8746 | 是 |
+| 15 | b10 | 0.00 | 48.321–49.942 | 44.9364 | 22.0127 | 是 |
+| 16 | b12 | 0.00 | 48.368–49.942 | 42.9321 | 24.2623 | 是 |
+| 17 | b13 | 0.00 | 28.450–36.362 | 44.9623 | 44.9498 | 是 |
+| 18 | b15 | 0.00 | 48.628–49.937 | 34.4631 | 41.4147 | 是 |
+| 19 | b14 | 0.00 | 18.530–21.576 | 44.9737 | 35.9680 | 是 |
+| 20 | b16 | 0.00 | 48.351–49.945 | 31.0840 | 22.2014 | 是 |
+| 21 | b19 | 0.00 | 34.721–39.060 | 44.9638 | 30.0302 | 是 |
+| 22 | b20 | 0.00 | 49.453–49.944 | 27.0136 | 44.9376 | 是 |
+| 23 | b21 | 0.00 | 47.305–49.948 | 44.9235 | 22.3160 | 是 |
+| 24 | b23 | 0.00 | 49.483–49.948 | 43.6435 | 17.6858 | 是 |
+| 25 | b22 | 0.00 | 48.373–49.951 | 26.7269 | 39.5342 | 是 |
+| 26 | b24 | 0.00 | 48.464–49.948 | 44.9597 | 19.6146 | 是 |
+| 27 | b25 | 0.00 | 48.067–49.945 | 44.9192 | 33.0784 | 是 |
+| 28 | b27 | 0.00 | 49.199–49.947 | 44.9459 | 17.6162 | 是 |
+| 29 | b29 | 0.01 | 15.093–19.878 | 44.8557 | 44.9408 | 是 |
+| 30 | b28 | 0.01 | 48.189–49.950 | 44.9408 | 16.2540 | 是 |
+
+## 结论：单颗 r1 在 ATK 中复现方案，30/30 次观测满足约束。
+场景已保存为 `results\q2\single_v3c\raw\single_r1.atk`，可在 ATK 界面中打开查看 r1 的段序列。
+not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+q2 exit=0
+=== Q3 v4 r1 single ===
+# 单颗 r1 的 ATK 机动规划复核
+
+- 方案：`solutions/q3/v4_p3_r1.json`；脉冲 20 次，观测 10 次
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+
+## 1. 脉冲坐标约定
+- 采用标准 VNC：V 沿速度，N 沿轨道角动量，C = V × N（任务 14 标定误差 0.000 m）
+
+## 2. 搭建单颗 r1
+- 首脉冲在历元时刻，已并入初始状态速度
+new objvgt: 0000021BA727B1A0
+new objvgt: 0000021BA727C430
+new objvgt: 0000021BA727C370
+new objvgt: 0000021BA727CFA0
+new objvgt: 0000021BA727DF90
+new objvgt: 0000021BA727DA80
+new objvgt: 0000021BA726DEB0
+new objvgt: 0000021BA726ECF0
+new objvgt: 0000021BA726E8D0
+new objvgt: 0000021BA726F3E0
+new objvgt: 0000021BA72702B0
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not - 段序列：初始状态 + 20 × (预报段 + 机动段) + 结束预报段，RunMCS 完成
+- 第一次脉冲后 3 h，ATK 与解析重放位置差 0.000 m
+
+## 3. 逐次观测检查（ATK 单颗 r1 传播，0.2 s 网格，太阳为 ERFA 几何方向）
+| # | 目标 | 与解析重放位置差 (m) | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b2 | 0.00 | 10.070–10.798 | 44.9399 | 44.9447 | 是 |
+| 2 | b1 | 0.00 | 12.986–16.868 | 34.1466 | 44.9489 | 是 |
+| 3 | b3 | 0.00 | 11.245–14.607 | 44.8631 | 42.7305 | 是 |
+| 4 | b5 | 0.00 | 46.334–46.982 | 33.5102 | 44.9436 | 是 |
+| 5 | b8 | 0.00 | 31.543–38.056 | 44.9496 | 40.8558 | 是 |
+| 6 | b9 | 0.00 | 49.713–49.946 | 27.0439 | 44.9464 | 是 |
+| 7 | b17 | 0.00 | 19.788–26.398 | 34.2843 | 44.9489 | 是 |
+| 8 | b18 | 0.00 | 27.856–31.705 | 44.9603 | 41.4538 | 是 |
+| 9 | b30 | 0.00 | 48.606–49.952 | 29.9122 | 19.7790 | 是 |
+| 10 | b26 | 0.00 | 49.400–49.943 | 30.8289 | 32.1467 | 是 |
+
+## 结论：单颗 r1 在 ATK 中复现方案，10/10 次观测满足约束。
+场景已保存为 `results\q3\single_v4_r1\raw\single_r1.atk`，可在 ATK 界面中打开查看 r1 的段序列。
+choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+r1 exit=0
+=== Q3 v4 r2 single ===
+# 单颗 r1 的 ATK 机动规划复核
+
+- 方案：`solutions/q3/v4_p3_r2.json`；脉冲 39 次，观测 20 次
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+
+## 1. 脉冲坐标约定
+- 采用标准 VNC：V 沿速度，N 沿轨道角动量，C = V × N（任务 14 标定误差 0.000 m）
+
+## 2. 搭建单颗 r1
+new objvgt: 0000021742C14340
+new objvgt: 0000021742C14430
+new objvgt: 0000021742C14640
+new objvgt: 0000021742C15810
+new objvgt: 0000021742C157E0
+new objvgt: 0000021742C164D0
+new objvgt: 0000021742C16E00
+new objvgt: 0000021742C07860
+new objvgt: 0000021742C07710
+new objvgt: 0000021742C08CD0
+new objvgt: 0000021742C09C30
+new objvgt: 0000021742C09750
+new objvgt: 0000021742C09FC0
+new objvgt: 0000021742C0A2F0
+new objvgt: 000002174368A5E0
+new objvgt: 000002174368AB80
+new objvgt: 000002174368B1B0
+new objvgt: 000002174368BB40
+new objvgt: 000002174368C230
+new objvgt: 000002174368C260
+new objvgt: 000002174368CF50
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can no- 段序列：初始状态 + 39 × (预报段 + 机动段) + 结束预报段，RunMCS 完成
+- 第一次脉冲后 3 h，ATK 与解析重放位置差 0.001 m
+
+## 3. 逐次观测检查（ATK 单颗 r1 传播，0.2 s 网格，太阳为 ERFA 几何方向）
+| # | 目标 | 与解析重放位置差 (m) | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|---|
+| 1 | b4 | 0.00 | 11.674–16.312 | 44.8730 | 44.9499 | 是 |
+| 2 | b11 | 0.00 | 32.919–33.819 | 44.9223 | 13.3915 | 是 |
+| 3 | b7 | 0.00 | 49.720–49.949 | 26.1941 | 44.9486 | 是 |
+| 4 | b6 | 0.00 | 45.767–47.263 | 35.7740 | 42.4621 | 是 |
+| 5 | b10 | 0.00 | 30.058–36.396 | 44.9452 | 39.5088 | 是 |
+| 6 | b12 | 0.00 | 40.432–41.021 | 31.3541 | 44.9460 | 是 |
+| 7 | b13 | 0.00 | 37.598–43.722 | 44.9501 | 36.4877 | 是 |
+| 8 | b15 | 0.00 | 48.821–49.946 | 32.4825 | 44.9460 | 是 |
+| 9 | b14 | 0.00 | 18.102–22.325 | 44.9643 | 44.2339 | 是 |
+| 10 | b16 | 0.00 | 23.682–23.897 | 32.9495 | 44.9603 | 是 |
+| 11 | b19 | 0.00 | 49.525–49.943 | 27.3732 | 44.9420 | 是 |
+| 12 | b20 | 0.00 | 21.277–28.552 | 44.9643 | 44.9508 | 是 |
+| 13 | b21 | 0.00 | 48.748–49.948 | 32.1505 | 44.9486 | 是 |
+| 14 | b23 | 0.00 | 49.346–49.942 | 34.3787 | 29.2939 | 是 |
+| 15 | b22 | 0.00 | 15.272–17.197 | 44.8773 | 28.6695 | 是 |
+| 16 | b24 | 0.00 | 17.224–17.646 | 33.1387 | 44.9222 | 是 |
+| 17 | b25 | 0.00 | 23.717–26.659 | 44.9079 | 44.9636 | 是 |
+| 18 | b27 | 0.00 | 41.559–42.491 | 38.7260 | 30.7205 | 是 |
+| 19 | b29 | 0.00 | 33.875–35.565 | 36.4079 | 44.9218 | 是 |
+| 20 | b28 | 0.00 | 48.748–49.949 | 44.9397 | 14.8249 | 是 |
+
+## 结论：单颗 r1 在 ATK 中复现方案，20/20 次观测满足约束。
+场景已保存为 `results\q3\single_v4_r2\raw\single_r1.atk`，可在 ATK 界面中打开查看 r1 的段序列。
+t choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+r2 exit=0
