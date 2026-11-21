@@ -1,33 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300">
-<rect x="0" y="0" width="760" height="300" fill="#FFFFFF"/>
-<rect x="20" y="30" width="200" height="125" rx="6" ry="6" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="1.6"/>
-<rect x="20" y="30" width="200" height="30" rx="6" ry="6" fill="#2B5C8A" stroke="#2B5C8A" stroke-width="1.6"/>
-<text x="120.0" y="50.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">问题一  单次观测单元</text>
-<text x="120.0" y="84.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">两脉冲非线性规划</text>
-<text x="120.0" y="106.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">多初值搜索</text>
-<text x="120.0" y="128.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">0.05 s 网格逐点检验</text>
-<rect x="280" y="30" width="200" height="125" rx="6" ry="6" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="1.6"/>
-<rect x="280" y="30" width="200" height="30" rx="6" ry="6" fill="#2B5C8A" stroke="#2B5C8A" stroke-width="1.6"/>
-<text x="380.0" y="50.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">问题二  单星序列巡游</text>
-<text x="380.0" y="84.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">漂移代价 + 束搜索定顺序</text>
-<text x="380.0" y="106.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">全计划序列凸近似</text>
-<text x="380.0" y="128.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">外层调整顺序与时刻</text>
-<rect x="540" y="30" width="200" height="125" rx="6" ry="6" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="1.6"/>
-<rect x="540" y="30" width="200" height="30" rx="6" ry="6" fill="#2B5C8A" stroke="#2B5C8A" stroke-width="1.6"/>
-<text x="640.0" y="50.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">问题三  双星选轨与分工</text>
-<text x="640.0" y="84.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">R2 初始轨道设计</text>
-<text x="640.0" y="106.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">东西分区、单向扫描</text>
-<text x="640.0" y="128.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">δa 灵敏度分析</text>
-<line x1="224.0" y1="92.5" x2="276.0" y2="92.5" stroke="#000000" stroke-width="1.6"/><polygon points="276.0,92.5 268.6,95.6 268.6,89.4" fill="#000000" stroke="#000000" stroke-width="0.5"/>
-<line x1="484.0" y1="92.5" x2="536.0" y2="92.5" stroke="#000000" stroke-width="1.6"/><polygon points="536.0,92.5 528.6,95.6 528.6,89.4" fill="#000000" stroke="#000000" stroke-width="0.5"/>
-<text x="250.0" y="82.5" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">串成序列</text>
-<text x="510.0" y="82.5" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">加一颗星</text>
-<rect x="20" y="200" width="720" height="40" rx="6" ry="6" fill="#DCE6F0" stroke="#7F7F7F" stroke-width="1.2"/>
-<text x="380.0" y="225.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">统一基础模型：二体传播、时变可观测区域、两级字典序目标</text>
-<line x1="120.0" y1="155.0" x2="120.0" y2="200.0" stroke="#7F7F7F" stroke-width="1.2" stroke-dasharray="4,3"/>
-<line x1="380.0" y1="155.0" x2="380.0" y2="200.0" stroke="#7F7F7F" stroke-width="1.2" stroke-dasharray="4,3"/>
-<line x1="640.0" y1="155.0" x2="640.0" y2="200.0" stroke="#7F7F7F" stroke-width="1.2" stroke-dasharray="4,3"/>
-<rect x="20" y="260" width="720" height="34" rx="6" ry="6" fill="#FFFFFF" stroke="#D9822B" stroke-width="1.4"/>
-<text x="380.0" y="282.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#D9822B">全部方案经 Python 精确传播认证与 ATK 独立复核</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="382" viewBox="0 0 820 382">
+<rect x="0" y="0" width="820" height="382" fill="#FFFFFF"/>
+<rect x="110" y="20" width="120" height="32" fill="#D9D9D9" stroke="#000000" stroke-width="1"/>
+<text x="170.0" y="41.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">输入与预处理</text>
+<rect x="230" y="20" width="205" height="32" fill="#D9D9D9" stroke="#000000" stroke-width="1"/>
+<text x="332.5" y="41.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">模型</text>
+<rect x="435" y="20" width="215" height="32" fill="#D9D9D9" stroke="#000000" stroke-width="1"/>
+<text x="542.5" y="41.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">求解算法</text>
+<rect x="650" y="20" width="150" height="32" fill="#D9D9D9" stroke="#000000" stroke-width="1"/>
+<text x="725.0" y="41.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">结果</text>
+<rect x="20" y="52" width="90" height="88" fill="#F2F2F2" stroke="#000000" stroke-width="1"/>
+<text x="65.0" y="101.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#000000">问题一</text>
+<rect x="110" y="52" width="120" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="170.0" y="85.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">R1、B1 初始状态</text>
+<text x="170.0" y="107.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">β ≤ 90° 时段</text>
+<rect x="230" y="52" width="205" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="332.5" y="85.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">两脉冲非线性规划</text>
+<text x="332.5" y="107.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">60 s 连续观测约束</text>
+<rect x="435" y="52" width="215" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="542.5" y="85.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">多初值瞄准 + SLSQP 精修</text>
+<text x="542.5" y="107.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">0.05 s 网格逐点认证</text>
+<rect x="650" y="52" width="150" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="725.0" y="85.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#2B5C8A">2 次机动</text>
+<text x="725.0" y="107.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#2B5C8A">5.2128 m/s</text>
+<rect x="20" y="140" width="90" height="88" fill="#F2F2F2" stroke="#000000" stroke-width="1"/>
+<text x="65.0" y="189.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#000000">问题二</text>
+<rect x="110" y="140" width="120" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="170.0" y="173.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">30 颗目标状态</text>
+<text x="170.0" y="195.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">每日观测机会</text>
+<rect x="230" y="140" width="205" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="332.5" y="173.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">访问序列 + 全局脉冲时间轴</text>
+<text x="332.5" y="195.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">两级字典序目标</text>
+<rect x="435" y="140" width="215" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="542.5" y="173.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">束搜索定顺序</text>
+<text x="542.5" y="195.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">全计划序列凸近似 + 邻域搜索</text>
+<rect x="650" y="140" width="150" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="725.0" y="173.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#2B5C8A">30/30 颗</text>
+<text x="725.0" y="195.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#2B5C8A">176.31 m/s</text>
+<rect x="20" y="228" width="90" height="88" fill="#F2F2F2" stroke="#000000" stroke-width="1"/>
+<text x="65.0" y="277.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#000000">问题三</text>
+<rect x="110" y="228" width="120" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="170.0" y="261.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">目标相位分布</text>
+<text x="170.0" y="283.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">R2 初始轨道约束</text>
+<rect x="230" y="228" width="205" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="332.5" y="261.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">R2 选轨 + 东西分工</text>
+<text x="332.5" y="283.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">δa、e 初始约束</text>
+<rect x="435" y="228" width="215" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="542.5" y="261.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">初始状态与脉冲联合优化</text>
+<text x="542.5" y="283.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">δa 灵敏度扫描</text>
+<rect x="650" y="228" width="150" height="88" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="725.0" y="261.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#2B5C8A">30/30 颗</text>
+<text x="725.0" y="283.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#2B5C8A">33.460 m/s</text>
+<rect x="20" y="332" width="780" height="34" fill="#FFFFFF" stroke="#000000" stroke-width="1" stroke-dasharray="5,3"/>
+<text x="410.0" y="354.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#000000">模型检验：Python 精确传播认证、ATK 独立复核、安全裕量与 δa、e 的灵敏度分析</text>
 </svg>

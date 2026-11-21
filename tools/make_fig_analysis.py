@@ -69,50 +69,59 @@ def save(name, W, H, body):
 
 
 # ---------------- 图 1(a)：观测几何示意 ----------------
-def fig1a():
-    W, H = 560, 470
-    cx, cy = 260, 250           # 目标位置
-    r_in, r_out = 45, 170        # 10 km 与 50 km 球面（示意比例）
-    th_sun, th_earth = np.radians(25), np.radians(-45)   # 两条轴线方向（屏幕坐标，y 向下取负）
-    hw = np.radians(45)
+# 参照空间目标观测文献中太阳—目标—观测者的几何示意画法：黑白线条，矢量加符号，夹角用小圆弧标注，不按比例。
+def arc(cx, cy, r, a0, a1, n=30):
+    return [(cx + r * np.cos(t), cy - r * np.sin(t)) for t in np.linspace(a0, a1, n)]
 
-    def P(r, th):
-        return cx + r * np.cos(th), cy - r * np.sin(th)
+
+def fig1a():
+    W, H = 620, 460
+    tx, ty = 470, 215                     # 目标
+    ex, ey, er = 110, 375, 45             # 地球（示意）
+    a_e = np.arctan2(-(ey - ty), ex - tx)  # 地心方向（数学角，y 轴向上）
+    a_s = a_e - np.radians(75)             # 太阳方向，与地心方向夹角 β = 75°
+    a_o = (a_s + a_e) / 2 + np.radians(4)  # 观测卫星方向
+
+    def P(r, t):
+        return tx + r * np.cos(t), ty - r * np.sin(t)
 
     body = []
-    # 两个圆锥（平面上是两个扇形），淡色填充
-    for th, col in ((th_sun, ORANGE), (th_earth, BLUE)):
-        pts = [(cx, cy)] + [P(r_out + 22, t) for t in np.linspace(th - hw, th + hw, 40)]
-        body.append(poly(pts, fill=col, stroke=col, w=0.8, opacity=0.10))
-    # 可观测区域：两扇形交集与环形区域的交
-    lo, hi = max(th_sun, th_earth) - hw, min(th_sun, th_earth) + hw
-    ts = np.linspace(lo, hi, 60)
-    pts = [P(r_out, t) for t in ts] + [P(r_in, t) for t in ts[::-1]]
-    body.append(poly(pts, fill=BLUE, stroke=BLUE, w=1.2, opacity=0.45))
-    # 球壳
-    for r, lab in ((r_in, "10 km"), (r_out, "50 km")):
-        body.append(poly([P(r, t) for t in np.linspace(0, 2 * np.pi, 120)], stroke=GRAY, w=1.0, dash="5,4"))
-    body.append(text(*P(r_in + 4, np.radians(200)), "10 km", 12, "end", GRAY))
-    body.append(text(*P(r_out + 6, np.radians(200)), "50 km", 12, "end", GRAY))
-    # 轴线
-    body.append(arrow(cx, cy, *P(r_out + 70, th_sun), ORANGE, 1.6))
-    body.append(arrow(cx, cy, *P(r_out + 70, th_earth), BLUE, 1.6))
-    body.append(text(*P(r_out + 88, th_sun), "指向太阳", 13, "middle", ORANGE))
-    body.append(text(*P(r_out + 92, th_earth), "指向地心", 13, "middle", BLUE))
-    # 两个 45° 半顶角
-    for th, col in ((th_sun, ORANGE), (th_earth, BLUE)):
-        body.append(line(cx, cy, *P(r_out + 22, th + hw), col, 0.8, "3,3"))
-        body.append(line(cx, cy, *P(r_out + 22, th - hw), col, 0.8, "3,3"))
-    body.append(text(*P(105, th_sun + np.radians(25)), "45°", 12, "middle", ORANGE))
-    body.append(text(*P(105, th_earth - np.radians(25)), "45°", 12, "middle", BLUE))
-    # 目标与示意观测卫星
-    body.append(f'<circle cx="{cx}" cy="{cy}" r="5" fill="#000000"/>')
-    body.append(text(cx - 10, cy + 20, "目标", 13, "end"))
-    ox, oy = P(105, (lo + hi) / 2)
-    body.append(f'<circle cx="{ox:.1f}" cy="{oy:.1f}" r="4.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.4"/>')
-    body.append(line(ox + 4, oy + 3, ox + 40, oy + 60, "#000000", 0.8))
-    body.append(text(ox + 42, oy + 74, "观测卫星", 13, "start"))
-    body.append(text(W / 2, 24, "深色区域为瞬时可观测区域", 13))
+    # 地球
+    body.append(poly(arc(ex, ey, er, 0, 2 * np.pi, 80), fill="#EDEDED", stroke="#000000", w=1.0))
+    body.append(text(ex, ey + er + 20, "地球", 13))
+    body.append(f'<circle cx="{ex}" cy="{ey}" r="2.5" fill="#000000"/>')
+    # 目标指向地心：虚线
+    body.append(line(tx, ty, ex, ey, "#000000", 1.0, "6,4"))
+    # 目标指向太阳
+    sx, sy = P(205, a_s)
+    body.append(arrow(tx, ty, sx, sy, "#000000", 1.3))
+    body.append(text(sx - 8, sy + 4, "太阳方向", 13, "end"))
+    # 距离约束：两段同心圆弧
+    for r, lab in ((55, "10 km"), (175, "50 km")):
+        body.append(poly(arc(tx, ty, r, a_o - np.radians(32), a_o + np.radians(32)), stroke=GRAY, w=1.0, closed=False, dash="4,3"))
+        lx, ly = P(r, a_o - np.radians(34))
+        body.append(text(lx, ly - 6, lab, 11, "middle", GRAY))
+    # 观测卫星与相对矢量 ρ
+    ox, oy = P(130, a_o)
+    body.append(arrow(tx, ty, ox, oy, BLUE, 1.6))
+    body.append(f'<rect x="{ox - 5:.1f}" y="{oy - 5:.1f}" width="10" height="10" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>')
+    body.append(text(ox - 4, oy + 24, "观测卫星 O", 13, "middle"))
+    mx, my = P(85, a_o - np.radians(8))
+    body.append(text(mx, my, "ρ", 15, "middle", BLUE, italic=True))
+    # 目标
+    body.append(f'<circle cx="{tx}" cy="{ty}" r="5" fill="#000000"/>')
+    body.append(text(tx + 10, ty - 8, "目标 B", 13, "start"))
+    # 夹角 α（太阳方向与 ρ）、θ（地心方向与 ρ）、β（太阳方向与地心方向）
+    body.append(poly(arc(tx, ty, 38, a_o, a_s), stroke="#000000", w=1.0, closed=False))
+    lx, ly = P(52, (a_o + a_s) / 2)
+    body.append(text(lx, ly + 5, "α", 14, italic=True))
+    body.append(poly(arc(tx, ty, 38, a_e, a_o), stroke="#000000", w=1.0, closed=False))
+    lx, ly = P(52, (a_o + a_e) / 2)
+    body.append(text(lx, ly + 5, "θ", 14, italic=True))
+    body.append(poly(arc(tx, ty, 215, a_e, a_s, 50), stroke=GRAY, w=0.8, closed=False, dash="2,3"))
+    lx, ly = P(228, (a_e + a_s) / 2)
+    body.append(text(lx, ly + 5, "β", 14, "middle", GRAY, italic=True))
+    body.append(text(W - 20, H - 16, "示意图，未按比例绘制", 11, "end", GRAY))
     save("fig1a_geometry.svg", W, H, body)
 
 
@@ -138,7 +147,7 @@ def fig1b():
             while j + 1 < len(t) and ok[j + 1]:
                 j += 1
             body.append(f'<rect x="{X(t[i] / 3600):.1f}" y="{T}" width="{X(t[j] / 3600) - X(t[i] / 3600):.1f}" '
-                        f'height="{H - T - B}" fill="{LIGHT}" stroke="none"/>')
+                        f'height="{H - T - B}" fill="#E6E6E6" stroke="none"/>')
             i = j + 1
         else:
             i += 1
@@ -153,7 +162,7 @@ def fig1b():
     body.append(line(L, T, L, H - B))
     body.append(line(L, Y(90), W - R, Y(90), ORANGE, 1.2, "6,4"))
     body.append(text(L + 6, Y(90) - 6, "β = 90°", 12, "start", ORANGE))
-    body.append(poly([(X(a / 3600), Y(b)) for a, b in zip(t, beta)], stroke=BLUE, w=1.8, closed=False))
+    body.append(poly([(X(a / 3600), Y(b)) for a, b in zip(t, beta)], stroke="#000000", w=1.5, closed=False))
     # 两次观测机会：本文方案的观测时刻 38.43 h，另一次在 14.45 h 附近（求解器的两族起点）
     sol = json.load(open(REPO / "solutions" / "q1" / "p1_claude_v4.json", encoding="utf-8"))
     for h, lab in ((14.45, "机会 1"), (sol["obs_start_s"] / 3600, "机会 2（本文方案）")):
@@ -165,6 +174,7 @@ def fig1b():
 
 
 # ---------------- 图 2：目标分布 ----------------
+# 参照同步带目标统计文献的画法：以相位（经度）为横轴，分别画半长轴偏差和倾角两幅散点图，用实心、空心符号区分分组。
 def fig2():
     R1, TG = read_states(str(REPO / "data" / "数据.xlsx"))
 
@@ -176,91 +186,88 @@ def fig2():
         return a - A_GEO, inc, np.degrees(np.arctan2(r[1], r[0]))
 
     da0, i0, l0 = el(np.array(R1))
+    west = {"b1", "b2", "b3", "b5", "b8", "b9", "b17", "b18", "b26", "b30"}
     pts = []
     for k, x in TG.items():
         da, inc, lon = el(np.array(x))
-        pts.append((k.upper(), (lon - l0 + 180) % 360 - 180, da, inc))
-    W, H, L, R, T, B = 700, 420, 75, 150, 25, 60
+        pts.append((k.upper(), (lon - l0 + 180) % 360 - 180, da, inc, k in west))
+    W, H = 720, 520
+    L, R = 80, 20
     X = lambda d: L + (d + 21) / 42 * (W - L - R)  # noqa: E731
-    Y = lambda d: T + (6 - d) / 13 * (H - T - B)  # noqa: E731
+    panels = [  # (上边界, 下边界, 取值函数, 纵轴范围, 刻度, 纵轴名称, 子图名, R1 取值, 标注目标)
+        (30, 225, lambda p: p[2], (-7, 6), range(-6, 7, 3), "a − a<tspan baseline-shift=\"sub\" font-size=\"10\">GEO</tspan> / km", "(a)", da0,
+         ("B30", "B21", "B11")),
+        (285, 470, lambda p: p[3], (0, 10), range(0, 11, 2), "倾角 / (°)", "(b)", i0, ("B18", "B30", "B21")),
+    ]
     body = []
-    for d in range(-6, 7, 2):
-        body.append(line(L, Y(d), W - R, Y(d), "#E8E8E8", 0.8))
-        body.append(text(L - 8, Y(d) + 4, str(d), 12, "end"))
-    for d in range(-20, 21, 5):
-        body.append(line(X(d), H - B, X(d), H - B + 5))
-        body.append(text(X(d), H - B + 20, str(d), 12))
-    body.append(line(L, H - B, W - R, H - B))
-    body.append(line(L, T, L, H - B))
-    # 第三问东西分界（B2 与 B4 之间）
-    xs = X(1.6)
-    body.append(line(xs, T, xs, H - B, GRAY, 1.0, "6,4"))
-    body.append(text(xs - 6, T + 14, "R1 负责（西侧 10 颗）", 12, "end", GRAY))
-    body.append(text(xs + 6, T + 14, "R2 负责（东侧 20 颗）", 12, "start", GRAY))
-    # 颜色表示倾角：4 档离散色
-    bins = [(0, 1, "#C6DBEF"), (1, 3, "#6BAED6"), (3, 6, "#2171B5"), (6, 10, "#08306B")]
-
-    def col(inc):
-        for a, b, c in bins:
-            if a <= inc < b:
-                return c
-        return bins[-1][2]
-
-    for k, dl, da, inc in pts:
-        body.append(f'<circle cx="{X(dl):.1f}" cy="{Y(da):.1f}" r="5" fill="{col(inc)}" stroke="#333333" stroke-width="0.6"/>')
-    for k in ("B30", "B21", "B19", "B1", "B28", "B18"):
-        _, dl, da, _ = next(p for p in pts if p[0] == k)
-        body.append(text(X(dl) + 7, Y(da) - 6, k, 11, "start"))
-    # R1
-    rx, ry = X(0), Y(da0)
-    body.append(poly([(rx, ry - 8), (rx + 7, ry + 5), (rx - 7, ry + 5)], fill=ORANGE, stroke="#000000", w=0.8))
-    body.append(text(rx + 9, ry + 16, "R1", 12, "start", ORANGE))
-    # 图例
-    lx, ly = W - R + 18, T + 30
-    body.append(text(lx, ly - 10, "目标倾角", 12, "start"))
-    for n, (a, b, c) in enumerate(bins):
-        y = ly + 8 + n * 22
-        body.append(f'<circle cx="{lx + 6}" cy="{y}" r="5" fill="{c}" stroke="#333333" stroke-width="0.6"/>')
-        body.append(text(lx + 18, y + 4, f"{a}°–{b}°", 12, "start"))
-    y = ly + 8 + 4 * 22 + 6
-    body.append(poly([(lx + 6, y - 7), (lx + 12, y + 4), (lx, y + 4)], fill=ORANGE, stroke="#000000", w=0.8))
-    body.append(text(lx + 18, y + 4, f"R1（{i0:.2f}°）", 12, "start"))
-    body.append(text((L + W - R) / 2, H - 14, "初始时刻相对 R1 的相位差 / (°)", 13))
-    body.append(f'<text x="22" y="{(T + H - B) / 2:.1f}" font-family="{FONT}" font-size="13" text-anchor="middle" transform="rotate(-90 22 {(T + H - B) / 2:.1f})">a − a<tspan baseline-shift="sub" font-size="10">GEO</tspan> / km</text>')
+    for top, bot, f, (lo, hi), ticks, ylab, tag, r1v, lab in panels:
+        Y = lambda v, top=top, bot=bot, lo=lo, hi=hi: bot - (v - lo) / (hi - lo) * (bot - top)  # noqa: E731
+        body.append(f'<rect x="{L}" y="{top}" width="{W - L - R}" height="{bot - top}" fill="none" stroke="#000000" stroke-width="1"/>')
+        for v in ticks:
+            body.append(line(L, Y(v), L + 5, Y(v)))
+            body.append(line(W - R, Y(v), W - R - 5, Y(v)))
+            body.append(text(L - 7, Y(v) + 4, str(v).replace("-", "−"), 12, "end"))
+        for d in range(-20, 21, 5):
+            body.append(line(X(d), bot, X(d), bot - 5))
+            body.append(line(X(d), top, X(d), top + 5))
+            body.append(text(X(d), bot + 18, str(d).replace("-", "−"), 12))
+        body.append(line(X(1.6), top, X(1.6), bot, GRAY, 0.9, "5,4"))
+        for k, dl, da, inc, w in pts:
+            v = f((k, dl, da, inc))
+            if w:
+                body.append(f'<circle cx="{X(dl):.1f}" cy="{Y(v):.1f}" r="4.2" fill="#FFFFFF" stroke="#000000" stroke-width="1.1"/>')
+            else:
+                body.append(f'<circle cx="{X(dl):.1f}" cy="{Y(v):.1f}" r="4.2" fill="#000000" stroke="#000000" stroke-width="1.1"/>')
+            if k in lab:
+                body.append(text(X(dl) + 7, Y(v) - 6, k, 11, "start"))
+        rx, ry = X(0), Y(r1v)
+        body.append(poly([(rx, ry - 7), (rx + 6.5, ry + 4.5), (rx - 6.5, ry + 4.5)], fill=ORANGE, stroke="#000000", w=0.8))
+        body.append(text(rx - 9, ry + 4, "R1", 11, "end", ORANGE))
+        cy = (top + bot) / 2
+        body.append(f'<text x="28" y="{cy:.1f}" font-family="{FONT}" font-size="13" text-anchor="middle" transform="rotate(-90 28 {cy:.1f})">{ylab}</text>')
+        body.append(text(L + 8, top + 18, tag, 13, "start"))
+    body.append(text((L + W - R) / 2, H - 16, "初始时刻相对 R1 的相位差 / (°)", 13))
+    # 图例放在 (a) 子图右下角
+    lx, ly = W - R - 200, 195
+    body.append(f'<rect x="{lx - 8}" y="{ly - 16}" width="196" height="24" fill="#FFFFFF" stroke="none"/>')
+    body.append(f'<circle cx="{lx}" cy="{ly - 4}" r="4.2" fill="#FFFFFF" stroke="#000000" stroke-width="1.1"/>')
+    body.append(text(lx + 9, ly, "西侧 10 颗", 12, "start"))
+    body.append(f'<circle cx="{lx + 90}" cy="{ly - 4}" r="4.2" fill="#000000"/>')
+    body.append(text(lx + 99, ly, "东侧 20 颗", 12, "start"))
     save("fig2_targets.svg", W, H, body)
 
 
-# ---------------- 图 3：求解框架 ----------------
+# ---------------- 图 3：技术路线 ----------------
+# 参照数学建模论文常见的"技术路线图"：按问题分行，按"数据—模型—算法—结果"分列，黑色细线框，灰色表头。
 def fig3():
-    W, H = 760, 300
+    W, H = 820, 400
+    cols = [("输入与预处理", 120), ("模型", 205), ("求解算法", 215), ("结果", 150)]
+    x0, y0, hh, rh = 110, 20, 32, 88
     body = []
-
-    def box(x, y, w, h, title, lines, color):
-        body.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" ry="6" fill="#FFFFFF" stroke="{color}" stroke-width="1.6"/>')
-        body.append(f'<rect x="{x}" y="{y}" width="{w}" height="30" rx="6" ry="6" fill="{color}" stroke="{color}" stroke-width="1.6"/>')
-        body.append(text(x + w / 2, y + 20, title, 14, color="#FFFFFF"))
-        for n, s in enumerate(lines):
-            body.append(text(x + w / 2, y + 54 + n * 22, s, 13))
-
-    bw, bh, y0 = 200, 125, 30
-    xs = [20, 280, 540]
-    box(xs[0], y0, bw, bh, "问题一  单次观测单元", ["两脉冲非线性规划", "多初值搜索", "0.05 s 网格逐点检验"], BLUE)
-    box(xs[1], y0, bw, bh, "问题二  单星序列巡游", ["漂移代价 + 束搜索定顺序", "全计划序列凸近似", "外层调整顺序与时刻"], BLUE)
-    box(xs[2], y0, bw, bh, "问题三  双星选轨与分工", ["R2 初始轨道设计", "东西分区、单向扫描", "δa 灵敏度分析"], BLUE)
-    for i in range(2):
-        body.append(arrow(xs[i] + bw + 4, y0 + bh / 2, xs[i + 1] - 4, y0 + bh / 2, "#000000", 1.6))
-    body.append(text(xs[0] + bw + 30, y0 + bh / 2 - 10, "串成序列", 12))
-    body.append(text(xs[1] + bw + 30, y0 + bh / 2 - 10, "加一颗星", 12))
-    # 底部：统一模型与复核
-    yb = y0 + bh + 45
-    body.append(f'<rect x="{xs[0]}" y="{yb}" width="{xs[2] + bw - xs[0]}" height="40" rx="6" ry="6" fill="{LIGHT}" stroke="{GRAY}" stroke-width="1.2"/>')
-    body.append(text((xs[0] + xs[2] + bw) / 2, yb + 25, "统一基础模型：二体传播、时变可观测区域、两级字典序目标", 13))
-    for x in xs:
-        body.append(line(x + bw / 2, y0 + bh, x + bw / 2, yb, GRAY, 1.2, "4,3"))
-    yv = yb + 60
-    body.append(f'<rect x="{xs[0]}" y="{yv}" width="{xs[2] + bw - xs[0]}" height="34" rx="6" ry="6" fill="#FFFFFF" stroke="{ORANGE}" stroke-width="1.4"/>')
-    body.append(text((xs[0] + xs[2] + bw) / 2, yv + 22, "全部方案经 Python 精确传播认证与 ATK 独立复核", 13, color=ORANGE))
-    save("fig3_framework.svg", W, H, body)
+    xs = [x0]
+    for _, w in cols:
+        xs.append(xs[-1] + w)
+    # 表头
+    for (name, w), x in zip(cols, xs):
+        body.append(f'<rect x="{x}" y="{y0}" width="{w}" height="{hh}" fill="#D9D9D9" stroke="#000000" stroke-width="1"/>')
+        body.append(text(x + w / 2, y0 + 21, name, 13))
+    rows = [
+        ("问题一", ["R1、B1 初始状态", "β ≤ 90° 时段"], ["两脉冲非线性规划", "60 s 连续观测约束"], ["多初值瞄准 + SLSQP 精修", "0.05 s 网格逐点认证"], ["2 次机动", "5.2128 m/s"]),
+        ("问题二", ["30 颗目标状态", "每日观测机会"], ["访问序列 + 全局脉冲时间轴", "两级字典序目标"], ["束搜索定顺序", "全计划序列凸近似 + 邻域搜索"], ["30/30 颗", "176.31 m/s"]),
+        ("问题三", ["目标相位分布", "R2 初始轨道约束"], ["R2 选轨 + 东西分工", "δa、e 初始约束"], ["初始状态与脉冲联合优化", "δa 灵敏度扫描"], ["30/30 颗", "33.460 m/s"]),
+    ]
+    for r, (name, *cells) in enumerate(rows):
+        y = y0 + hh + r * rh
+        body.append(f'<rect x="20" y="{y}" width="{x0 - 20}" height="{rh}" fill="#F2F2F2" stroke="#000000" stroke-width="1"/>')
+        body.append(text((20 + x0) / 2, y + rh / 2 + 5, name, 14))
+        for c, (lines, x, (_, w)) in enumerate(zip(cells, xs, cols)):
+            body.append(f'<rect x="{x}" y="{y}" width="{w}" height="{rh}" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>')
+            for n, s in enumerate(lines):
+                body.append(text(x + w / 2, y + rh / 2 - 4 + (n - (len(lines) - 1) / 2) * 22 + 4, s, 12.5, color=(BLUE if c == 3 else "#000000")))
+    yb = y0 + hh + 3 * rh + 16
+    body.append(f'<rect x="20" y="{yb}" width="{xs[-1] - 20}" height="34" fill="#FFFFFF" stroke="#000000" stroke-width="1" stroke-dasharray="5,3"/>')
+    body.append(text((20 + xs[-1]) / 2, yb + 22, "模型检验：Python 精确传播认证、ATK 独立复核、安全裕量与 δa、e 的灵敏度分析", 12.5))
+    save("fig3_framework.svg", W, yb + 50, body)
 
 
 if __name__ == "__main__":
