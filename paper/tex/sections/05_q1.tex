@@ -1,0 +1,121 @@
+\section{问题一模型建立及求解}
+
+\subsection{单目标两脉冲观测模型的建立}
+
+问题一是第 4.3 节观测单元的直接应用。取 R1 在初始历元的状态为 $\bm x_0$，$t_0 = 0$，目标为 B1，时间窗 $W = [0,\ 48~\mathrm h]$。下面给出本问的决策变量、目标函数和约束条件。
+
+\subsubsection{决策变量定义}
+
+题目允许每次观测前最多机动两次，本问只有一次观测，所以 R1 至多进行两次脉冲机动。决策变量为两次脉冲的时刻 $t_1, t_2$、速度增量 $\Delta\bm v_1, \Delta\bm v_2$ 和观测开始时刻 $s$，记为
+\begin{equation}
+  \bm z = (t_1,\ t_2,\ \Delta\bm v_1,\ \Delta\bm v_2,\ s) \in \mathbb R^9 .
+  \label{eq:q1var}
+\end{equation}
+给定 $\bm z$ 后，按式~\eqref{eq:impulse} 依次施加两次脉冲，用 $\Phi$ 传播，即可得到 R1 在任意时刻的位置。只用一次脉冲或不机动的方案对应 $\Delta\bm v_j = \bm 0$，也包含在这组变量中。
+
+\subsubsection{目标函数设置}
+
+本问只观测一颗目标，字典序目标的第一阶段 $N^* = 1$ 是确定的，只需最小化累计速度增量
+\begin{equation}
+  J(\bm z) = \|\Delta\bm v_1\| + \|\Delta\bm v_2\| .
+  \label{eq:q1obj}
+\end{equation}
+范数在速度增量为零处不可导，求解时用 $\sqrt{\|\Delta\bm v_j\|^2 + \varepsilon}$ 代替 $\|\Delta\bm v_j\|$，$\varepsilon$ 取很小的正数，使梯度类算法可以正常迭代。
+
+\subsubsection{约束条件分析}
+
+约束分为三类。第一类是时间约束，两次机动依次进行，间隔不少于 1~h，观测在第二次机动之后开始，并在 48~h 内结束。第二类是脉冲约束，单次速度增量不超过 30~m/s；本问累计速度增量远小于 300~m/s，预算约束自动满足。第三类是观测约束，观测区间内每一时刻相对位置都要落在可观测区域 $\mathcal C_{\mathrm{B1}}(t)$ 内。
+
+第三类约束对连续区间内的每一时刻都成立，是半无限约束。我们把观测区间按 1~s 等分，在 61 个采样时刻 $s + j$，$j = 0, 1, \dots, 60$ 上施加式~\eqref{eq:feasset} 的条件，化为有限个不等式约束。采样点之间是否越界，在求解后用更细的网格检验。
+
+\subsubsection{模型汇总}
+
+综上，问题一的优化模型为
+\begin{equation}
+  \begin{aligned}
+    \min_{\bm z}\quad & \|\Delta\bm v_1\| + \|\Delta\bm v_2\| \\
+    \text{s.t.}\quad & 0 \le t_1,\quad t_2 - t_1 \ge 3600,\quad t_2 \le s,\quad s + 60 \le 172800, \\
+    & \|\Delta\bm v_j\| \le 30~\mathrm{m/s},\quad j = 1, 2, \\
+    & 10 \le \|\bm\rho(s+j)\| \le 50, \\
+    & \hat{\bm u}_\odot(s+j)\cdot\bm\rho(s+j) \ge \|\bm\rho(s+j)\|\cos 45^\circ, \\
+    & \hat{\bm u}_E(s+j)\cdot\bm\rho(s+j) \ge \|\bm\rho(s+j)\|\cos 45^\circ, \qquad j = 0, 1, \dots, 60 ,
+  \end{aligned}
+  \label{eq:q1model}
+\end{equation}
+其中 $\bm\rho(t) = \bm r_{\mathrm{R1}}(t;\bm z) - \bm r_{\mathrm{B1}}(t)$，时间单位为 s。这是一个含 9 个变量、约 250 个非线性不等式约束的非线性规划。
+
+\subsection{优化模型求解}
+
+可观测区域非凸，模型~\eqref{eq:q1model} 存在多个局部最优解，直接从随机初值求解很难收敛到可行点。我们先构造一个容易求解的瞄准问题生成初值，再在完整约束下精修。
+
+\subsubsection{基于轨道面穿越的瞄准初值生成}
+
+由第 2.1 节的分析，48~h 内 B1 有两个可能观测时段，而 R1 只在穿过 B1 轨道面附近时才可能靠近 B1。在某个可能观测时段内选取 R1 穿越 B1 轨道面的时刻作为观测中点，在可观测区域内取一个参考点，要求 R1 在观测中点恰好到达这个参考点。这是一个只含等式约束的两脉冲交会问题，约束少、容易收敛，得到的解给出了大致的机动时刻和方向。
+
+\subsubsection{多起点精修与网格检验}
+
+以瞄准解为初值，用序列二次规划方法 SLSQP\cite{kraft1988} 求解完整模型~\eqref{eq:q1model}，具体调用 SciPy 中的实现\cite{scipy2020}。参考点的位置、机动时刻和所选观测时段都随机抽取，重复 300 次，从所有可行解中取速度增量最小者。得到方案后，在 0.05~s 的时间网格上逐点检验全部约束，确认 1~s 采样点之间没有越界。为了抵消数值传播的微小误差，检验时在距离和角度上各留 0.01~km 和 $0.01^\circ$ 的裕量。
+
+\subsection{结果的分析与验证}
+
+求得的机动方案见表~\ref{tab:q1plan}。R1 两次机动的速度增量分别为 4.096~m/s 和 1.117~m/s，累计 5.2128~m/s，观测于 2027 年 1 月 2 日 14:25:46.63 开始，持续 60~s。三段自由飞行时间依次为 14.76~h、13.56~h 和 10.11~h，两次机动间隔远大于 1~h 的下限。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题一机动方案}
+  \label{tab:q1plan}
+  \zihao{5}\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    事件 & 时刻（UTC） & $t$ / s & $\Delta\bm v$ / (m/s) & $\|\Delta\bm v\|$ / (m/s) & 机动后 $\Delta a$ / km \\
+    \midrule
+    初始 & 01-01 00:00:00 & 0 & — & — & 1.77 \\
+    机动 1 & 01-01 14:45:24.6 & 53124.64 & $(-4.024,\ 0.700,\ 0.308)$ & 4.096 & 114.31 \\
+    机动 2 & 01-02 04:19:00.0 & 101940.01 & $(-1.066,\ -0.326,\ 0.074)$ & 1.117 & 83.63 \\
+    观测开始 & 01-02 14:25:46.6 & 138346.63 & — & — & — \\
+    观测结束 & 01-02 14:26:46.6 & 138406.63 & — & — & — \\
+    \midrule
+    合计 & & & & 5.2128 & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+机动的作用可以用第 2.2 节的相位漂移来理解。初始时刻 B1 位于 R1 西侧约 $1.35^\circ$。第 1 次机动主要沿速度反方向，使 R1 的半长轴升高约 112~km，R1 开始以每天约 $1.47^\circ$ 的速率向西漂移，追赶 B1。第 2 次机动把漂移率减到每天约 $1.07^\circ$，同时微调轨道，使 R1 在第二个可能观测时段恰好穿过 B1 轨道面附近，进入可观测区域。任务在观测结束时终止，不需要第三次机动来停止漂移，所以两次脉冲就足够了。
+
+对两个观测时段的比较验证了第 2.3 节的判断。把观测限定在第一个时段时，用同样的方法求得的最小速度增量为 13.35~m/s，是第二个时段的 2.6 倍。第一个时段留给相位调整的时间不到第二个时段的 40\%，所需漂移率更大，代价也就更高。
+
+观测过程如图~\ref{fig:q1obs} 所示。R1 以约 0.23~km/s 的相对速度从 B1 旁边掠过，15~min 前距离还在 200~km 以外，最近时约 10.3~km，随后迅速远离。观测开始时侦测角恰为 $45^\circ$，结束时光照角恰为 $45^\circ$，期间距离最小降到 10.28~km，三个约束同时起作用，60~s 的观测时段正好卡在其中。这说明最优方案处在可观测区域的边缘，再减少燃料就会越出可行区域。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig5a_q1_range.pdf}
+    \caption{观测前后 15~min 的距离}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig5b_q1_angles.pdf}
+    \caption{观测前后 3~min 的角度与距离}
+  \end{subfigure}
+  \caption{问题一的观测过程}
+  \label{fig:q1obs}
+\end{figure}
+
+观测段的约束检验见表~\ref{tab:q1check}。表中的 ATK 结果由 ATK 软件独立数值积分得到，与解析传播在观测时刻的位置差小于 1~m，两种方法都表明 60~s 内全部约束成立。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题一观测段约束检验}
+  \label{tab:q1check}
+  \zihao{5}
+  \begin{tabular}{lcccc}
+    \toprule
+    检验方式 & 距离 / km & 最大光照角 / ($^\circ$) & 最大侦测角 / ($^\circ$) & 是否满足 \\
+    \midrule
+    约束要求 & $10 \sim 50$ & $\le 45$ & $\le 45$ & — \\
+    解析传播 & $10.2795 \sim 14.0513$ & 44.9900 & 44.9900 & 是 \\
+    ATK 数值积分 & $10.2795 \sim 14.0513$ & 44.9898 & 44.9901 & 是 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

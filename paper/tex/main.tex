@@ -9,6 +9,7 @@
 \usepackage{caption,subcaption}
 \usepackage{booktabs}
 \usepackage{float}
+\usepackage[section]{placeins}
 \usepackage[hidelinks]{hyperref}
 
 \graphicspath{{figures/}}
@@ -34,6 +35,13 @@
     indent = 0pt,
     aftername = \quad,
     beforeskip = 12pt, afterskip = 6pt
+  },
+  % 三级标题：左顶格、小四、黑体（格式要求未规定，取比二级标题小一号）
+  subsubsection = {
+    format = \raggedright\heiti\zihao{-4},
+    indent = 0pt,
+    aftername = \quad,
+    beforeskip = 8pt, afterskip = 4pt
   }
 }
 % 图题、表题：黑体五号
@@ -71,6 +79,7 @@
 \input{sections/02_analysis}
 \input{sections/03_assumptions}
 \input{sections/04_base_model}
+\input{sections/05_q1}
 
 % ---------------- 参考文献 ----------------
 \begingroup
