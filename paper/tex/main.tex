@@ -1,0 +1,73 @@
+% 高轨卫星抵近观测 A 题论文主文件
+% 编译：在本目录运行 ./build.sh（先把 ../figures/*.svg 转成 PDF，再用 xelatex 编译两遍）
+% Windows 上用 xelatex 编译时 ctex 会自动使用宋体、黑体；Linux 上自动使用 Fandol 字体。
+\documentclass[a4paper,12pt]{ctexart}
+
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{caption,subcaption}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\pagestyle{plain}
+\urlstyle{same}
+
+% ---------------- 格式要求 ----------------
+% 正文：宋体小四
+\AtBeginDocument{\zihao{-4}}
+\linespread{1.3}
+% 一级标题：居中、三号、黑体；二级标题：左顶格、四号、黑体
+\ctexset{
+  section = {
+    format = \centering\heiti\zihao{3},
+    name = {,},
+    number = \arabic{section},
+    aftername = \quad,
+    beforeskip = 18pt, afterskip = 12pt
+  },
+  subsection = {
+    format = \raggedright\heiti\zihao{4},
+    indent = 0pt,
+    aftername = \quad,
+    beforeskip = 12pt, afterskip = 6pt
+  }
+}
+% 图题、表题：黑体五号
+\DeclareCaptionFont{heiwu}{\heiti\zihao{5}}
+\captionsetup{font=heiwu, labelsep=quad}
+\captionsetup[sub]{font=heiwu, labelformat=parens}
+% 公式：居中，按全文顺序编号
+\numberwithin{equation}{section}
+
+\newcommand{\aGEO}{a_{\mathrm{GEO}}}
+
+\begin{document}
+
+% ---------------- 题目 ----------------
+\begin{center}
+  {\heiti\zihao{3} 高轨卫星抵近观测任务的轨道机动规划模型}
+\end{center}
+
+% ---------------- 摘要 ----------------
+\begin{center}
+  {\heiti\zihao{4} 摘\quad 要}
+\end{center}
+
+\input{sections/00_abstract}
+
+\clearpage
+
+\input{sections/01_problem}
+\input{sections/02_analysis}
+
+% ---------------- 参考文献 ----------------
+\begingroup
+\renewcommand{\section}[2]{\begin{center}{\heiti\zihao{4}参考文献}\end{center}}
+\zihao{-4}\raggedright
+\input{sections/99_references}
+\endgroup
+
+\end{document}
