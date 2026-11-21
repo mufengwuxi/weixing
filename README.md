@@ -7,10 +7,10 @@
 | 问题 | 当前采用版本 | 结果 | 方案文件 | 说明文档 | ATK 复核 |
 |---|---|---|---|---|---|
 | 第一问 | v4（Claude，新数据） | 5.212815 m/s | `solutions/q1/p1_claude_v4.json` | `docs/00_题目/v1_约束核对_claude.md` | 任务 17 |
-| 第二问 | v2 30 颗版（Claude，旧数据） | 30 颗，177.2571 m/s | `solutions/q2/p2_claude_30.json` | `docs/q2/v2_第二问_claude.md` | 新数据待重算（简化流程目前 28 颗） |
-| 第三问 | v3 双星分工（Claude，新数据） | 30 颗，35.850 m/s（δa ≥ 7.8 km） | `solutions/q3/v3_p3_claude.json` | `docs/q3/v3_第三问_claude.md` | 任务 17 |
+| 第二问 | v3-B（Claude，新数据，新模型 M2-B） | 30 颗，180.761 m/s | `solutions/q2/v3b_p2_scp.json` | `docs/q2/v3_新模型设计_claude.md` | 待复核 |
+| 第三问 | v4（Claude，新数据，M3-B） | 30 颗，34.103 m/s（δa ≥ 7.81 km） | `solutions/q3/v4_p3_claude.json` | `docs/q3/v3_第三问_claude.md`、`MODELS.md` | 待复核（v3 在任务 17） |
 
-每一问的版本是怎么演进的，见 [CHANGELOG.md](CHANGELOG.md)。高精度新数据已于任务 16 合并；第一问 v4、第三问 v3 用的是新数据，第二问还在用旧数据，待重算。三问统一的数学模型见 `docs/模型/v1_模型抽象_claude.md`。
+每一问的版本是怎么演进的，见 [CHANGELOG.md](CHANGELOG.md)。高精度新数据已于任务 16 合并；第一问 v4、第三问 v3 用的是新数据，第二问还在用旧数据，待重算。三问统一的数学模型见 `docs/模型/v1_模型抽象_claude.md`，**全部模型的分类索引见 [MODELS.md](MODELS.md)**。
 
 ## 目录
 
@@ -20,7 +20,7 @@
 | `docs/` | 建模与分析文档，按问分子目录，文件名带版本和作者（见 `docs/README.md`） | 作者本人 |
 | `paper/` | 论文撰写区：章节稿 `sections/`、配图 `figures/`（见 `paper/README.md`） | 按章节分工 |
 | `solutions/` | 机动方案 JSON，按问分子目录（格式见 `solutions/README.md`） | 求解代码输出，不手改 |
-| `code/` | 求解代码：`atkbridge.py` 封装 ATK；`p1/`、`p2/`、`p3/` 分别是三问的求解器 | 远端 Claude |
+| `code/` | 求解代码：`atkbridge.py` 封装 ATK，`datafile.py` 统一读数据；`p1/`、`p2/`、`p3/` 分别是三问的求解器，各模型对应的子目录见 `MODELS.md` | 远端 Claude |
 | `tools/` | 复核、出图、数据检查脚本 | 远端 Claude |
 | `results/` | 复核与运行结果，按问分子目录；`env/` 是早期 ATK 环境测试的输出 | 本机 agent 提交 |
 | `report/` | `tasks/` 存各任务的控制台日志和截图；`env/` 存 ATK 环境探测报告和官方接口定义 | 本机 agent 提交 |

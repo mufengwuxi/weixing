@@ -36,6 +36,8 @@
 | v2-27 | Claude | 27 颗，149.92 m/s | 漂移相位模型排日程，逐段 SLSQP 精确求解；ATK 复核 27/27 | `solutions/q2/p2_claude_27.json`、`results/q2/p2_verify_27/` | 51351ee、2320b26 |
 | v2-29 | Claude | 29 颗，172.09 m/s | 束搜索加宽，末段插入 | `solutions/q2/p2_claude_29.json` | 66d6bf5 |
 | **v2-30** | Claude | **30 颗，177.2571 m/s** | b19 与 b20 在同一次飞越中先后观测，b19 不需要单独机动，实现全覆盖 | `solutions/q2/p2_claude_30.json`、`docs/q2/v2_第二问_claude.md` | 652ba57 |
+| v3-A（新数据，M2-A） | Claude | 30 颗，210.387 m/s | 旧模型在新数据上：排日程只得到 29 颗，补插 b25 后到 213.71，再重排到 210.39 | `solutions/q2/v3a_p2_m2a.json` | 本次 |
+| **v3-B（新数据，M2-B）** | Claude | **30 颗，180.761 m/s** | 新模型：全计划 SCP，访问顺序不变，比 v3-A 低 14.1%；并行大邻域搜索还在运行 | `solutions/q2/v3b_p2_scp.json`、`code/p2/v3/`、`docs/q2/v3_新模型设计_claude.md` | 本次 |
 | 论文稿 | Claude | — | 两层模型的论文表述、搜索实验、局部最优性证据和配图 | `paper/sections/04_第二问.md`、`paper/figures/p2_*.svg` | ce5d221、ca2fc51 |
 
 `results/q2/single_r1_p2/summary.md` 是任务 14 修复之前的旧输出（0/30），要等任务 14 第四轮重跑后替换。
@@ -46,7 +48,8 @@
 |---|---|---|---|---|---|
 | v1 | Claude | 30 颗，55.648 m/s（r1 19.239 + r2 36.409），δa = 50 km | 按经度分工：r1 负责西侧 10 颗，r2 负责东侧 20 颗；r2 与 r1 共面，首脉冲并入初始轨道；扫描了 43 个 r2 设计 | `solutions/q3/`、`docs/q3/v1_第三问_claude.md`、`code/p3/` | 5660719 |
 | v2（旧数据） | Claude | 30 颗，34.263 m/s（r1 16.547 + r2 17.716），要求 δa ≥ 15 km | 裕量缩小到只为数值安全保留，候选观测机会增多后重新排日程；r2 改为 Δa = +15 km，从东侧组西端出发；给出 J*(δa) 的初步参数分析 | `solutions/q3/v2_p3_*.json`、`docs/q3/v2_第三问_claude.md`、`code/p3/v2/` | 09d2831 |
-| **v3（新数据）** | Claude | **30 颗，35.850 m/s**（r1 18.943 + r2 16.907），要求 δa ≥ 7.8 km | 换成高精度新数据（b9 的修正使 r1 多花 2.4 m/s）；δa 扫描加密到 0–25 km，J*(δa) 从 δa = 0 时的 36.38 降到 7.8 km 时的 35.85，之后饱和 | `solutions/q3/v3_p3_*.json`、`docs/q3/v3_第三问_claude.md`、`code/p3/v3/` | 本次 |
+| **v3（新数据）** | Claude | **30 颗，35.850 m/s**（r1 18.943 + r2 16.907），要求 δa ≥ 7.8 km | 换成高精度新数据（b9 的修正使 r1 多花 2.4 m/s）；δa 扫描加密到 0–25 km，J*(δa) 从 δa = 0 时的 36.38 降到 7.8 km 时的 35.85，之后饱和 | `solutions/q3/v3_p3_*.json`、`docs/q3/v3_第三问_claude.md`、`code/p3/v3/` | 1a6782c |
+| **v4（新数据，M3-B）** | Claude | **30 颗，34.103 m/s**（r1 18.148 + r2 15.956），要求 δa ≥ 7.81 km | 在 v3 的方案上，对两颗星各自做全计划 SCP（M2-B 的连续层） | `solutions/q3/v4_p3_*.json`、`code/p3/v4/`、`MODELS.md` | 本次 |
 
 ## 建模文档
 
