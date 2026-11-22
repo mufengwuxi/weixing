@@ -1,0 +1,526 @@
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+# 方案迁移：Scenario2_org.atk + v3c_p2_lns_scp.json
+
+- 原始场景：Scenario2_org.atk（未改动）；输出：Scenario2_q2.atk
+- 累计 Δv：176.3117 m/s；观测 30 次
+
+## 段序列
+- 删除 R1 原有默认段 Propagate × 10（避免脉冲时序被推后），剩余段数 2
+- R1 首脉冲在历元时刻，已并入初始状态速度
+new objvgt: 000001E7A8336BC0
+new objvgt: 000001E7A84649B0
+new objvgt: 000001E7A8464B60
+new objvgt: 000001E7A847D160
+new objvgt: 000001E7A847D430
+new objvgt: 000001E7A847D100
+new objvgt: 000001E7A848DB00
+new objvgt: 000001E7A848D950
+new objvgt: 000001E7A848D590
+new objvgt: 000001E7A84A22E0
+new objvgt: 000001E7A84A26A0
+new objvgt: 000001E7A84A2610
+new objvgt: 000001E7A84B2E80
+new objvgt: 000001E7A84B29D0
+new objvgt: 000001E7A84B2D00
+new objvgt: 000001E7A84B30C0
+new objvgt: 000001E7A84CC940
+new objvgt: 000001E7A84CC4F0
+new objvgt: 000001E7A84CCC40
+new objvgt: 000001E7A84CC910
+new objvgt: 000001E7A84CCE80
+new objvgt: 000001E7A84CD1E0
+new objvgt: 000001E7A84E8BB0
+new objvgt: 000001E7A84E8580
+new objvgt: 000001E7A84E83D0
+new objvgt: 000001E7A84E85B0
+new objvgt: 000001E7A84E7F80
+new objvgt: 000001E7A84E8790
+new objvgt: 000001E7A850B2A0
+new objvgt: 000001E7A850B120
+new objvgt: 000001E7A850B8A0
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can - R1：段序列 InitialState + 57 × (Coast/Burn) + CoastEnd，RunMCS 完成（共 117 段）
+
+## 场景内观测验证（0.2 s 网格，ERFA 几何太阳）
+
+| # | 目标 | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|
+| 1 | b2 | 10.068–10.879 | 44.9413 | 44.9483 | 是 |
+| 2 | b3 | 19.132–24.475 | 44.9245 | 44.9503 | 是 |
+| 3 | b9 | 14.032–15.914 | 44.9283 | 34.6896 | 是 |
+| 4 | b18 | 17.541–20.865 | 44.9547 | 44.9131 | 是 |
+| 5 | b30 | 46.459–49.950 | 31.1664 | 22.0882 | 是 |
+| 6 | b26 | 49.449–49.950 | 38.3698 | 11.4804 | 是 |
+| 7 | b17 | 48.939–49.426 | 44.9377 | 8.3684 | 是 |
+| 8 | b8 | 49.482–49.948 | 31.9577 | 23.2530 | 是 |
+| 9 | b5 | 43.236–49.951 | 44.9561 | 37.7484 | 是 |
+| 10 | b1 | 49.482–49.948 | 34.1290 | 20.5893 | 是 |
+| 11 | b4 | 40.480–46.436 | 44.9548 | 34.3434 | 是 |
+| 12 | b11 | 46.264–49.950 | 44.9497 | 24.4545 | 是 |
+| 13 | b6 | 48.598–49.948 | 44.9159 | 23.9125 | 是 |
+| 14 | b7 | 49.715–49.955 | 44.9440 | 44.8746 | 是 |
+| 15 | b10 | 48.321–49.942 | 44.9364 | 22.0127 | 是 |
+| 16 | b12 | 48.368–49.942 | 42.9321 | 24.2623 | 是 |
+| 17 | b13 | 28.450–36.362 | 44.9623 | 44.9498 | 是 |
+| 18 | b15 | 48.628–49.937 | 34.4631 | 41.4147 | 是 |
+| 19 | b14 | 18.530–21.576 | 44.9737 | 35.9680 | 是 |
+| 20 | b16 | 48.351–49.945 | 31.0840 | 22.2014 | 是 |
+| 21 | b19 | 34.721–39.060 | 44.9638 | 30.0302 | 是 |
+| 22 | b20 | 49.453–49.944 | 27.0136 | 44.9376 | 是 |
+| 23 | b21 | 47.305–49.948 | 44.9235 | 22.3160 | 是 |
+| 24 | b23 | 49.483–49.948 | 43.6435 | 17.6858 | 是 |
+| 25 | b22 | 48.373–49.951 | 26.7269 | 39.5342 | 是 |
+| 26 | b24 | 48.464–49.948 | 44.9597 | 19.6146 | 是 |
+| 27 | b25 | 48.067–49.945 | 44.9192 | 33.0784 | 是 |
+| 28 | b27 | 49.199–49.947 | 44.9459 | 17.6162 | 是 |
+| 29 | b29 | 15.093–19.878 | 44.8557 | 44.9408 | 是 |
+| 30 | b28 | 48.189–49.950 | 44.9408 | 16.2540 | 是 |
+
+**结论：30/30 次观测满足全部约束。**
+- 场景已另存：C:\Users\xie\scenario2\Scenario2_q2.atk（3442637 bytes）
+summary -> C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing\results\q2\scenario2_q2\summary.md
+not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+q2 exit=0
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/planets.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/ceres.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/jupiter.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/mars.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/neptune.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/pluto.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/saturn.bsp
+spkfile is :I:\��ģ����2\ATK4\ATK-4.2.0-rc.2/./AstroData/Spice/uranus.bsp
+# 方案迁移：Scenario2_org.atk + v6_p3_r1.json + R2(v6_p3_r2.json)
+
+- 原始场景：Scenario2_org.atk（未改动）；输出：Scenario2_q3.atk
+- 累计 Δv：18.1475 m/s；观测 10 次
+
+## 段序列
+- 删除 R1 原有默认段 Propagate × 10（避免脉冲时序被推后），剩余段数 2
+- R1 首脉冲在历元时刻，已并入初始状态速度
+new objvgt: 000002B40F0619E0
+new objvgt: 000002B40F061E30
+new objvgt: 000002B40F063150
+new objvgt: 000002B40F062C10
+new objvgt: 000002B40F063420
+new objvgt: 000002B40F062FD0
+new objvgt: 000002B40F062CA0
+new objvgt: 000002B40F063510
+new objvgt: 000002B40F063B40
+new objvgt: 000002B40F063C60
+new objvgt: 000002B40F063870
+new objvgt: 000002B40F063EA0
+new objvgt: 000002B40F064530
+new objvgt: 000002B40F064C50
+new objvgt: 000002B40F064770
+new objvgt: 000002B40F064950
+new objvgt: 000002B40F064230
+new objvgt: 000002B40F0656A0
+new objvgt: 000002B40F065790
+new objvgt: 000002B40F065310
+new objvgt: 000002B40F065340
+new objvgt: 000002B40F064E30
+new objvgt: 000002B40F065EE0
+new objvgt: 000002B40F065880
+new objvgt: 000002B40F065DC0
+new objvgt: 000002B40F065FA0
+new objvgt: 000002B40F066210
+new objvgt: 000002B40F0668D0
+new objvgt: 000002B40F066900
+new objvgt: 000002B40F066A20
+new objvgt: 000002B40F066480
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\- R1：段序列 InitialState + 19 × (Coast/Burn) + CoastEnd，RunMCS 完成（共 41 段）
+- 新建卫星 R2（初始轨道为方案设计值），累计 Δv 15.3121 m/s
+- 删除 R2 原有默认段 Propagate × 10（避免脉冲时序被推后），剩余段数 2
+- R2 首脉冲在历元时刻，已并入初始状态速度
+Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+new objvgt: 000002B41DC29C00
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCo- R2：段序列 InitialState + 39 × (Coast/Burn) + CoastEnd，RunMCS 完成（共 81 段）
+
+## 场景内观测验证（0.2 s 网格，ERFA 几何太阳）
+
+| # | 目标 | 距离 (km) | 最大光照角 (°) | 最大侦测角 (°) | 满足 |
+|---|---|---|---|---|---|
+| 1 | R2:b4 | 13.733–16.877 | 44.8779 | 35.6983 | 是 |
+| 2 | b2 | 10.070–10.798 | 44.9399 | 44.9447 | 是 |
+| 3 | b1 | 12.986–16.868 | 34.1466 | 44.9489 | 是 |
+| 4 | R2:b11 | 37.776–38.712 | 44.9260 | 13.0344 | 是 |
+| 5 | R2:b7 | 49.669–49.949 | 26.6842 | 44.9485 | 是 |
+| 6 | b3 | 11.245–14.607 | 44.8631 | 42.7305 | 是 |
+| 7 | R2:b6 | 34.321–36.249 | 40.3834 | 44.9331 | 是 |
+| 8 | b5 | 46.334–46.982 | 33.5102 | 44.9436 | 是 |
+| 9 | R2:b10 | 35.609–40.971 | 44.9437 | 33.9914 | 是 |
+| 10 | b8 | 31.543–38.056 | 44.9496 | 40.8558 | 是 |
+| 11 | R2:b12 | 47.775–48.293 | 30.1990 | 44.9468 | 是 |
+| 12 | b9 | 49.713–49.946 | 27.0439 | 44.9464 | 是 |
+| 13 | R2:b13 | 38.731–44.595 | 44.9494 | 35.0078 | 是 |
+| 14 | b17 | 19.788–26.398 | 34.2843 | 44.9489 | 是 |
+| 15 | R2:b15 | 48.894–49.946 | 32.9323 | 44.9464 | 是 |
+| 16 | R2:b14 | 18.026–22.124 | 44.9648 | 42.9298 | 是 |
+| 17 | R2:b16 | 13.603–14.148 | 36.7635 | 24.4416 | 是 |
+| 18 | b18 | 27.856–31.705 | 44.9603 | 41.4538 | 是 |
+| 19 | R2:b19 | 49.457–49.942 | 27.9634 | 44.9424 | 是 |
+| 20 | b30 | 48.606–49.952 | 29.9122 | 19.7790 | 是 |
+| 21 | R2:b20 | 20.132–27.252 | 44.9654 | 44.9522 | 是 |
+| 22 | b26 | 49.400–49.943 | 30.8289 | 32.1467 | 是 |
+| 23 | R2:b21 | 48.739–49.948 | 32.1781 | 44.9494 | 是 |
+| 24 | R2:b23 | 49.254–49.941 | 35.3060 | 28.8337 | 是 |
+| 25 | R2:b22 | 16.238–18.146 | 44.8826 | 27.5496 | 是 |
+| 26 | R2:b24 | 17.119–17.649 | 34.6678 | 44.9253 | 是 |
+| 27 | R2:b25 | 23.996–26.900 | 44.9110 | 44.9662 | 是 |
+| 28 | R2:b27 | 41.310–42.315 | 39.1867 | 30.7788 | 是 |
+| 29 | R2:b29 | 33.780–35.536 | 36.6869 | 44.9239 | 是 |
+| 30 | R2:b28 | 48.786–49.947 | 44.9397 | 14.6313 | 是 |
+
+**结论：30/30 次观测满足全部约束。**
+- 场景已另存：C:\Users\xie\scenario2\Scenario2_q3.atk（3548433 bytes）
+summary -> C:\Users\xie\.zcode\workspace\draft-8304a4da-a07b-4cf9-837e-8b0a3b1a0564\weixing\results\q3\scenario2_q3\summary.md
+ordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+
+e:\git-runner\builds\glrtr-zu\0\atk\atk\build\.gens\astromasterlib\windows\unity_build\..\..\..\..\..\Module\AstroMaster\AsMCS\MCSManeuver.cpp(426): `CMCSManeuver::SetBurnCoordAxes`
+Debug   -1 ATK: can not choose parent satellite's axes
+q3 exit=0
