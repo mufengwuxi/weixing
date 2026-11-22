@@ -858,7 +858,6 @@ def fig6():
     ya = T + 22
     body.append(arrow(X(0), ya, X(x0) + 2, ya, "#8A5A00", 1.1, 7))
     body.append(arrow(X(0), ya, X(x1) - 2, ya, "#8A5A00", 1.1, 7))
-    body.append(f'<rect x="{X(0) - 62:.1f}" y="{ya - 24}" width="124" height="18" fill="#FFFFFF" fill-opacity="0.9"/>')
     body.append(text(X(0), ya - 10, f"可能观测时间窗 {(x1 - x0):.1f} min", 12, "middle", "#8A5A00"))
     # 穿越点与 R1 图标
     body.append(f'<circle cx="{X(0):.1f}" cy="{Y(0):.1f}" r="5.5" fill="#2E7D32" stroke="#FFFFFF" stroke-width="1.3"/>')

@@ -46,15 +46,69 @@
 
 \subsection{优化模型求解}
 
-可观测区域非凸，模型~\eqref{eq:q1model} 存在多个局部最优解，直接从随机初值求解很难收敛到可行点。我们先构造一个容易求解的瞄准问题生成初值，再在完整约束下精修。
+可观测区域非凸，模型~\eqref{eq:q1model} 存在多个局部最优解，直接从随机初值求解很难收敛到可行点。我们按“候选观测时刻、瞄准初值、精修与检验”三步求解。
 
-\subsubsection{基于轨道面穿越的瞄准初值生成}
+\subsubsection{候选观测时刻的确定}
 
-由第 2.1 节的分析，48~h 内 B1 有两个可能观测时段，而 R1 只在穿过 B1 轨道面附近时才可能靠近 B1。在某个可能观测时段内选取 R1 穿越 B1 轨道面的时刻作为观测中点，在可观测区域内取一个参考点，要求 R1 在观测中点恰好到达这个参考点。这是一个只含等式约束的两脉冲交会问题，约束少、容易收敛，得到的解给出了大致的机动时刻和方向。
+观测只能发生在两个条件同时成立的时刻附近。第一个条件是两个观测圆锥有交集，即 $\beta(t) \le 90^\circ$，这在第 2.1 节已经给出。第二个条件是 R1 正好处在目标轨道面附近。记目标轨道面的单位法向为 $\hat{\bm h}_b$，R1 到目标轨道面的有向距离为
+\begin{equation}
+  g(t) = \bm r_{\mathrm{R1}}(t)\cdot\hat{\bm h}_b .
+  \label{eq:planedist}
+\end{equation}
+
+R1 与 B1 的轨道面夹角为 $4.21^\circ$，$g(t)$ 的振幅约为 3093~km。观测要求两星距离不超过 50~km，因而必须有 $|g(t)| \le 50$~km。在 $g(t)$ 的零点 $t_c$ 附近，$|g(t)| \approx a\,n\sin i_{\mathrm{rel}}\,|t - t_c|$，由此得到 $|t - t_c| \le 222$~s，也就是说观测必须发生在 R1 穿越目标轨道面前后约 4 分钟之内，如图~\ref{fig:crossing}(c) 所示。另一方面，1 米每秒的脉冲最多使轨道面转动约 $0.019^\circ$，几米每秒的机动几乎不改变 R1 的轨道面，所以可以在 R1 不机动的轨道上预先计算穿越时刻。
+
+据此，候选观测时刻取为
+\begin{equation}
+  \mathcal S = \{\, t_c \in [0, T] \mid g(t_c) = 0,\ \beta(t_c) \le 90^\circ \,\} .
+  \label{eq:candidates}
+\end{equation}
+
+对本题数据，48~h 内 R1 共穿越 B1 轨道面 4 次，时刻为 2.45~h、14.42~h、26.38~h 和 38.35~h，如图~\ref{fig:crossing}(b) 所示。其中第 1、3 次发生在向阳侧交点，$\beta$ 约为 $146^\circ$，不满足条件；第 2、4 次发生在背阳侧交点，$\beta$ 约为 $34^\circ$，构成两个候选观测时刻。两类交点的几何关系如图~\ref{fig:crossing}(a) 所示。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.86\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig6a_crossing.pdf}
+    \caption{两轨道面的交线与交点}
+  \end{subfigure}
+
+  \vspace{4pt}
+  \begin{subfigure}[b]{0.53\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig6b_g48h.pdf}
+    \caption{48~h 内 R1 到目标轨道面的距离 $g(t)$}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig6c_gzoom.pdf}
+    \caption{穿越时刻前后 10~min 的 $g(t)$}
+  \end{subfigure}
+  \caption{候选观测时刻的确定}
+  \label{fig:crossing}
+\end{figure}
+
+\subsubsection{瞄准初值的构造}
+
+对每个候选时刻 $t_c$，构造一个“观测开始时 R1 恰好到达瞄准点”的两脉冲问题，它只含等式约束，容易求解，其解作为精修的初值。瞄准点和初始脉冲按下面的方法确定。
+
+瞄准方向取目标处太阳方向 $\hat{\bm u}_\odot$ 与地心方向 $\hat{\bm u}_E$ 的角平分线。两个圆锥的半顶角都是 $45^\circ$，轴线夹角为 $\beta$，角平分线方向与两条轴线的夹角都是 $\beta/2$，离两个锥面的角距离都是 $45^\circ - \beta/2$。对其他方向，到某一个锥面的距离一定小于这个值，所以角平分线是角度可行区域里离边界最远的方向。在 $\beta \approx 34^\circ$ 时，这个裕量约为 $28^\circ$。瞄准距离 $L$ 在 $[10, 50]$~km 内均匀抽取，瞄准点为
+\begin{equation}
+  \bm r_{\mathrm{aim}} = \bm r_b(t_c) + L\,\frac{\hat{\bm u}_\odot + \hat{\bm u}_E}{\|\hat{\bm u}_\odot + \hat{\bm u}_E\|} .
+  \label{eq:aim}
+\end{equation}
+
+初始脉冲由第 2.2 节的相位漂移模型估计。设 $t_c$ 时刻目标相对 R1 的沿轨相位差为 $\Delta\lambda$，第一次机动时刻为 $t_1$，可用时间为 $T_1 = t_c - t_1$。要在 $T_1$ 内消除这一相位差，所需的切向速度增量约为
+\begin{equation}
+  \Delta v_T = -\frac{a\,\Delta\lambda}{3\,T_1},
+  \label{eq:dvguess}
+\end{equation}
+正值表示沿速度方向。对本题，两个候选时刻的相位差都约为 $-1.31^\circ$，即 B1 在 R1 西侧，R1 需要沿速度方向加速、抬高轨道、向西漂移。初值中第一次脉冲取沿速度方向、大小为式~\eqref{eq:dvguess} 乘以 $[0.3, 1.5]$ 内的随机系数；第二次脉冲取 0.5~m/s 量级的随机小量。两次机动时刻在满足间隔约束的范围内随机抽取。
 
 \subsubsection{多起点精修与网格检验}
 
-以瞄准解为初值，用序列二次规划方法 SLSQP\cite{kraft1988} 求解完整模型~\eqref{eq:q1model}，具体调用 SciPy 中的实现\cite{scipy2020}。参考点的位置、机动时刻和所选观测时段都随机抽取，重复 300 次，从所有可行解中取速度增量最小者。得到方案后，在 0.05~s 的时间网格上逐点检验全部约束，确认 1~s 采样点之间没有越界。为了抵消数值传播的微小误差，检验时在距离和角度上各留 0.01~km 和 $0.01^\circ$ 的裕量。
+以瞄准解为初值，用序列二次规划方法 SLSQP\cite{kraft1988} 求解完整模型~\eqref{eq:q1model}，具体调用 SciPy 中的实现\cite{scipy2020}。候选时刻、瞄准距离、机动时刻和初始脉冲的随机系数都随机抽取，重复 300 次，从所有可行解中取速度增量最小者。得到方案后，在 0.05~s 的时间网格上逐点检验全部约束，确认 1~s 采样点之间没有越界。为了抵消数值传播的微小误差，检验时在距离和角度上各留 0.01~km 和 $0.01^\circ$ 的裕量。由于初值已经落在可行解附近，在第 1 个初值上就得到了最终的最优解，后续初值没有找到更好的解。
 
 \subsection{结果的分析与验证}
 
@@ -119,3 +173,5 @@
     \bottomrule
   \end{tabular}
 \end{table}
+
+为检验方法的可迁移性，我们不修改任何代码和参数，只把观测目标依次换成 B7 和 B20，用相同的设置求解。两者分别得到 8.98~m/s 和 34.83~m/s 的可行方案，候选观测时刻、相位差和初始脉冲都由式~\eqref{eq:candidates} 至式~\eqref{eq:dvguess} 自动给出。其中 B20 的第二次脉冲达到 30~m/s 的上限，说明不同目标的机动代价差别很大，这也是问题二需要优化访问顺序的原因。
