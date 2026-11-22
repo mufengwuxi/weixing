@@ -881,6 +881,112 @@ def fig6():
     save("fig6c_gzoom.svg", W, H + 40, body)
 
 
+# ---------------- 图 8：问题一的抽象——穿过时变可观测管道 ----------------
+def fig_tube():
+    W, H = 1000, 600
+    # 斜二测投影：世界坐标 (t, x, y)，t 为时间轴（向右上），x 为相对位置的水平分量（向右下），y 为竖直分量
+    O = np.array([170.0, 400.0])
+    et, ex, ey = np.array([1.0, -0.26]), np.array([0.55, 0.42]), np.array([0.0, -1.0])
+
+    def P(t, x, y):
+        q = O + t * et + x * ex + y * ey
+        return float(q[0]), float(q[1])
+
+    body = [DEFS3D, """<defs>
+<linearGradient id="gTube" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FD3F0" stop-opacity="0.55"/><stop offset="1" stop-color="#2E6FB7" stop-opacity="0.35"/></linearGradient>
+<linearGradient id="gTubeHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE48A" stop-opacity="0.85"/><stop offset="1" stop-color="#F2A515" stop-opacity="0.65"/></linearGradient>
+<radialGradient id="gStar" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.4" stop-color="#7BE07B"/><stop offset="1" stop-color="#1B7A1B"/></radialGradient>
+</defs>"""]
+    r_in, r_out, half = 32.0, 105.0, np.radians(40)
+    phi = lambda t: np.radians(120) + 0.0010 * (t - 380)  # noqa: E731  管道截面朝向随时间缓慢转动
+
+    def section(t):
+        ang = np.linspace(phi(t) - half, phi(t) + half, 28)
+        outer = [P(t, r_out * np.cos(a), r_out * np.sin(a)) for a in ang]
+        inner = [P(t, r_in * np.cos(a), r_in * np.sin(a)) for a in ang[::-1]]
+        return outer + inner
+
+    t0, t1, tc0, tc1 = 0.0, 620.0, 345.0, 415.0
+    ts = np.r_[0, 110, 220, 345, 380, 415, 520, 620]
+    # 时间轴（目标所在的轴线）
+    body.append(line(*P(-40, 0, 0), *P(t1 + 90, 0, 0), "#333333", 1.4))
+    body.append(poly([P(t1 + 90, 0, 0), (P(t1 + 90, 0, 0)[0] - 12, P(t1 + 90, 0, 0)[1] - 1), (P(t1 + 90, 0, 0)[0] - 10, P(t1 + 90, 0, 0)[1] + 7)], fill="#333333", stroke="#333333", w=1))
+    tx, ty = P(t1 + 100, 0, 0)
+    body.append(text(tx + 4, ty + 4, "t", 15, "start", italic=True))
+    # 管道四条棱
+    for a_k, r_k in ((-1, r_in), (-1, r_out), (1, r_in), (1, r_out)):
+        pts = [P(t, r_k * np.cos(phi(t) + a_k * half), r_k * np.sin(phi(t) + a_k * half)) for t in np.linspace(t0, t1, 40)]
+        body.append(poly(pts, stroke="#2E6FB7", w=0.9, closed=False, dash="5,3"))
+    # 截面（远端先画）
+    for t in ts:
+        hi = tc0 <= t <= tc1
+        body.append(poly(section(t), fill="url(#gTubeHi)" if hi else "url(#gTube)", stroke="#B5770A" if hi else "#2E6FB7", w=1.2 if hi else 0.7))
+    # 目标卫星位于轴线起点附近
+    body.append(sat3d(*P(-10, 0, 0), "blue", 0.8))
+    bx, by = P(-10, 0, 0)
+    body.append(text(bx, by + 34, "目标 B1（原点）", 12.5, "middle", "#1D4E8F"))
+    # R1 相对轨迹：从远处斜穿管道
+    tt = np.linspace(120, 620, 300)
+    pm = phi(380)
+    rho0 = np.array([68 * np.cos(pm), 68 * np.sin(pm)])          # 观测中点：截面内的瞄准点
+    vdir = np.array([np.cos(pm - np.pi / 2), np.sin(pm - np.pi / 2)])  # 相对速度方向：横穿截面
+
+    def rel(t):
+        # 观测段附近相对运动近似匀速直线（飞越），远处叠加脉冲前的较大偏离
+        u = (t - 380) / 35
+        q = rho0 + vdir * 34 * u + rho0 / np.linalg.norm(rho0) * max(0.0, -u - 1.2) ** 2 * 3.2
+        return float(q[0]), float(q[1])
+    pts = [P(t, *rel(t)) for t in tt]
+    inside = [(r_in <= np.hypot(*rel(t)) <= r_out) and abs(np.arctan2(rel(t)[1], rel(t)[0]) - phi(t)) <= half for t in tt]
+    body.append(poly(pts, stroke="#B01818", w=2.2, closed=False))
+    seg = [p for p, k in zip(pts, inside) if k]
+    if seg:
+        body.append(poly(seg, stroke="#B01818", w=5.0, closed=False))
+    # 定推力：两次脉冲（火焰 + 卫星）
+    for tb, lab in ((150, "Δv₁"), (255, "Δv₂")):
+        x_, y_ = P(tb, *rel(tb))
+        body.append(flame(x_ - 6, y_ + 10, 215, L=30, Wd=12))
+        body.append(sat3d(x_, y_, "red", 0.7))
+        body.append(text(x_ - 6, y_ - 24, lab, 13, "end", "#B01818"))
+    # 定点：候选时刻截面上的瞄准点（角平分线方向）
+    tm = 380
+    ax_, ay_ = P(tm, *rel(tm))
+    star = []
+    for k in range(10):
+        rr = 9 if k % 2 == 0 else 4
+        aa = np.pi / 2 + k * np.pi / 5
+        star.append((ax_ + rr * np.cos(aa), ay_ - rr * np.sin(aa)))
+    body.append(poly(star, fill="url(#gStar)", stroke="#1B5E20", w=0.8))
+    # 候选时段在时间轴上的标记
+    body.append(line(*P(tc0, 0, 0), *P(tc1, 0, 0), "#F2A515", 6))
+    # 三层标注（统一放在图右侧和上方的空白处，用引线连接）
+    def tag(xp, yp, lx, ly, title, sub, col):
+        body.append(line(xp, yp, lx, ly, col, 0.9))
+        body.append(f'<rect x="{lx - 4}" y="{ly - 30}" width="232" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="{col}" stroke-width="1.2"/>')
+        if title.endswith("t_c"):
+            body.append(f'<text x="{lx + 6}" y="{ly - 11}" font-family="{FONT}" font-size="13.5" fill="{col}">{title[:-3]}t<tspan baseline-shift="sub" font-size="10">c</tspan></text>')
+        else:
+            body.append(text(lx + 6, ly - 11, title, 13.5, "start", col))
+        body.append(text(lx + 6, ly + 8, sub, 11.5, "start", "#444444"))
+    cxa, cya = P((tc0 + tc1) / 2, 0, 0)
+    tag(cxa, cya, 640, 540, "定时：候选观测时刻 t_c", "轨道面交线附近且 β ≤ 90°", "#B5770A")
+    tag(ax_ + 8, ay_ - 4, 700, 80, "定点：瞄准点", "截面角平分线方向，离边界最远", "#1B7A1B")
+    x2, y2 = P(255, *rel(255))
+    tag(x2 + 10, y2 + 10, 330, 560, "定推力：两次脉冲", "相位漂移估计初值，非线性规划精修", "#B01818")
+    # 截面说明
+    top = min((P(t1, r_out * np.cos(a), r_out * np.sin(a)) for a in np.linspace(phi(t1) - half, phi(t1) + half, 30)), key=lambda q: q[1])
+    body.append(text(top[0] + 40, top[1] - 14, "管道截面 C(t)：双圆锥 ∩ 球壳", 12.5, "middle", "#1F4E79"))
+    # 图例
+    lx, ly = 40, 520
+    body.append(f'<rect x="{lx}" y="{ly - 10}" width="26" height="14" fill="url(#gTube)" stroke="#2E6FB7" stroke-width="0.7"/>')
+    body.append(text(lx + 32, ly + 2, "时变可观测管道", 12, "start"))
+    body.append(f'<rect x="{lx}" y="{ly + 14}" width="26" height="14" fill="url(#gTubeHi)" stroke="#B5770A" stroke-width="0.8"/>')
+    body.append(text(lx + 32, ly + 26, "候选时段内的截面", 12, "start"))
+    body.append(line(lx, ly + 45, lx + 26, ly + 45, "#B01818", 2.2))
+    body.append(text(lx + 32, ly + 50, "R1 相对轨迹（管道内加粗）", 12, "start"))
+    save("fig8_tube.svg", W, H, body)
+
+
 if __name__ == "__main__":
     fig1a()
     fig1b()
@@ -889,3 +995,4 @@ if __name__ == "__main__":
     fig4()
     fig5()
     fig6()
+    fig_tube()
