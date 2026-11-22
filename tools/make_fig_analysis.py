@@ -638,57 +638,125 @@ def frame(body, L, T, W_, H_, xt, yt, X, Y, xlab, ylab, yfmt=str):
     body.append(text(L - 44, T + H_ / 2, ylab, 13, rot=-90))
 
 
+def panel(body, L, T, W_, H_, xt, yt, X, Y, xlab=None, ylab=None, yfmt=str, xfmt=str):
+    """浅灰底、白网格的坐标面板（参照期刊数据图常见的样式）。"""
+    body.append(f'<rect x="{L}" y="{T}" width="{W_}" height="{H_}" fill="#F4F6FA" stroke="none"/>')
+    for v in yt:
+        body.append(line(L, Y(v), L + W_, Y(v), "#FFFFFF", 1.4))
+        body.append(text(L - 8, Y(v) + 4, yfmt(v), 12, "end", "#444444"))
+    for v in xt:
+        body.append(line(X(v), T, X(v), T + H_, "#FFFFFF", 1.4))
+        if xlab is not None:
+            body.append(text(X(v), T + H_ + 18, xfmt(v), 12, "middle", "#444444"))
+    if xlab:
+        body.append(text(L + W_ / 2, T + H_ + 40, xlab, 13))
+    if ylab:
+        body.append(text(L - 46, T + H_ / 2, ylab, 13, rot=-90))
+
+
+def _tw(t_, size=12):
+    return sum(size if ord(c) > 255 else size * 0.55 for c in t_)
+
+
+def callout(body, x, y, lx, ly, lines_, col, anchor="start", dot=True):
+    body.append(line(x, y, lx, ly, col, 1.0))
+    if dot:
+        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.5" fill="#FFFFFF" stroke="{col}" stroke-width="2"/>')
+    w = max(_tw(t_) for t_ in lines_) + 16
+    x0 = lx if anchor == "start" else lx - w
+    body.append(f'<rect x="{x0:.1f}" y="{ly - 16}" width="{w:.1f}" height="{8 + 18 * len(lines_)}" rx="5" ry="5" fill="#FFFFFF" stroke="{col}" stroke-width="1.1"/>')
+    for k, t_ in enumerate(lines_):
+        body.append(text(x0 + 8, ly + 2 + 18 * k, t_, 12, "start", col))
+
+
+GRAD5 = """<defs>
+<linearGradient id="gUnder" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B5C8A" stop-opacity="0.16"/><stop offset="1" stop-color="#2B5C8A" stop-opacity="0.0"/></linearGradient>
+<linearGradient id="gShell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FC4A8" stop-opacity="0.35"/><stop offset="1" stop-color="#2E7D32" stop-opacity="0.18"/></linearGradient>
+<linearGradient id="gWin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F2A515" stop-opacity="0.45"/><stop offset="1" stop-color="#F2A515" stop-opacity="0.25"/></linearGradient>
+<linearGradient id="gOK" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FC4A8" stop-opacity="0.10"/><stop offset="1" stop-color="#2E7D32" stop-opacity="0.28"/></linearGradient>
+</defs>"""
+
+
 def fig5():
-    # (a) 观测前后 ±15 min 的相对距离（对数坐标）
+    # (a) 观测前后 ±15 min 的相对距离（对数坐标）：飞越过程
     _, _, _, s0 = q1_series(np.array([0.0]))
     ta = np.arange(-900, 901, 5.0)
     d, al, th, s0 = q1_series(s0 + ta)
-    W, H = 640, 360
-    L, T, W_, H_ = 80, 40, 520, 250
-    lo, hi = np.log10(5), np.log10(300)
-    X = lambda v: L + (v + 15) / 30 * W_  # noqa: E731  横轴单位 min
+    W, H = 660, 380
+    L, T, W_, H_ = 86, 30, 540, 270
+    lo, hi = np.log10(6), np.log10(300)
+    X = lambda v: L + (v + 15) / 30 * W_  # noqa: E731
     Y = lambda v: T + (hi - np.log10(v)) / (hi - lo) * H_  # noqa: E731
-    body = []
-    body.append(f'<rect x="{L}" y="{Y(50):.1f}" width="{W_}" height="{Y(10) - Y(50):.1f}" fill="#DCEAF7"/>')
-    body.append(text(L + 8, Y(50) + 16, "10 ~ 50 km", 12, "start", "#1F4E79"))
-    body.append(f'<rect x="{X(0):.1f}" y="{T}" width="{X(1) - X(0):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.35"/>')
-    frame(body, L, T, W_, H_, range(-15, 16, 5), [5, 10, 20, 50, 100, 200], X, Y, "相对观测开始时刻 / min", "距离 d / km")
-    m = (d >= 5) & (d <= 300)
-    body.append(poly([(X(u / 60), Y(v)) for u, v, k in zip(ta, d, m) if k], stroke="#1F4E79", w=2.2, closed=False))
-    body.append(text(X(0.5), T - 8, "观测 60 s", 12, "middle", "#B5770A"))
-    body.append(arrow(X(0.5), T - 4, X(0.5), T + 10, "#B5770A", 1.0, 6))
+    body = [DEFS3D, GRAD5]
+    panel(body, L, T, W_, H_, range(-15, 16, 5), [10, 20, 50, 100, 200], X, Y, "相对观测开始时刻 / min", "距离 d / km",
+          xfmt=lambda v: str(v).replace("-", "−"))
+    body.append(f'<rect x="{L}" y="{Y(50):.1f}" width="{W_}" height="{Y(10) - Y(50):.1f}" fill="url(#gShell)"/>')
+    body.append(line(L, Y(10), L + W_, Y(10), "#2E7D32", 1.0, "6,4"))
+    body.append(line(L, Y(50), L + W_, Y(50), "#2E7D32", 1.0, "6,4"))
+    body.append(text(L + W_ - 8, Y(50) + 16, "距离约束 10–50 km", 12, "end", "#2E7D32"))
+    body.append(f'<rect x="{X(0):.1f}" y="{T}" width="{X(1) - X(0):.1f}" height="{H_}" fill="url(#gWin)"/>')
+    m = (d >= 6) & (d <= 300)
+    pts = [(X(u / 60), Y(v)) for u, v, k in zip(ta, d, m) if k]
+    body.append(poly(pts + [(pts[-1][0], T + H_), (pts[0][0], T + H_)], fill="url(#gUnder)", stroke="none"))
+    body.append(poly(pts, stroke="#FFFFFF", w=5.5, closed=False))
+    body.append(poly(pts, stroke="#1F4E79", w=2.6, closed=False))
+    i0 = np.argmin(d)
+    dmin = q1_series(s0 + np.arange(0, 60.01, 0.1))[0].min()
+    callout(body, X(ta[i0] / 60), Y(d[i0]), X(3.2), Y(9.0) - 8, [f"最近距离 {dmin:.2f} km"], "#1F4E79")
+    callout(body, X(1.0), T + 14, X(2.2), T + 26, ["观测 60 s"], "#B5770A", dot=False)
+    # 飞越示意：R1 图标沿曲线运动
+    for u in (-11, 11):
+        k = np.argmin(np.abs(ta / 60 - u))
+        body.append(sat3d(X(u), Y(d[k]) - 26, "red", 0.55))
+    body.append(text(X(-11), Y(d[np.argmin(np.abs(ta / 60 + 11))]) - 48, "接近", 11.5, "middle", "#B01818"))
+    body.append(text(X(11), Y(d[np.argmin(np.abs(ta / 60 - 11))]) - 48, "远离", 11.5, "middle", "#B01818"))
     save("fig5a_q1_range.svg", W, H, body)
 
-    # (b) 观测前后 ±3 min 的光照角、侦测角与距离
+    # (b) 观测前后 ±3 min：上图两个角度，下图距离，共用时间轴
     tb = np.arange(-180, 241, 1.0)
     d, al, th, _ = q1_series(s0 + tb)
-    L, T, W_, H_ = 80, 40, 500, 250
+    W, H = 660, 470
+    L, W_ = 86, 540
     X = lambda v: L + (v + 180) / 420 * W_  # noqa: E731
-    Y = lambda v: T + (120 - v) / 120 * H_  # noqa: E731  左轴 0°–120°
-    Y2 = lambda v: T + (60 - v) / 60 * H_  # noqa: E731  右轴 0–60 km
-    body = []
-    body.append(f'<rect x="{X(0):.1f}" y="{T}" width="{X(60) - X(0):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.30"/>')
-    frame(body, L, T, W_, H_, range(-180, 241, 60), range(0, 121, 30), X, Y, "相对观测开始时刻 / s", "角度 / (°)")
-    for v in range(0, 61, 15):
-        body.append(line(L + W_, Y2(v), L + W_ - 6, Y2(v)))
-        body.append(text(L + W_ + 7, Y2(v) + 4, str(v), 12, "start"))
-    body.append(text(L + W_ + 44, T + H_ / 2, "距离 d / km", 13, rot=90))
-    body.append(line(L, Y(45), L + W_, Y(45), "#C0392B", 1.2, "7,4"))
-    body.append(text(L + 6, Y(45) - 6, "45°", 12, "start", "#C0392B"))
-    clip = lambda arr, lo_, hi_: [(X(u), Y(min(max(v, lo_), hi_))) for u, v in zip(tb, arr)]  # noqa: E731
-    body.append(poly(clip(al, 0, 120), stroke="#D9822B", w=2.0, closed=False))
-    body.append(poly(clip(th, 0, 120), stroke="#2E7D32", w=2.0, closed=False, dash="8,3"))
-    body.append(poly([(X(u), Y2(min(v, 60))) for u, v in zip(tb, d)], stroke="#1F4E79", w=2.0, closed=False))
-    body.append(line(L, Y2(10), L + W_, Y2(10), "#1F4E79", 0.9, "3,3"))
-    body.append(text(L + W_ - 6, Y2(10) - 5, "10 km", 11, "end", "#1F4E79"))
-    lx, ly = L + 20, T + H_ + 62
-    for k, (lab, col, dash) in enumerate((("光照角 α", "#D9822B", None), ("侦测角 θ", "#2E7D32", "8,3"), ("距离 d", "#1F4E79", None))):
-        xx = lx + k * 150
-        body.append(line(xx, ly, xx + 30, ly, col, 2.0, dash))
-        body.append(text(xx + 36, ly + 4, lab, 12, "start"))
-    body.append(f'<rect x="{lx + 450}" y="{ly - 7}" width="24" height="14" fill="#F2A515" fill-opacity="0.30"/>')
-    body.append(text(lx + 480, ly + 4, "观测时段", 12, "start"))
-    save("fig5b_q1_angles.svg", 660, 380, body)
+    T1, H1 = 30, 230
+    Y1 = lambda v: T1 + (120 - v) / 120 * H1  # noqa: E731
+    T2, H2 = 290, 110
+    Y2 = lambda v: T2 + (60 - v) / 60 * H2  # noqa: E731
+    body = [GRAD5]
+    panel(body, L, T1, W_, H1, range(-180, 241, 60), range(0, 121, 30), X, Y1, None, "角度 / (°)")
+    panel(body, L, T2, W_, H2, range(-180, 241, 60), range(0, 61, 20), X, Y2, "相对观测开始时刻 / s", "距离 d / km",
+          xfmt=lambda v: str(v).replace("-", "−"))
+    # 可行区（角度 ≤ 45°、距离 10–50 km）
+    body.append(f'<rect x="{L}" y="{Y1(45):.1f}" width="{W_}" height="{Y1(0) - Y1(45):.1f}" fill="url(#gOK)"/>')
+    body.append(line(L, Y1(45), L + W_, Y1(45), "#2E7D32", 1.2, "6,4"))
+    body.append(text(L + W_ - 8, Y1(45) + 16, "角度约束 ≤ 45°", 12, "end", "#2E7D32"))
+    body.append(f'<rect x="{L}" y="{Y2(50):.1f}" width="{W_}" height="{Y2(10) - Y2(50):.1f}" fill="url(#gOK)"/>')
+    body.append(line(L, Y2(10), L + W_, Y2(10), "#2E7D32", 1.2, "6,4"))
+    body.append(text(L + 8, Y2(10) + 16, "距离下界 10 km", 12, "start", "#2E7D32"))
+    for TT, HH in ((T1, H1), (T2, H2)):
+        body.append(f'<rect x="{X(0):.1f}" y="{TT}" width="{X(60) - X(0):.1f}" height="{HH}" fill="url(#gWin)"/>')
+    clip = lambda arr: [(X(u), Y1(min(max(v, 0), 120))) for u, v in zip(tb, arr)]  # noqa: E731
+    for arr, col, dash in ((al, "#D9822B", None), (th, "#6A3D9A", "9,4")):
+        body.append(poly(clip(arr), stroke="#FFFFFF", w=5, closed=False))
+        body.append(poly(clip(arr), stroke=col, w=2.6, closed=False, dash=dash))
+    dp = [(X(u), Y2(min(v, 60))) for u, v in zip(tb, d)]
+    body.append(poly(dp, stroke="#FFFFFF", w=5, closed=False))
+    body.append(poly(dp, stroke="#1F4E79", w=2.6, closed=False))
+    # 三个起作用的约束
+    k0, k1 = np.argmin(np.abs(tb - 0)), np.argmin(np.abs(tb - 60))
+    callout(body, X(0), Y1(th[k0]), X(0) - 4, Y1(108), ["开始时侦测角 θ = 45°"], "#6A3D9A", anchor="end")
+    callout(body, X(60), Y1(al[k1]), X(60) + 4, Y1(108), ["结束时光照角 α = 45°"], "#D9822B")
+    kd = np.argmin(d)
+    callout(body, X(tb[kd]), Y2(d[kd]), X(120), Y2(40), [f"最近距离 {d[kd]:.2f} km"], "#1F4E79")
+    # 图例
+    lx, ly = L + 4, H - 14
+    for k, (lab, col, dash) in enumerate((("光照角 α", "#D9822B", None), ("侦测角 θ", "#6A3D9A", "9,4"), ("距离 d", "#1F4E79", None))):
+        xx = lx + k * 130
+        body.append(line(xx, ly - 4, xx + 30, ly - 4, col, 2.6, dash))
+        body.append(text(xx + 36, ly, lab, 12, "start"))
+    body.append(f'<rect x="{lx + 400}" y="{ly - 11}" width="24" height="14" fill="url(#gWin)"/>')
+    body.append(text(lx + 430, ly, "观测 60 s", 12, "start"))
+    save("fig5b_q1_angles.svg", W, H, body)
 
 
 # ---------------- 图 6：候选观测时刻（轨道面穿越） ----------------
