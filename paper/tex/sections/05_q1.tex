@@ -113,7 +113,7 @@ R1 与 B1 的轨道面夹角为 $4.21^\circ$，$g(t)$ 的振幅约为 3093~km。
 \end{equation}
 正值表示沿速度方向。对本题，两个候选时刻的相位差都约为 $-1.31^\circ$，即 B1 在 R1 西侧，R1 需要沿速度方向加速、抬高轨道、向西漂移。初值中第一次脉冲取沿速度方向、大小为式~\eqref{eq:dvguess} 乘以 $[0.3, 1.5]$ 内的随机系数；第二次脉冲取 0.5~m/s 量级的随机小量。两次机动时刻在满足间隔约束的范围内随机抽取。
 
-以瞄准问题的解为初值，用序列二次规划方法 SLSQP\cite{kraft1988} 求解完整模型~\eqref{eq:q1model}，具体调用 SciPy 中的实现\cite{scipy2020}。候选时刻、瞄准距离、机动时刻和初始脉冲的随机系数都随机抽取，重复 300 次，从所有可行解中取速度增量最小者。得到方案后，在 0.05~s 的时间网格上逐点检验全部约束，确认 1~s 采样点之间没有越界。为了抵消数值传播的微小误差，检验时在距离和角度上各留 0.01~km 和 $0.01^\circ$ 的裕量。由于初值已经落在可行解附近，在第 1 个初值上就得到了最终的最优解，后续初值没有找到更好的解。
+以瞄准问题的解为初值，用序列二次规划方法 SLSQP\cite{kraft1988} 求解完整模型~\eqref{eq:q1model}，具体调用 SciPy 中的实现\cite{scipy2020}。候选时刻、瞄准距离、机动时刻和初始脉冲的随机系数都随机抽取，重复 300 次，从所有可行解中取速度增量最小者。得到方案后，需要确认 1~s 采样点之间没有越界。设某个约束函数在观测段内的二阶导数绝对值不超过 $M$，则在步长为 $h$ 的两个相邻采样点之间，它的极值最多比两端采样值中较优的一个多出 $Mh^2/8$。我们据此选取检验网格，在 0.05~s 的网格上逐点检验全部约束，并在距离和角度上各留 0.01~km 和 $0.01^\circ$ 的裕量，使检验网格的误差远小于裕量。由于初值已经落在可行解附近，在第 1 个初值上就得到了最终的最优解，后续初值没有找到更好的解。
 
 \subsection{结果的分析与验证}
 
@@ -161,6 +161,24 @@ R1 与 B1 的轨道面夹角为 $4.21^\circ$，$g(t)$ 的振幅约为 3093~km。
   \label{fig:q1obs}
 \end{figure}
 
+采样误差的检验结果如图~\ref{fig:q1grid} 所示。以 0.001~s 网格上的曲线为基准，最小距离出现在观测开始后 42.42~s，为 10.27951~km，而 1~s 采样点给出的最小值为 10.27994~km，两者相差 0.43~m。把采样网格的起点在一个步长内平移并取最坏情形，最小距离的采样误差随步长按 $h^2$ 下降，与误差界 $Mh^2/8$ 几乎重合。步长为 1~s 时，距离误差最多 0.63~m，两个角度的误差界分别为 $0.012^\circ$ 和 $0.016^\circ$，已经超过角度裕量，所以只用优化时的 1~s 采样并不足以保证约束成立。步长为 0.05~s 时，距离误差降到 1.6~mm，角度误差不超过 $0.00004^\circ$，都比裕量小两个数量级以上，检验结果可以代表连续时间上的约束。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7a_grid_zoom.pdf}
+    \caption{最小距离附近的采样点与连续曲线}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7b_grid_err.pdf}
+    \caption{最小距离的采样误差随步长的变化}
+  \end{subfigure}
+  \caption{采样步长对约束检验的影响}
+  \label{fig:q1grid}
+\end{figure}
+
 观测段的约束检验见表~\ref{tab:q1check}。表中的 ATK 结果由 ATK 软件独立数值积分得到，与解析传播在观测时刻的位置差小于 1~m，两种方法都表明 60~s 内全部约束成立。
 
 \begin{table}[!htb]
@@ -178,5 +196,30 @@ R1 与 B1 的轨道面夹角为 $4.21^\circ$，$g(t)$ 的振幅约为 3093~km。
     \bottomrule
   \end{tabular}
 \end{table}
+
+为检验上述方案的最优性，我们固定一部分决策变量、对剩余变量重新优化，观察最小速度增量 $J^*$ 的变化，结果如图~\ref{fig:q1opt} 所示。图~\ref{fig:q1opt}(a) 按 1~h 步长遍历两次机动时刻 $(t_1, t_2)$，共 704 个组合，每个格点对 $\Delta\bm v_1$、$\Delta\bm v_2$ 和 $s$ 重新优化。全图的最小值正是本文方案的 5.2128~m/s，周围格点的代价均更高，最近的一格为 5.219~m/s；在 $t_1 \approx 3$~h、$t_2 \approx 15$~h 附近存在另一个代价较高的局部盆地；灰色区域在以相邻格点解为初值重算后仍未找到可行解。图~\ref{fig:q1opt}(b) 把两次脉冲各分解为径向（R）、沿迹（T）和法向（N）三个分量，每次固定一个分量使其偏离本文方案 $-1$ 到 $+1$~m/s，对其余变量重新优化。6 条剖面曲线的最低点都落在偏移为 0 处，其中沿迹分量最为敏感，偏离 1~m/s 时 $J^*$ 升至约 6.0~m/s。图~\ref{fig:q1opt}(c) 统计了 300 个随机初值的收敛结果：第一个候选观测时段的初值全部收敛到 13.35~m/s 或 14.65~m/s，第二个时段有 117 个收敛到 5.2128~m/s，其余落在 6.4、9.3、12.0~m/s 等较差的局部最优，没有任何一个初值得到更低的解。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.62\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7c_q1_t1t2.pdf}
+    \caption{固定两次机动时刻的最小速度增量 $J^*(t_1, t_2)$}
+  \end{subfigure}
+
+  \vspace{6pt}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7d_q1_dvprof.pdf}
+    \caption{两次脉冲各 RTN 分量偏离时的 $J^*$ 剖面}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7e_q1_multistart.pdf}
+    \caption{300 个随机初值的收敛结果分布}
+  \end{subfigure}
+  \caption{问题一方案的最优性检验}
+  \label{fig:q1opt}
+\end{figure}
 
 为检验方法的可迁移性，我们不修改任何代码和参数，只把观测目标依次换成 B7 和 B20，用相同的设置求解。两者分别得到 8.98~m/s 和 34.83~m/s 的可行方案，候选观测时刻、相位差和初始脉冲都由式~\eqref{eq:candidates} 至式~\eqref{eq:dvguess} 自动给出。其中 B20 的第二次脉冲达到 30~m/s 的上限，说明不同目标的机动代价差别很大，这也是问题二需要优化访问顺序的原因。
