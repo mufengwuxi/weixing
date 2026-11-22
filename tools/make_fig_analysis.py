@@ -691,6 +691,162 @@ def fig5():
     save("fig5b_q1_angles.svg", 660, 380, body)
 
 
+# ---------------- 图 6：候选观测时刻（轨道面穿越） ----------------
+def q1_plane_series(t):
+    import sys as _s
+    _s.path.insert(0, str(REPO / "code" / "p1"))
+    import solver as S
+    P = S.Problem(str(REPO / "data" / "数据.xlsx"))
+    rR, _ = P.traj([], [], t)
+    rB, _ = P.target(t)
+    hB = np.cross(P.B1[:3], P.B1[3:])
+    hB /= np.linalg.norm(hB)
+    g = rR @ hB
+    us = P.sun(t) - rB
+    us /= np.linalg.norm(us, axis=1)[:, None]
+    ue = -rB / np.linalg.norm(rB, axis=1)[:, None]
+    beta = np.degrees(np.arccos(np.clip(np.sum(us * ue, 1), -1, 1)))
+    return g, beta
+
+
+def fig6():
+    # (a) 示意图：两个轨道面、交线、两个交点，太阳在右侧
+    W, H = 880, 420
+    cx, cy, rx = 450, 215, 255
+    body = [DEFS3D, """<defs>
+<radialGradient id="gEarth6" cx="0.38" cy="0.3" r="0.75">
+<stop offset="0" stop-color="#8EC9F2"/><stop offset="0.55" stop-color="#2E6FB7"/><stop offset="1" stop-color="#0D2E5C"/>
+</radialGradient>
+<radialGradient id="gSun6" cx="0.4" cy="0.38" r="0.7">
+<stop offset="0" stop-color="#FFF7C2"/><stop offset="0.5" stop-color="#FFC531"/><stop offset="1" stop-color="#F08A12"/>
+</radialGradient>
+<linearGradient id="gPlaneR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4B6B6" stop-opacity="0.45"/><stop offset="1" stop-color="#E06060" stop-opacity="0.18"/></linearGradient>
+<linearGradient id="gPlaneB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B8D4F2" stop-opacity="0.55"/><stop offset="1" stop-color="#5B8FD6" stop-opacity="0.20"/></linearGradient>
+</defs>"""]
+
+    def ell(ry, a0, a1, n=120):
+        return [(cx + rx * np.cos(t), cy + ry * np.sin(t)) for t in np.linspace(a0, a1, n)]
+
+    ryB, ryR = 50, 108
+    # 轨道面（半透明填充）
+    body.append(poly(ell(ryB, 0, 2 * np.pi), fill="url(#gPlaneB)", stroke="none"))
+    body.append(poly(ell(ryR, 0, 2 * np.pi), fill="url(#gPlaneR)", stroke="none"))
+    # 后半圈（被地球挡住的一侧）虚线，前半圈实线
+    for ry, col in ((ryB, "#1D4E8F"), (ryR, "#B01818")):
+        body.append(poly(ell(ry, np.pi, 2 * np.pi), stroke=col, w=1.3, closed=False, dash="5,4"))
+    # 地球
+    body.append(f'<circle cx="{cx}" cy="{cy}" r="58" fill="url(#gEarth6)" stroke="#0D2E5C" stroke-width="0.8"/>')
+    for ry, col in ((ryB, "#1D4E8F"), (ryR, "#B01818")):
+        body.append(poly(ell(ry, 0, np.pi), stroke=col, w=2.0, closed=False))
+    # 交线
+    body.append(line(cx - rx - 30, cy, cx - 62, cy, "#000000", 1.1, "7,4"))
+    body.append(line(cx + 62, cy, cx + rx + 30, cy, "#000000", 1.1, "7,4"))
+    body.append(text(cx + rx + 34, cy - 6, "交线", 13, "start"))
+    # 太阳在右侧
+    sx, sy = W - 40, 70
+    for k in range(12):
+        t = 2 * np.pi * k / 12
+        body.append(line(sx + 27 * np.cos(t), sy + 27 * np.sin(t), sx + 36 * np.cos(t), sy + 36 * np.sin(t), "#F2A115", 2.0))
+    body.append(f'<circle cx="{sx}" cy="{sy}" r="22" fill="url(#gSun6)" stroke="#E07B00" stroke-width="0.8"/>')
+    body.append(text(sx, sy + 56, "太阳", 13))
+    body.append(arrow(sx - 44, sy + 10, cx + rx - 10, cy - 110, "#C9A227", 1.4))
+    # 轨道面标注
+    body.append(text(cx - 150, cy - ryR - 10, "R1 轨道面", 13, "middle", "#B01818"))
+    body.append(text(cx - 40, cy + ryB + 34, "目标轨道面", 13, "middle", "#1D4E8F"))
+    # 左交点（背阳侧，候选）：R1 即将穿越，画出法向距离 g
+    nx = cx - rx
+    tR = np.pi - 0.42                       # R1 在前半圈、离交点不远处
+    rxp, ryp = cx + rx * np.cos(tR), cy + ryR * np.sin(tR)
+    yB = cy + ryB * np.sin(tR)                # 同一 x 处目标轨道面上的点
+    body.append(line(rxp, ryp - 2, rxp, yB, "#000000", 1.4))
+    for yy in (ryp - 2, yB):
+        body.append(line(rxp - 5, yy, rxp + 5, yy, "#000000", 1.4))
+    body.append(f'<text x="{rxp - 10:.1f}" y="{(ryp + yB) / 2 + 5:.1f}" font-family="{FONT}" font-size="14" font-style="italic" text-anchor="end">g(t)</text>')
+    body.append(sat3d(rxp + 4, ryp + 22, "red", 0.75))
+    body.append(text(rxp + 44, ryp + 30, "R1", 13, "start", "#B01818"))
+    tB = np.pi - 0.16
+    bxp, byp = cx + rx * np.cos(tB), cy + ryB * np.sin(tB)
+    body.append(sat3d(bxp + 2, byp - 22, "blue", 0.75))
+    body.append(text(bxp + 2, byp - 44, "目标", 13, "middle", "#1D4E8F"))
+    body.append(f'<circle cx="{nx}" cy="{cy}" r="5" fill="#2E7D32" stroke="#FFFFFF" stroke-width="1.2"/>')
+    body.append(line(nx, cy, nx - 60, cy - 70, "#2E7D32", 0.9))
+    body.append(f'<rect x="{nx - 175}" y="{cy - 120}" width="196" height="46" rx="5" ry="5" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1"/>')
+    body.append(text(nx - 77, cy - 101, "背阳侧交点：β ≤ 90°", 12.5, color="#2E7D32"))
+    body.append(f'<text x="{nx - 77:.1f}" y="{cy - 82:.1f}" font-family="{FONT}" font-size="12.5" text-anchor="middle" fill="#2E7D32">候选观测时刻 t<tspan baseline-shift="sub" font-size="9">c</tspan></text>')
+    # 右交点（向阳侧）
+    px = cx + rx
+    body.append(f'<circle cx="{px}" cy="{cy}" r="5" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="1.2"/>')
+    body.append(line(px, cy, px + 40, cy + 70, "#9E9E9E", 0.9))
+    body.append(f'<rect x="{px - 30}" y="{cy + 72}" width="150" height="46" rx="5" ry="5" fill="#FFFFFF" stroke="#9E9E9E" stroke-width="1"/>')
+    body.append(text(px + 45, cy + 91, "向阳侧交点", 12.5, color="#616161"))
+    body.append(text(px + 45, cy + 110, "β > 90°，不可观测", 12.5, color="#616161"))
+    save("fig6a_crossing.svg", W, H, body)
+
+    # (b) 48 h 内 g(t)，阴影为 β ≤ 90°；(c) 候选时刻 ±10 min 放大
+    t = np.arange(0, 48 * 3600 + 1, 60.0)
+    g, beta = q1_plane_series(t)
+    h = t / 3600
+    W, H = 640, 330
+    L, T, W_, H_ = 80, 30, 520, 230
+    X = lambda v: L + v / 48 * W_  # noqa: E731
+    Y = lambda v: T + (3500 - v) / 7000 * H_  # noqa: E731
+    body = []
+    ok = beta <= 90
+    edges = np.where(np.diff(ok.astype(int)) != 0)[0]
+    segs, st = [], (0 if ok[0] else None)
+    for e in edges:
+        if st is None:
+            st = e + 1
+        else:
+            segs.append((st, e))
+            st = None
+    if st is not None:
+        segs.append((st, len(t) - 1))
+    for a0, a1 in segs:
+        body.append(f'<rect x="{X(h[a0]):.1f}" y="{T}" width="{X(h[a1]) - X(h[a0]):.1f}" height="{H_}" fill="#DCEAF7"/>')
+    frame(body, L, T, W_, H_, range(0, 49, 6), range(-3000, 3001, 1500), X, Y, "时间 t / h", "g(t) / km",
+          yfmt=lambda v: str(v).replace("-", "−"))
+    body.append(line(L, Y(0), L + W_, Y(0), "#555555", 0.8))
+    body.append(poly([(X(u), Y(v)) for u, v in zip(h, g)], stroke="#B01818", w=2.0, closed=False))
+    for i in np.where(np.sign(g[:-1]) != np.sign(g[1:]))[0]:
+        tc = h[i] - g[i] * (h[i + 1] - h[i]) / (g[i + 1] - g[i])
+        good = beta[i] <= 90
+        col = "#2E7D32" if good else "#9E9E9E"
+        body.append(f'<circle cx="{X(tc):.1f}" cy="{Y(0):.1f}" r="5.5" fill="{col}" stroke="#FFFFFF" stroke-width="1.2"/>')
+        dx = -34 if good else 34                # 标注放在曲线不经过的那一侧
+        body.append(text(X(tc) + dx, Y(0) - 12, f"{tc:.2f} h", 11.5, "middle", col))
+    lx, ly = L + 6, T + H_ + 62
+    body.append(f'<circle cx="{lx + 6}" cy="{ly - 4}" r="5.5" fill="#2E7D32"/>')
+    body.append(text(lx + 16, ly, "候选观测时刻（β ≤ 90°）", 12, "start"))
+    body.append(f'<circle cx="{lx + 216}" cy="{ly - 4}" r="5.5" fill="#9E9E9E"/>')
+    body.append(text(lx + 226, ly, "β > 90°，舍去", 12, "start"))
+    body.append(f'<rect x="{lx + 356}" y="{ly - 11}" width="24" height="14" fill="#DCEAF7"/>')
+    body.append(text(lx + 386, ly, "β ≤ 90° 时段", 12, "start"))
+    save("fig6b_g48h.svg", W, H + 40, body)
+
+    # (c) 放大 38.35 h 附近 ±10 min
+    tc = 38.353 * 3600
+    tz = np.arange(tc - 600, tc + 601, 2.0)
+    gz, _ = q1_plane_series(tz)
+    W, H = 460, 330
+    L, T, W_, H_ = 80, 30, 340, 230
+    X = lambda v: L + (v + 10) / 20 * W_  # noqa: E731
+    Y = lambda v: T + (150 - v) / 300 * H_  # noqa: E731
+    body = []
+    i0 = np.argmin(np.abs(gz))
+    inb = np.abs(gz) <= 50
+    xs = (tz[inb] - tz[i0]) / 60
+    body.append(f'<rect x="{X(xs.min()):.1f}" y="{T}" width="{X(xs.max()) - X(xs.min()):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.25"/>')
+    body.append(f'<rect x="{L}" y="{Y(50):.1f}" width="{W_}" height="{Y(-50) - Y(50):.1f}" fill="#DCEAF7"/>')
+    frame(body, L, T, W_, H_, range(-10, 11, 5), range(-150, 151, 50), X, Y, "相对穿越时刻 / min", "g(t) / km",
+          yfmt=lambda v: str(v).replace("-", "−"))
+    body.append(poly([(X((u - tz[i0]) / 60), Y(max(min(v, 150), -150))) for u, v in zip(tz, gz)], stroke="#B01818", w=2.0, closed=False))
+    body.append(text(L + W_ - 6, Y(50) - 6, "|g| ≤ 50 km", 12, "end", "#1F4E79"))
+    half = (xs.max() - xs.min()) / 2 * 60
+    body.append(text(X(0), T + 18, f"约 ±{half:.0f} s", 12.5, "middle", "#8A5A00"))
+    save("fig6c_gzoom.svg", W, H, body)
+
+
 if __name__ == "__main__":
     fig1a()
     fig1b()
@@ -698,3 +854,4 @@ if __name__ == "__main__":
     fig3()
     fig4()
     fig5()
+    fig6()
