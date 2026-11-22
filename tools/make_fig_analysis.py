@@ -707,6 +707,9 @@ def legend_box(body, x, y, items):
         yy = y + 13 + 18 * k
         if kind == "line":
             body.append(line(x + 6, yy - 1, x + 28, yy - 1, col, 1.6, dash))
+        elif kind == "star":
+            pts = [(x + 17 + (6 if k % 2 == 0 else 2.7) * np.cos(np.pi / 2 + k * np.pi / 5), yy - 1 - (6 if k % 2 == 0 else 2.7) * np.sin(np.pi / 2 + k * np.pi / 5)) for k in range(10)]
+            body.append(poly(pts, fill="#FFFFFF", stroke=col, w=1.3))
         elif kind == "dot":
             body.append(f'<circle cx="{x + 17}" cy="{yy - 1}" r="3.2" fill="{col}" stroke="none"/>')
         else:

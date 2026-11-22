@@ -118,7 +118,7 @@ def total(burns):
     return sum(np.linalg.norm(dv) for _, dv in burns)
 
 
-def scp(L, iters=30, tr=1.0, log=print):
+def scp(L, iters=30, tr=1.0, log=print, soft=0.0):
     burns, obs = unpack(L)
     ok, _ = certify(burns, obs)
     if not ok:
@@ -153,13 +153,16 @@ def scp(L, iters=30, tr=1.0, log=print):
         for j in set(idx.tolist()):
             m = (P0 - rT)[idx == j].mean(axis=0)
             G[j] = m / np.linalg.norm(m)
+        sig = cp.Variable((len(T), 4), nonneg=True) if soft > 0 else None   # 松弛变量（虚拟控制），罚函数 soft·Σσ
         for i in range(len(T)):
             r0 = P0[i] - rT[i]
             rho = r0 + J[i].reshape(3, nb * 3) @ xv
             g = G[idx[i]]
-            cons += [ca * cp.norm(rho) <= us[i] @ rho, ca * cp.norm(rho) <= ue[i] @ rho,
-                     cp.norm(rho) <= 50 - MD, g @ rho >= 10 + MD]
-        prob = cp.Problem(cp.Minimize(cp.sum(cp.norm(dv0 + X, 2, axis=1))), cons)
+            e = (lambda q: sig[i, q]) if soft > 0 else (lambda q: 0)
+            cons += [ca * cp.norm(rho) <= us[i] @ rho + e(0), ca * cp.norm(rho) <= ue[i] @ rho + e(1),
+                     cp.norm(rho) <= 50 - MD + e(2), g @ rho >= 10 + MD - e(3)]
+        obj = cp.sum(cp.norm(dv0 + X, 2, axis=1)) + (soft * cp.sum(sig) if soft > 0 else 0)
+        prob = cp.Problem(cp.Minimize(obj), cons)
         try:
             prob.solve(solver=cp.CLARABEL)
         except Exception as e:  # noqa: BLE001

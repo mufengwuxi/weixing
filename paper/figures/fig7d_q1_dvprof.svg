@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="400" viewBox="0 0 620 400">
+<rect x="0" y="0" width="620" height="400" fill="#FFFFFF"/>
+<line x1="335.0" y1="20.0" x2="335.0" y2="340.0" stroke="#555555" stroke-width="0.8" stroke-dasharray="4,3"/>
+<line x1="80.0" y1="309.9" x2="590.0" y2="309.9" stroke="#555555" stroke-width="0.8" stroke-dasharray="4,3"/>
+<polyline points="80.0,290.4 92.8,292.4 105.5,294.2 118.2,295.9 131.0,297.5 143.8,299.0 156.5,300.5 169.2,301.8 182.0,303.0 194.8,304.1 207.5,305.1 220.2,306.0 233.0,306.8 245.8,307.6 258.5,308.2 271.2,308.7 284.0,309.2 296.8,309.5 309.5,309.7 322.2,309.9 335.0,309.9 347.8,309.9 360.5,309.7 373.2,309.5 386.0,309.2 398.8,308.7 411.5,308.2 424.2,307.6 437.0,306.9 449.8,306.1 462.5,305.2 475.2,304.2 488.0,303.1 500.8,301.9 513.5,300.6 526.2,299.3 539.0,297.8 551.8,296.2 564.5,294.6 577.2,292.8 590.0,291.0" fill="none" stroke="#1F4E79" stroke-width="1.5"/>
+<polyline points="80.0,108.6 92.8,119.6 105.5,130.5 118.2,141.5 131.0,152.3 143.8,163.1 156.5,173.9 169.2,184.6 182.0,195.3 194.8,205.9 207.5,216.4 220.2,226.9 233.0,237.2 245.8,247.6 258.5,257.8 271.2,268.0 284.0,278.0 296.8,287.9 309.5,297.7 322.2,306.6 335.0,309.9 347.8,307.2 360.5,300.0 373.2,289.9 386.0,278.5 398.8,266.7 411.5,254.7 424.2,242.7 437.0,230.6 449.8,218.5 462.5,206.4 475.2,194.3 488.0,182.3 500.8,170.2 513.5,158.1 526.2,146.1 539.0,134.1 551.8,122.1 564.5,110.1 577.2,98.2 590.0,86.3" fill="none" stroke="#1F4E79" stroke-width="1.5" stroke-dasharray="7,3"/>
+<polyline points="80.0,277.9 92.8,281.0 105.5,283.9 118.2,286.7 131.0,289.3 143.8,291.8 156.5,294.1 169.2,296.3 182.0,298.3 194.8,300.1 207.5,301.8 220.2,303.4 233.0,304.7 245.8,305.9 258.5,307.0 271.2,307.9 284.0,308.6 296.8,309.2 309.5,309.6 322.2,309.8 335.0,309.9 347.8,309.8 360.5,309.6 373.2,309.2 386.0,308.6 398.8,307.9 411.5,307.0 424.2,305.9 437.0,304.7 449.8,303.4 462.5,301.8 475.2,300.1 488.0,298.3 500.8,296.3 513.5,294.1 526.2,291.8 539.0,289.3 551.8,286.7 564.5,283.9 577.2,281.0 590.0,277.9" fill="none" stroke="#1F4E79" stroke-width="1.5" stroke-dasharray="2,2"/>
+<polyline points="80.0,219.9 92.8,229.6 105.5,238.7 118.2,247.2 131.0,255.2 143.8,262.5 156.5,269.2 169.2,275.3 182.0,280.8 194.8,285.8 207.5,290.3 220.2,294.2 233.0,297.7 245.8,300.7 258.5,303.2 271.2,305.3 284.0,307.0 296.8,308.3 309.5,309.2 322.2,309.7 335.0,309.9 347.8,309.7 360.5,309.2 373.2,308.4 386.0,307.3 398.8,305.8 411.5,304.1 424.2,302.0 437.0,299.7 449.8,297.1 462.5,294.3 475.2,291.2 488.0,287.8 500.8,284.2 513.5,280.3 526.2,276.2 539.0,271.9 551.8,267.4 564.5,262.6 577.2,257.6 590.0,252.4" fill="none" stroke="#C0392B" stroke-width="1.5"/>
+<polyline points="80.0,78.1 92.8,91.1 105.5,104.0 118.2,116.8 131.0,129.7 143.8,142.5 156.5,155.2 169.2,167.8 182.0,180.4 194.8,193.0 207.5,205.4 220.2,217.7 233.0,229.9 245.8,241.9 258.5,253.8 271.2,265.4 284.0,276.7 296.8,287.5 309.5,297.6 322.2,306.1 335.0,309.9 347.8,307.2 360.5,301.4 373.2,293.9 386.0,285.3 398.8,275.9 411.5,266.0 424.2,255.5 437.0,244.6 449.8,233.3 462.5,221.7 475.2,209.7 488.0,197.5 500.8,185.0 513.5,172.3 526.2,159.4 539.0,146.2 551.8,132.8 564.5,119.3 577.2,105.5 590.0,91.6" fill="none" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="7,3"/>
+<polyline points="80.0,209.2 92.8,217.8 105.5,226.1 118.2,234.2 131.0,242.0 143.8,249.5 156.5,256.7 169.2,263.5 182.0,269.9 194.8,275.9 207.5,281.6 220.2,286.7 233.0,291.4 245.8,295.7 258.5,299.4 271.2,302.6 284.0,305.2 296.8,307.2 309.5,308.7 322.2,309.6 335.0,309.9 347.8,309.6 360.5,308.7 373.2,307.2 386.0,305.2 398.8,302.6 411.5,299.4 424.2,295.7 437.0,291.4 449.8,286.7 462.5,281.6 475.2,275.9 488.0,269.9 500.8,263.5 513.5,256.6 526.2,249.5 539.0,242.0 551.8,234.2 564.5,226.1 577.2,217.8 590.0,209.2" fill="none" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="2,2"/>
+<rect x="80" y="20" width="510" height="320" fill="none" stroke="#000000" stroke-width="0.9"/>
+<line x1="80.0" y1="313.3" x2="85.0" y2="313.3" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="313.3" x2="585.0" y2="313.3" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="317.3" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">5.2</text>
+<line x1="80.0" y1="260.0" x2="85.0" y2="260.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="260.0" x2="585.0" y2="260.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="264.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">5.4</text>
+<line x1="80.0" y1="206.7" x2="85.0" y2="206.7" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="206.7" x2="585.0" y2="206.7" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="210.7" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">5.6</text>
+<line x1="80.0" y1="153.3" x2="85.0" y2="153.3" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="153.3" x2="585.0" y2="153.3" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="157.3" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">5.8</text>
+<line x1="80.0" y1="100.0" x2="85.0" y2="100.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="100.0" x2="585.0" y2="100.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="104.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">6.0</text>
+<line x1="80.0" y1="46.7" x2="85.0" y2="46.7" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="46.7" x2="585.0" y2="46.7" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="50.7" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">6.2</text>
+<line x1="80.0" y1="340.0" x2="80.0" y2="335.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="80.0" y1="20.0" x2="80.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="80.0" y="357.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">−1</text>
+<line x1="207.5" y1="340.0" x2="207.5" y2="335.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="207.5" y1="20.0" x2="207.5" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="207.5" y="357.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">−0.5</text>
+<line x1="335.0" y1="340.0" x2="335.0" y2="335.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="335.0" y1="20.0" x2="335.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="335.0" y="357.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">0</text>
+<line x1="462.5" y1="340.0" x2="462.5" y2="335.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="462.5" y1="20.0" x2="462.5" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="462.5" y="357.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">0.5</text>
+<line x1="590.0" y1="340.0" x2="590.0" y2="335.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="20.0" x2="590.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="590.0" y="357.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">1</text>
+<text x="335.0" y="378.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">分量相对本文方案的偏移 δ / (m/s)</text>
+<text x="36.0" y="180.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 36.0 180.0)">J* / (m/s)</text>
+<rect x="88" y="28" width="129.1" height="116" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
+<line x1="94.0" y1="40.0" x2="116.0" y2="40.0" stroke="#1F4E79" stroke-width="1.6"/>
+<text x="122.0" y="44.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">Δv₁ 的 R 分量</text>
+<line x1="94.0" y1="58.0" x2="116.0" y2="58.0" stroke="#1F4E79" stroke-width="1.6" stroke-dasharray="7,3"/>
+<text x="122.0" y="62.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">Δv₁ 的 T 分量</text>
+<line x1="94.0" y1="76.0" x2="116.0" y2="76.0" stroke="#1F4E79" stroke-width="1.6" stroke-dasharray="2,2"/>
+<text x="122.0" y="80.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">Δv₁ 的 N 分量</text>
+<line x1="94.0" y1="94.0" x2="116.0" y2="94.0" stroke="#C0392B" stroke-width="1.6"/>
+<text x="122.0" y="98.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">Δv₂ 的 R 分量</text>
+<line x1="94.0" y1="112.0" x2="116.0" y2="112.0" stroke="#C0392B" stroke-width="1.6" stroke-dasharray="7,3"/>
+<text x="122.0" y="116.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">Δv₂ 的 T 分量</text>
+<line x1="94.0" y1="130.0" x2="116.0" y2="130.0" stroke="#C0392B" stroke-width="1.6" stroke-dasharray="2,2"/>
+<text x="122.0" y="134.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">Δv₂ 的 N 分量</text>
+</svg>
