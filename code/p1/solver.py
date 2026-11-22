@@ -4,10 +4,16 @@
 观测约束 10 ≤ d ≤ 50 km、光照角 ≤ 45°、侦测角 ≤ 45°（有向角）、连续 ≥ 60 s；
 单次 |Δv| ≤ 30 m/s，两次机动间隔 ≥ 3600 s。可选加裕量：距离、角度和观测时长都可以收紧。
 
-求解流程：
-1. 多起点：随机取机动时刻和瞄准点，先解“观测中点打到目标附近一点”的两脉冲瞄准问题（SLSQP）；
-2. 以瞄准解为初值，在完整连续观测约束下（1 s 网格）用 SLSQP 精修；
-3. 在 0.05 s 网格上认证全部约束（含裕量），取认证通过的最小 Δv 解。
+求解流程（对应论文 5.2 节，所有先验量都由数据现算，换数据不需要改代码）：
+1. 候选观测时刻（observation_candidates）：在 R1 不机动的轨道上找出它穿越目标轨道面的时刻，
+   只保留目标处太阳方向与地心方向夹角 β ≤ 90° 的那些（两个观测圆锥有交集的必要条件）。
+   理由：小脉冲几乎不改变 R1 的轨道面，而两轨道面间的法向距离只在交线附近小于 50 km。
+2. 瞄准初值（aim_point、initial_guess）：瞄准点取在两个圆锥轴线的角平分线方向上，
+   这是可观测角度区域里离两个锥面都最远的方向；距离在 [10, 50] km 内随机。
+   第一次脉冲沿切向，大小按相位漂移模型 Δv = −a·Δλ/(3T) 估计（论文式 (2.2)），Δλ 为穿越时刻的相位差。
+3. 瞄准问题：观测开始时刻恰好到达瞄准点的两脉冲问题（SLSQP），给出可行的初值；
+4. 精修：以瞄准解为初值，在完整连续观测约束下（1 s 网格）用 SLSQP 求解；
+5. 认证：在 0.05 s 网格上检验全部约束（含裕量），取认证通过的最小 Δv 解。
 
 用法（依赖 numpy、scipy、pyerfa、openpyxl）：
     python code/p1/solver.py --out solutions/q1/p1_claude_limit.json --margin-d 0.001 --margin-a 0.0001
@@ -33,12 +39,12 @@ REPO = Path(__file__).resolve().parents[2]
 
 
 # ---------------- 数据 ----------------
-def load_states(xlsx):
+def load_states(xlsx, target="b1"):
     import sys
     sys.path.insert(0, str(REPO / "code"))
     from datafile import read_states  # 自动识别 km 或 m 单位
     R1, TG = read_states(xlsx)
-    return R1, TG["b1"]
+    return R1, TG[target.lower()]
 
 
 # ---------------- 动力学 ----------------
@@ -67,8 +73,9 @@ def kepler(r0, v0, dt):
 
 
 class Problem:
-    def __init__(self, xlsx, md=0.0, ma=0.0, D=60.0):
-        self.R1, self.B1 = load_states(xlsx)
+    def __init__(self, xlsx, md=0.0, ma=0.0, D=60.0, target="b1"):
+        # self.B1 存的是所选目标（默认 B1），沿用原变量名
+        self.R1, self.B1 = load_states(xlsx, target)
         self.md, self.ma, self.D = md, ma, D
         import erfa
         d1, d2 = erfa.dtf2d("UTC", 2027, 1, 1, 0, 0, 0.0)
@@ -99,6 +106,10 @@ class Problem:
         return d, np.sum(us * rho, 1) / d, np.sum(ue * rho, 1) / d
 
     def aim(self, s, L):
+        """瞄准点：目标处太阳方向 û⊙ 与地心方向 û_E 的角平分线上、距目标 L 处。
+
+        两圆锥半顶角都是 45°，轴线夹角为 β ≤ 90° 时，角平分线方向与两轴的夹角都是 β/2，
+        离两个锥面的角距离都是 45° − β/2，是角度可行区域里裕量最大的方向。"""
         rT = self.target(s)[0][0]
         us = self.sun(s) - rT
         us /= np.linalg.norm(us)
@@ -155,19 +166,65 @@ def certify(P, x, step=0.05):
             "theta_max": float(th.max()), "r_min": float(rr.min())}
 
 
+def observation_candidates(P, step=30.0):
+    """候选观测时刻：R1 不机动时穿越目标轨道面、且 β ≤ 90° 的时刻。
+
+    返回 [(t_c 秒, Δλ 弧度)]，Δλ 是该时刻目标相对 R1 的沿轨相位差（目标在前为正）。"""
+    t = np.arange(0.0, T_END, step)
+    rR, vR = P.traj([], [], t)
+    rB, _ = P.target(t)
+    hB = np.cross(P.B1[:3], P.B1[3:])
+    hB /= np.linalg.norm(hB)                    # 目标轨道面法向（二体运动中不变）
+    g = rR @ hB                                 # R1 到目标轨道面的有向距离
+    us = P.sun(t) - rB
+    us /= np.linalg.norm(us, axis=1)[:, None]
+    ue = -rB / np.linalg.norm(rB, axis=1)[:, None]
+    beta = np.degrees(np.arccos(np.clip(np.sum(us * ue, 1), -1, 1)))
+    out = []
+    for i in np.where(np.sign(g[:-1]) != np.sign(g[1:]))[0]:
+        if beta[i] > 90:                        # 两个观测圆锥没有交集，这次穿越不可能观测
+            continue
+        tc = t[i] - g[i] * (t[i + 1] - t[i]) / (g[i + 1] - g[i])
+        hR = np.cross(rR[i], vR[i])
+        hR /= np.linalg.norm(hR)
+        dlam = np.arctan2(np.cross(rR[i], rB[i]) @ hR, rR[i] @ rB[i])
+        out.append((tc, dlam))
+    return out
+
+
+MIN_GAP_H = 1.0        # 两次脉冲最小间隔（题目给定）
+
+
+def initial_guess(P, rng, tc, dlam):
+    """在候选时刻 tc 附近构造一个瞄准问题的初值（单位：h、m/s）。
+
+    t1 在 [0, tc − 1 h − τ] 内随机，t2 在 [t1 + 1 h, tc − τ/2] 内随机；
+    第一次脉冲沿 R1 速度方向，大小按相位漂移模型 Δv = −a·Δλ/(3T) 估计，再乘 [0.3, 1.5] 的随机系数，
+    并叠加 0.5 m/s 量级的随机扰动；第二次脉冲取小的随机值。"""
+    th = tc / 3600
+    tau_h = P.D / 3600
+    t1 = rng.uniform(0, th - MIN_GAP_H - 2 * tau_h - 0.1)
+    t2 = rng.uniform(t1 + MIN_GAP_H, th - tau_h / 2)
+    r, v = P.traj([], [], [t1 * 3600])
+    a = 1 / (2 / np.linalg.norm(r[0]) - v[0] @ v[0] / MU)
+    T = (th - t1) * 3600
+    dv_t = -a * dlam / (3 * T) * 1000          # m/s，正值沿速度方向
+    tdir = v[0] / np.linalg.norm(v[0])
+    dv1 = tdir * dv_t * rng.uniform(0.3, 1.5) + rng.normal(0, 0.5, 3)
+    dv2 = rng.normal(0, 0.5, 3)
+    return np.r_[t1, t2, dv1, dv2, th]
+
+
 def search(P, starts, seed, log=print):
     rng = np.random.default_rng(seed)
     best = None
     t0 = time.time()
+    cands = observation_candidates(P)
+    log("  候选观测时刻：" + "，".join(f"{tc / 3600:.2f} h（Δλ = {np.degrees(dl):+.2f}°）" for tc, dl in cands))
     for i in range(starts):
-        cross = rng.choice([14.45, 38.43])  # 两个日照窗口内 r1 穿越 b1 轨道面的时刻附近（h）
-        L = rng.uniform(10 + P.md, 45 - P.md)
-        t1 = rng.uniform(0, cross - 1.2)
-        t2 = rng.uniform(t1 + 1.0, cross - 0.05)
-        _, v = P.traj([], [], [t1 * 3600])
-        tdir = v[0] / np.linalg.norm(v[0])
-        x0 = np.r_[t1, t2, tdir * 970 / (3 * (cross - t1) * 3600) * 1000 * rng.uniform(0.3, 1.5) + rng.normal(0, 0.5, 3),
-                   rng.normal(0, 0.5, 3), cross]
+        tc, dlam = cands[rng.integers(len(cands))]
+        L = rng.uniform(10 + P.md, 50 - P.md)     # 瞄准距离在整个距离约束区间内均匀抽取
+        x0 = initial_guess(P, rng, tc, dlam)
         a = solve_aim(P, x0, L)
         if not a.success:
             continue
@@ -220,10 +277,14 @@ def main():
     ap.add_argument("--duration", type=float, default=60.0, help="要求的连续观测时长 s")
     ap.add_argument("--starts", type=int, default=200)
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--target", default="b1", help="目标卫星名（默认 b1；换目标用于检验可迁移性）")
+    ap.add_argument("--hours", type=float, default=48.0, help="任务时长 h（默认 48）")
     ap.add_argument("--init", default=None, help="热启动：以已有方案（本脚本输出的 JSON）为初值，直接精修并认证")
     a = ap.parse_args()
 
-    P = Problem(a.data, a.margin_d, a.margin_a, a.duration)
+    global T_END
+    T_END = a.hours * 3600
+    P = Problem(a.data, a.margin_d, a.margin_a, a.duration, a.target)
     print(f"裕量：距离 {a.margin_d} km，角度 {a.margin_a}°，时长 {a.duration} s；起点 {a.starts} 个")
     best = warm(P, a.init) if a.init else search(P, a.starts, a.seed)
     if best is None:
