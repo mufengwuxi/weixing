@@ -824,27 +824,62 @@ def fig6():
     body.append(text(lx + 386, ly, "β ≤ 90° 时段", 12, "start"))
     save("fig6b_g48h.svg", W, H + 40, body)
 
-    # (c) 放大 38.35 h 附近 ±10 min
+    # (c) 放大 38.35 h 附近 ±10 min：红线 g(t) 落在蓝带 |g| ≤ 50 km 内的时段（橙色）才可能观测
     tc = 38.353 * 3600
     tz = np.arange(tc - 600, tc + 601, 2.0)
     gz, _ = q1_plane_series(tz)
-    W, H = 460, 330
-    L, T, W_, H_ = 80, 30, 340, 230
+    i0 = np.argmin(np.abs(gz))
+    m = (tz - tz[i0]) / 60
+    W, H = 560, 400
+    L, T, W_, H_ = 80, 40, 440, 260
     X = lambda v: L + (v + 10) / 20 * W_  # noqa: E731
     Y = lambda v: T + (150 - v) / 300 * H_  # noqa: E731
-    body = []
-    i0 = np.argmin(np.abs(gz))
     inb = np.abs(gz) <= 50
-    xs = (tz[inb] - tz[i0]) / 60
-    body.append(f'<rect x="{X(xs.min()):.1f}" y="{T}" width="{X(xs.max()) - X(xs.min()):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.25"/>')
+    x0, x1 = m[inb].min(), m[inb].max()
+    body = [DEFS3D]
+    # 蓝带：距离上限给出的必要条件
     body.append(f'<rect x="{L}" y="{Y(50):.1f}" width="{W_}" height="{Y(-50) - Y(50):.1f}" fill="#DCEAF7"/>')
-    frame(body, L, T, W_, H_, range(-10, 11, 5), range(-150, 151, 50), X, Y, "相对穿越时刻 / min", "g(t) / km",
+    # 橙色：可能观测时间窗
+    body.append(f'<rect x="{X(x0):.1f}" y="{T}" width="{X(x1) - X(x0):.1f}" height="{H_}" fill="#F2A515" fill-opacity="0.22"/>')
+    # 交汇区：蓝带与时间窗重叠的矩形加深
+    body.append(f'<rect x="{X(x0):.1f}" y="{Y(50):.1f}" width="{X(x1) - X(x0):.1f}" height="{Y(-50) - Y(50):.1f}" fill="#F2A515" fill-opacity="0.35" stroke="#B5770A" stroke-width="1.1" stroke-dasharray="4,3"/>')
+    frame(body, L, T, W_, H_, range(-10, 11, 5), range(-150, 151, 50), X, Y, "相对穿越时刻 / min", "R1 到目标轨道面的距离 g / km",
           yfmt=lambda v: str(v).replace("-", "−"))
-    body.append(poly([(X((u - tz[i0]) / 60), Y(max(min(v, 150), -150))) for u, v in zip(tz, gz)], stroke="#B01818", w=2.0, closed=False))
-    body.append(text(L + W_ - 6, Y(50) - 6, "|g| ≤ 50 km", 12, "end", "#1F4E79"))
-    half = (xs.max() - xs.min()) / 2 * 60
-    body.append(text(X(0), T + 18, f"约 ±{half:.0f} s", 12.5, "middle", "#8A5A00"))
-    save("fig6c_gzoom.svg", W, H, body)
+    body.append(line(L, Y(0), L + W_, Y(0), "#888888", 0.8, "2,3"))
+    # 红线：带外细、带内加粗
+    body.append(poly([(X(u), Y(max(min(v, 150), -150))) for u, v in zip(m, gz)], stroke="#B01818", w=1.6, closed=False))
+    body.append(poly([(X(u), Y(v)) for u, v, k in zip(m, gz, inb) if k], stroke="#B01818", w=4.0, closed=False))
+    body.append(text(X(4.6), Y(98), "g(t)", 14, "middle", "#B01818", italic=True))
+    # 时间窗边界与宽度标注
+    for xx, lab in ((x0, f"−{abs(x0) * 60:.0f} s"), (x1, f"+{x1 * 60:.0f} s")):
+        body.append(line(X(xx), T, X(xx), T + H_, "#B5770A", 1.0, "4,3"))
+        side = 1 if xx < 0 else -1               # 标注放在时间窗内侧
+        body.append(text(X(xx) + side * 6, Y(-118), lab, 11.5, "start" if side > 0 else "end", "#8A5A00"))
+    ya = T + 22
+    body.append(arrow(X(0), ya, X(x0) + 2, ya, "#8A5A00", 1.1, 7))
+    body.append(arrow(X(0), ya, X(x1) - 2, ya, "#8A5A00", 1.1, 7))
+    body.append(f'<rect x="{X(0) - 62:.1f}" y="{ya - 24}" width="124" height="18" fill="#FFFFFF" fill-opacity="0.9"/>')
+    body.append(text(X(0), ya - 10, f"可能观测时间窗 {(x1 - x0):.1f} min", 12, "middle", "#8A5A00"))
+    # 穿越点与 R1 图标
+    body.append(f'<circle cx="{X(0):.1f}" cy="{Y(0):.1f}" r="5.5" fill="#2E7D32" stroke="#FFFFFF" stroke-width="1.3"/>')
+    body.append(line(X(0) + 4, Y(0) + 4, X(2.6), Y(-95), "#2E7D32", 0.9))
+    body.append(f'<text x="{X(2.8):.1f}" y="{Y(-100):.1f}" font-family="{FONT}" font-size="12.5" fill="#2E7D32">穿越时刻 t<tspan baseline-shift="sub" font-size="9">c</tspan>（g = 0）</text>')
+    # 两侧小图标：穿越前在目标轨道面一侧，穿越后在另一侧
+    body.append(sat3d(X(-5.7), Y(-133), "red", 0.55))
+    body.append(text(X(-7.1), Y(-133) + 4, "穿越前", 11, "end", "#555555"))
+    body.append(sat3d(X(5.7), Y(133), "red", 0.55))
+    body.append(text(X(7.1), Y(133) + 4, "穿越后", 11, "start", "#555555"))
+    # 带的标注（放在带内左侧，不压线）
+    body.append(text(L + 8, Y(50) + 16, "|g| ≤ 50 km", 12, "start", "#1F4E79"))
+    # 图例
+    lx, ly = L, T + H_ + 62
+    body.append(line(lx, ly - 4, lx + 26, ly - 4, "#B01818", 4.0))
+    body.append(text(lx + 32, ly, "g(t)，带内加粗", 12, "start"))
+    body.append(f'<rect x="{lx + 150}" y="{ly - 11}" width="24" height="14" fill="#DCEAF7"/>')
+    body.append(text(lx + 180, ly, "距离上限 |g| ≤ 50 km", 12, "start"))
+    body.append(f'<rect x="{lx + 330}" y="{ly - 11}" width="24" height="14" fill="#F2A515" fill-opacity="0.35" stroke="#B5770A" stroke-width="0.8" stroke-dasharray="3,2"/>')
+    body.append(text(lx + 360, ly, "可能观测区", 12, "start"))
+    save("fig6c_gzoom.svg", W, H + 40, body)
 
 
 if __name__ == "__main__":
