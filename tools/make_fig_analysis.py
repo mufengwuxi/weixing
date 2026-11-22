@@ -739,7 +739,7 @@ def fig5():
     minor = [v * 10 ** e for e in (0, 1, 2) for v in range(2, 10) if 5 <= v * 10 ** e <= 300]
     axes_box(body, L, T, W_, H_, range(-15, 16, 5), [10, 100], X, Y, "相对观测开始时刻 / min", "距离 d / km",
              xfmt=lambda v: str(v).replace("-", "−"), minor_y=minor)
-    legend_box(body, X(-6.5), T + 10, [("line", C_LINE, None, "距离 d"), ("rect", SH_BAND, None, "距离约束 10–50 km"),
+    legend_box(body, L + 8, T + 8, [("line", C_LINE, None, "距离 d"), ("rect", SH_BAND, None, "距离约束 10–50 km"),
                                            ("rect", SH_WIN, None, "观测时段")])
     save("fig5a_q1_range.svg", W, H, body)
 
@@ -750,7 +750,7 @@ def fig5():
     L, W_ = 80, 510
     X = lambda v: L + (v + 180) / 420 * W_  # noqa: E731
     T1, H1 = 20, 220
-    Y1 = lambda v: T1 + (150 - v) / 150 * H1  # noqa: E731
+    Y1 = lambda v: T1 + (120 - v) / 120 * H1  # noqa: E731
     T2, H2 = 255, 120
     Y2 = lambda v: T2 + (60 - v) / 60 * H2  # noqa: E731
     body = []
@@ -758,15 +758,15 @@ def fig5():
         body.append(f'<rect x="{X(0):.1f}" y="{TT}" width="{X(60) - X(0):.1f}" height="{HH}" fill="{SH_WIN}"/>')
     body.append(line(L, Y1(45), L + W_, Y1(45), "#555555", 0.8, "4,3"))
     body.append(line(L, Y2(10), L + W_, Y2(10), "#555555", 0.8, "4,3"))
-    body.append(poly([(X(u), Y1(min(max(v, 0), 150))) for u, v in zip(tb, al)], stroke=C_A, w=1.6, closed=False))
-    body.append(poly([(X(u), Y1(min(max(v, 0), 150))) for u, v in zip(tb, th)], stroke=C_T, w=1.6, closed=False, dash="6,3"))
+    body.append(poly([(X(u), Y1(min(max(v, 0), 120))) for u, v in zip(tb, al)], stroke=C_A, w=1.6, closed=False))
+    body.append(poly([(X(u), Y1(min(max(v, 0), 120))) for u, v in zip(tb, th)], stroke=C_T, w=1.6, closed=False, dash="6,3"))
     body.append(poly([(X(u), Y2(min(v, 60))) for u, v in zip(tb, d)], stroke=C_LINE, w=1.6, closed=False))
-    axes_box(body, L, T1, W_, H1, range(-180, 241, 60), range(0, 151, 30), X, Y1, None, "角度 / (°)")
+    axes_box(body, L, T1, W_, H1, range(-180, 241, 60), range(0, 121, 30), X, Y1, None, "角度 / (°)")
     axes_box(body, L, T2, W_, H2, range(-180, 241, 60), range(0, 61, 20), X, Y2, "相对观测开始时刻 / s", "距离 d / km",
              xfmt=lambda v: str(v).replace("-", "−"))
-    legend_box(body, X(-172), T1 + 6, [("line", C_A, None, "光照角 α"), ("line", C_T, "6,3", "侦测角 θ"),
+    legend_box(body, L + 8, T1 + 8, [("line", C_A, None, "光照角 α"), ("line", C_T, "6,3", "侦测角 θ"),
                                             ("line", "#555555", "4,3", "约束边界"), ("rect", SH_WIN, None, "观测时段")])
-    legend_box(body, X(-60) - 40, T2 + 8, [("line", C_LINE, None, "距离 d")])
+    legend_box(body, L + 8, T2 + 8, [("line", C_LINE, None, "距离 d")])
     save("fig5b_q1_angles.svg", W, H, body)
 
 
