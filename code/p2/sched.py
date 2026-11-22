@@ -1,3 +1,4 @@
+# 旧版（v2，单机）排日程脚本，交会漂移率用的是按本题数据取定的分档常数，已由 code/p2/batch/sched.py 的模型化版本取代，仅保留作为历史记录。
 import sys,time,pickle; sys.path.insert(0,'.'); from plan import *
 K=2.85  # m/s per (deg/day)
 H0=np.cross(R1[:3],R1[3:]); H0/=np.linalg.norm(H0)

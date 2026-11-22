@@ -79,9 +79,10 @@ def gam_arr(n):
     return np.degrees(np.arccos(np.clip(np.sum(us*ue,1),-1,1)))
 GAM={n:gam_arr(n) for n in NAMES}
 def opportunities(h, n):
-    """目标 n 穿过 r1 轨道面（法向 h）且在日照窗口内的时刻；近共面目标则窗口内每 2 h 一个。"""
-    z=TPOS[n]@h; ok=GAM[n]<=90-2*MA-3  # 留出余量
-    if np.max(np.abs(z))<35:
+    """目标 n 穿过 R1 轨道面（法向 h）、且 β ≤ 90° − 2m 的时刻。
+    若目标到 R1 轨道面的距离始终不超过观测距离上限，则不受穿越条件限制，β 窗口内每 2 h 取一个候选。"""
+    z=TPOS[n]@h; ok=GAM[n]<=90-2*MA
+    if np.max(np.abs(z))<=50-MD:
         return [t for t in TT[ok][::60]]
     idx=np.where(np.diff(np.sign(z))!=0)[0]
     out=[]

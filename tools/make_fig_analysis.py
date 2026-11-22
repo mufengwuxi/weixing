@@ -707,6 +707,8 @@ def legend_box(body, x, y, items):
         yy = y + 13 + 18 * k
         if kind == "line":
             body.append(line(x + 6, yy - 1, x + 28, yy - 1, col, 1.6, dash))
+        elif kind == "dot":
+            body.append(f'<circle cx="{x + 17}" cy="{yy - 1}" r="3.2" fill="{col}" stroke="none"/>')
         else:
             body.append(f'<rect x="{x + 6}" y="{yy - 7}" width="22" height="11" fill="{col}" stroke="none"/>')
         body.append(text(x + 34, yy + 3, t_, 11.5, "start"))
