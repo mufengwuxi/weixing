@@ -428,7 +428,6 @@ def make_q2_baseline_figs():
 
     # 极简标注（无框）
     body.append(F.text(xs[1], 376, "保留前 W 条", 12.5, "middle", DK))
-    body.append(F.text(xs[2] + 55, 310, "高代价 / 超 30 m/s 剪枝", 12, "middle", "#777777"))
     F.save("fig10f_q2_beam.svg", W, H, body)
 
 
