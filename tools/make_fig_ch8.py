@@ -48,9 +48,9 @@ def make_sens_margin():
         yfmt=lambda v: f"{v:.1f}",
     )
     F.legend_box(body, L + 8, T + 8, [
-        ("line", C_Q2, None, "问题二 M-Uni（单星 30 目标）"),
-        ("line", C_Q3, None, "问题三 M-Uni（R2 东侧 20 目标）"),
-        ("line", "#2E86C1", "5,3", "问题三 M-Uni（R1 西侧 10 目标，m ≤ 0.25）"),
+        ("line", C_Q2, None, "问题二主方案（单星 30 目标）"),
+        ("line", C_Q3, None, "问题三主方案（R2 东侧 20 目标）"),
+        ("line", "#2E86C1", "5,3", "问题三主方案（R1 西侧 10 目标，m ≤ 0.25）"),
         ("line", C_Q1, "2,2", "问题一（单星单目标）"),
     ])
     F.save("fig14a_sens_margin.svg", W, H, body)
@@ -87,7 +87,7 @@ def make_sens_emax():
         yfmt=lambda v: f"{v:.3f}",
     )
     F.legend_box(body, L + 8, T + 8, [
-        ("line", C_Q1, None, "M-Uni 在不同偏心率上限下的 R2 Δv"),
+        ("line", C_Q1, None, "主模型在不同偏心率上限下的 R2 Δv"),
         ("dot", C_Q2, None, "主方案上限 e_max = 10⁻³（14.123 m/s）"),
         ("line", "#888888", "4,3", "主方案基准 14.123 m/s（全区间变幅 +0.16%）"),
     ])

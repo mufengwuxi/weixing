@@ -154,7 +154,7 @@ def make_da_curve():
         yfmt=lambda v: f"{v:.1f}",
     )
     F.legend_box(body, L + 8, T + 8, [
-        ("line", C_R1, None, "M-Uni 联合优化曲线 J*(δa)"),
+        ("line", C_R1, None, "联合序列凸优化曲线 J*(δa)"),
         ("dot", C_R2, None, "主方案边界 δa = 5.90 km（26.04 m/s）"),
     ])
     F.save("fig13_q3_da.svg", W, H, body)

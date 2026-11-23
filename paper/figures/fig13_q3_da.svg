@@ -51,7 +51,7 @@
 <text x="40.0" y="160.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 40.0 160.0)">两星合计速度增量 J*(δa) / (m/s)</text>
 <rect x="92" y="28" width="264.8" height="44" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
 <line x1="98.0" y1="40.0" x2="120.0" y2="40.0" stroke="#1F4E79" stroke-width="1.6"/>
-<text x="126.0" y="44.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">M-Uni 联合优化曲线 J*(δa)</text>
+<text x="126.0" y="44.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">联合序列凸优化曲线 J*(δa)</text>
 <circle cx="109" cy="58" r="3.2" fill="#C0392B" stroke="none"/>
 <text x="126.0" y="62.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">主方案边界 δa = 5.90 km（26.04 m/s）</text>
 </svg>
