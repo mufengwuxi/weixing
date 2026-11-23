@@ -353,131 +353,166 @@ def fig2():
 # 参照项目申请书和建模论文常见的"总体框架图"：顶部标题条，问题特点一行，三列研究内容（虚线框 + 深色标题 + 浅色要点框 + 底部方法名），
 # 底部为支撑层（统一基础模型、模型检验）。只画思路和方法，不出现任何结果数值。
 def fig3():
-    W, H = 1040, 720
-    DK, MD, LT, LB = "#1B4F72", "#2874A6", "#EBF3FA", "#F4F8FB"
-    AC = "#1E5B56"
+    """总体技术路线图：单色系（学术深蓝）、三层架构、详略得当、内嵌真实流程箭头。"""
+    W = 1040
+    DK = "#1F4E79"     # 主深蓝
+    MD = "#3D72A4"     # 中蓝（箭头、重点框边框）
+    LT = "#EBF2F8"     # 浅蓝节点底
+    BG = "#F6F9FC"     # 极浅容器底
+    BD = "#9BB7D4"     # 细边框蓝
+    TX = "#1A2530"     # 深灰黑正文
     body = []
 
     def rect(x, y, w, h, fill, stroke="none", sw=1.0, dash=None, rx=4):
         d = f' stroke-dasharray="{dash}"' if dash else ""
         return f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" ry="{rx}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{d}/>'
 
-    def down(x, y1, y2, lab=None):
-        body.append(arrow(x, y1, x, y2, MD, 2.2, 10))
+    def v_arr(x, y1, y2):
+        body.append(arrow(x, y1, x, y2, MD, 1.8, 8))
+
+    def h_arr(x1, x2, y, lab=None):
+        body.append(arrow(x1, y, x2, y, MD, 2.0, 9))
         if lab:
-            body.append(text(x + 12, (y1 + y2) / 2 + 4, lab, 12.5, "start", "#333333"))
+            body.append(text((x1 + x2) / 2, y - 9, lab, 12, "middle", DK))
 
-    def up(x, y1, y2, lab=None):
-        body.append(arrow(x, y1, x, y2, AC, 2.2, 10))
-        if lab:
-            body.append(text(x + 12, (y1 + y2) / 2 + 4, lab, 12.5, "start", "#333333"))
+    # ==================== 1. 顶部：统一物理基础（精简略写） ====================
+    y_top = 16
+    body.append(rect(20, y_top, W - 40, 86, BG, BD, 1.0, rx=5))
+    body.append(rect(20, y_top, 152, 86, DK, rx=5))
+    body.append(text(96, y_top + 38, "物理机理", 15, color="#FFFFFF"))
+    body.append(text(96, y_top + 60, "与统一基础", 15, color="#FFFFFF"))
 
-    # 1. 顶部标题条
-    body.append(rect(20, 14, W - 40, 38, DK))
-    body.append(text(W / 2, 39, "高轨卫星抵近观测与机动规划总体技术路线", 17.5, color="#FFFFFF"))
-
-    # 2. 问题物理与优化特征层
-    body.append(rect(20, 62, W - 40, 52, "#FFFFFF", "#7F8C8D", 1.0))
-    feats = [
-        "时变非凸观测管道（球壳 + 双圆锥）",
-        "相位漂移与三维跨面耦合",
-        "离散排序与连续机动强耦合",
-        "双星空间分区与初轨待设计",
+    bases = [
+        ("二体与三维 CW 运动", "精确传播 / 代理转移代价"),
+        ("时变可观测管道", "球壳 + 双圆锥 / 切平面凸化"),
+        ("两级字典序目标", "先最大化目标数，再最小化 Δv"),
     ]
-    fw = (W - 40 - 50) / 4
-    for i, f in enumerate(feats):
-        x = 30 + i * (fw + 10)
-        body.append(rect(x, 72, fw, 32, LT, "#BDD4E7", 0.8))
-        body.append(text(x + fw / 2, 93, f, 13))
+    bx0, bw_tot = 186, W - 40 - 180
+    bgap = 14
+    bw = (bw_tot - 2 * bgap) / 3
+    for i, (t1, t2) in enumerate(bases):
+        x = bx0 + i * (bw + bgap)
+        body.append(rect(x, y_top + 13, bw, 60, "#FFFFFF", BD, 0.9, rx=4))
+        body.append(text(x + bw / 2, y_top + 36, t1, 14, "middle", DK))
+        body.append(text(x + bw / 2, y_top + 58, t2, 12, "middle", "#4A5568"))
 
-    # 3. 三列递进主线
-    cols = [
-        (
-            "问题一　单星单标观测",
-            [
-                ("候选机会锁定", "背阳侧轨道面穿越（β ≤ 90°）"),
-                ("连续区间约束", "60 s 连续观测 / 角平分线瞄准"),
-                ("精修与互证", "多初值 SLSQP / 联合凸优化复现"),
-            ],
-            "两脉冲非线性规划模型",
-        ),
-        (
-            "问题二　单星多标巡游",
-            [
-                ("离散排序层", "三维 CW 代理动态规划 + 变邻域下降"),
-                ("连续精修层", "脉冲矢量—时刻—观测时刻联合凸优化"),
-                ("重定位与对照", "主矢量退化脉冲重定位 / 束搜索与 LNS"),
-            ],
-            "CW 代理—时空联合序列凸优化模型",
-        ),
-        (
-            "问题三　双星协同巡游",
-            [
-                ("双星空间分区", "按相位划西 10 / 东 20 + 边界消融验证"),
-                ("R2 初轨嵌入", "六维初态入模（e &lt; 0.001, |Δa| ≤ δa）"),
-                ("协同联合求解", "双星时空联合序列凸优化 + 主矢量重定位"),
-            ],
-            "分区—初轨—巡游联合优化模型",
-        ),
+    # ==================== 2. 中层：三问递进核心框架（详写突出主模型） ====================
+    cy0, ch = 136, 368
+    cgap = 52
+    w1, w2, w3 = 270, 356, 270
+    x1 = 20
+    x2 = x1 + w1 + cgap
+    x3 = x2 + w2 + cgap
+
+    # 上层到中层三箭
+    for cx in (x1 + w1 / 2, x2 + w2 / 2, x3 + w3 / 2):
+        v_arr(cx, y_top + 88, cy0 - 3)
+
+    # --- 列 1：问题一（略精简） ---
+    body.append(rect(x1, cy0, w1, ch, "#FFFFFF", BD, 1.1, "5,3", rx=5))
+    body.append(rect(x1 + 10, cy0 + 10, w1 - 20, 34, DK, rx=4))
+    body.append(text(x1 + w1 / 2, cy0 + 32, "问题一 · 单星单标观测", 14.5, color="#FFFFFF"))
+
+    n1 = [
+        ("背阳侧轨道面穿越", "锁定候选观测时段"),
+        ("角平分线瞄准", "连续 60 s 区间约束"),
+        ("多初值 SLSQP 精修", "主模型同步复现互证"),
     ]
-    cg, cy0, chh = 22, 156, 316
-    cw = (W - 40 - 2 * cg) / 3
-    for i, (title, items, method) in enumerate(cols):
-        x = 20 + i * (cw + cg)
-        body.append(rect(x, cy0, cw, chh, "#FFFFFF", "#5D6D7E", 1.1, "5,3"))
-        body.append(rect(x + 10, cy0 + 10, cw - 20, 34, DK))
-        body.append(text(x + cw / 2, cy0 + 33, title, 15, color="#FFFFFF"))
-        for j, (k, v) in enumerate(items):
-            yy = cy0 + 56 + j * 68
-            body.append(rect(x + 10, yy, cw - 20, 58, LT, "#C8DCEE", 0.7))
-            body.append(text(x + 20, yy + 23, k, 13.5, "start", DK))
-            body.append(text(x + 20, yy + 45, v, 12.5, "start", "#222222"))
-        body.append(rect(x + 18, cy0 + chh - 48, cw - 36, 34, AC, rx=4))
-        body.append(text(x + cw / 2, cy0 + chh - 26, method, 13.5, color="#FFFFFF"))
-        if i < 2:
-            ax = x + cw + 2
-            body.append(poly([(ax + 2, cy0 + 140), (ax + cg - 4, cy0 + 152), (ax + 2, cy0 + 164)], fill="#7FB3D5", stroke="none"))
+    for j, (t1, t2) in enumerate(n1):
+        yy = cy0 + 62 + j * 78
+        body.append(rect(x1 + 16, yy, w1 - 32, 54, LT, BD, 0.8, rx=4))
+        body.append(text(x1 + w1 / 2, yy + 23, t1, 13.5, "middle", TX))
+        body.append(text(x1 + w1 / 2, yy + 43, t2, 12, "middle", "#4A5568"))
+        if j < 2:
+            v_arr(x1 + w1 / 2, yy + 55, yy + 76)
+    v_arr(x1 + w1 / 2, cy0 + 62 + 2 * 78 + 55, cy0 + ch - 52)
+    body.append(rect(x1 + 16, cy0 + ch - 50, w1 - 32, 36, DK, rx=4))
+    body.append(text(x1 + w1 / 2, cy0 + ch - 27, "两脉冲非线性规划模型", 13.5, color="#FFFFFF"))
 
-    # 特征层到三列箭头
-    for i in range(3):
-        down(20 + i * (cw + cg) + cw / 2, 116, cy0 - 4, "问题驱动" if i == 0 else None)
+    # --- 列 2：问题二（视觉中心，实线粗框 + 内部闭环） ---
+    body.append(rect(x2, cy0, w2, ch, BG, DK, 1.8, rx=5))
+    body.append(rect(x2 + 10, cy0 + 10, w2 - 20, 34, DK, rx=4))
+    body.append(text(x2 + w2 / 2, cy0 + 32, "问题二 · 单星多标巡游（核心主模型）", 14.5, color="#FFFFFF"))
 
-    # 4. 底部双支撑闭环层
-    by0 = cy0 + chh + 46
-    bw = (W - 40 - 24) / 2
-    blocks = [
-        (
-            "统一物理与数学基础",
-            AC,
-            [
-                "二体状态转移映射与三维 Hill/CW 相对运动",
-                "时变可观测管道与动态切平面内近似凸化",
-                "两级字典序目标（先覆目标数、再降累计 Δv）",
-            ],
-        ),
-        (
-            "全链条独立检验与灵敏度分析",
-            DK,
-            [
-                "0.05 s 加密网格认证与 30 天面外倾转角检验",
-                "ATK 4.2.0 单星机动规划（MCS）连续数值积分复核",
-                "安全裕量 m、偏心率上限 e_max 与 δa 灵敏度分析",
-            ],
-        ),
+    # 离散层
+    yy = cy0 + 58
+    body.append(rect(x2 + 16, yy, w2 - 32, 62, "#FFFFFF", MD, 1.0, rx=4))
+    body.append(text(x2 + w2 / 2, yy + 24, "离散排序层：三维 CW 代理动态规划", 13.5, "middle", DK))
+    body.append(text(x2 + w2 / 2, yy + 46, "确定性变邻域下降 · 自动识别伴随飞越", 12, "middle", "#4A5568"))
+    v_arr(x2 + w2 / 2, yy + 63, yy + 84)
+
+    # 连续层（带右侧重定位回环）
+    yy2 = yy + 86
+    body.append(rect(x2 + 16, yy2, w2 - 60, 66, "#FFFFFF", MD, 1.0, rx=4))
+    body.append(text(x2 + 16 + (w2 - 60) / 2, yy2 + 25, "连续精修层：时空联合序列凸优化", 13.5, "middle", DK))
+    body.append(text(x2 + 16 + (w2 - 60) / 2, yy2 + 48, "脉冲矢量 + 脉冲时刻 + 观测窗联合求解", 12, "middle", "#4A5568"))
+    v_arr(x2 + 16 + (w2 - 60) / 2, yy2 + 67, yy2 + 86)
+
+    # 主矢量重定位节点
+    yy3 = yy2 + 88
+    body.append(rect(x2 + 16, yy3, w2 - 60, 48, LT, BD, 0.9, rx=4))
+    body.append(text(x2 + 16 + (w2 - 60) / 2, yy3 + 21, "主矢量退化脉冲重定位", 13, "middle", TX))
+    body.append(text(x2 + 16 + (w2 - 60) / 2, yy3 + 39, "激活归零脉冲 · 突破局部极小", 11.5, "middle", "#4A5568"))
+
+    # 右侧闭环反馈折线箭头（重定位 -> 连续精修）
+    lx = x2 + w2 - 26
+    body.append(poly([(x2 + w2 - 44, yy3 + 24), (lx, yy3 + 24), (lx, yy2 + 33)], stroke=MD, w=1.7, closed=False))
+    body.append(arrow(lx, yy2 + 33, x2 + w2 - 43, yy2 + 33, MD, 1.7, 7))
+    ym = (yy2 + 33 + yy3 + 24) / 2
+    body.append(text(lx + 11, ym - 4, "迭", 11.5, "middle", MD))
+    body.append(text(lx + 11, ym + 11, "代", 11.5, "middle", MD))
+
+    v_arr(x2 + w2 / 2, yy3 + 49, cy0 + ch - 52)
+    body.append(rect(x2 + 16, cy0 + ch - 50, w2 - 32, 36, DK, rx=4))
+    body.append(text(x2 + w2 / 2, cy0 + ch - 27, "CW 代理—时空联合序列凸优化模型", 13.5, color="#FFFFFF"))
+
+    # --- 列 3：问题三（清晰递进） ---
+    body.append(rect(x3, cy0, w3, ch, "#FFFFFF", BD, 1.1, "5,3", rx=5))
+    body.append(rect(x3 + 10, cy0 + 10, w3 - 20, 34, DK, rx=4))
+    body.append(text(x3 + w3 / 2, cy0 + 32, "问题三 · 双星协同巡游", 14.5, color="#FFFFFF"))
+
+    n3 = [
+        ("双星空间分区", "西 10 / 东 20 单向巡游 + 边界验证"),
+        ("R2 初轨变量嵌入", "e &lt; 0.001，|a − aGEO| ≤ δa"),
+        ("复用主模型联合求解", "初轨 + 脉冲 + 观测窗同步优化"),
     ]
-    for i, (title, hdr, rows) in enumerate(blocks):
-        x = 20 + i * (bw + 24)
-        body.append(rect(x, by0, bw, 166, "#FFFFFF", "#5D6D7E", 1.1, "5,3"))
-        body.append(rect(x + 10, by0 + 10, bw - 20, 32, hdr))
-        body.append(text(x + bw / 2, by0 + 31, title, 14.5, color="#FFFFFF"))
-        for j, r in enumerate(rows):
-            yy = by0 + 52 + j * 36
-            body.append(rect(x + 10, yy, bw - 20, 29, LB, "#C9D6DF", 0.7))
-            body.append(text(x + 22, yy + 20, r, 13, "start", "#222222"))
+    for j, (t1, t2) in enumerate(n3):
+        yy = cy0 + 62 + j * 78
+        body.append(rect(x3 + 16, yy, w3 - 32, 54, LT, BD, 0.8, rx=4))
+        body.append(text(x3 + w3 / 2, yy + 23, t1, 13.5, "middle", TX))
+        body.append(text(x3 + w3 / 2, yy + 43, t2, 12, "middle", "#4A5568"))
+        if j < 2:
+            v_arr(x3 + w3 / 2, yy + 55, yy + 76)
+    v_arr(x3 + w3 / 2, cy0 + 62 + 2 * 78 + 55, cy0 + ch - 52)
+    body.append(rect(x3 + 16, cy0 + ch - 50, w3 - 32, 36, DK, rx=4))
+    body.append(text(x3 + w3 / 2, cy0 + ch - 27, "分区—初轨—巡游协同模型", 13.5, color="#FFFFFF"))
 
-    up(20 + bw / 2, by0 - 4, cy0 + chh + 4, "机理支撑")
-    down(W - 20 - bw / 2, cy0 + chh + 4, by0 - 4, "独立验证")
-    save("fig3_framework.svg", W, by0 + 182, body)
+    # 列间水平递进箭头
+    h_arr(x1 + w1 + 4, x2 - 4, cy0 + ch / 2, "串接")
+    h_arr(x2 + w2 + 4, x3 - 4, cy0 + ch / 2, "推广")
+
+    # ==================== 3. 底部：独立检验与灵敏度（精简略写） ====================
+    y_bot = cy0 + ch + 34
+    for cx in (x1 + w1 / 2, x2 + w2 / 2, x3 + w3 / 2):
+        v_arr(cx, cy0 + ch + 2, y_bot - 3)
+
+    body.append(rect(20, y_bot, W - 40, 86, BG, BD, 1.0, rx=5))
+    body.append(rect(20, y_bot, 152, 86, DK, rx=5))
+    body.append(text(96, y_bot + 38, "独立验证", 15, color="#FFFFFF"))
+    body.append(text(96, y_bot + 60, "与灵敏度", 15, color="#FFFFFF"))
+
+    verifs = [
+        ("0.05 s 网格与面外检验", "约束零漏检 / 轨道面倾转验证"),
+        ("ATK 4.2.0 独立复核", "单星 MCS 连续数值积分全通过"),
+        ("多维参数灵敏度分析", "安全裕量 m / 偏心率 e_max / δa"),
+    ]
+    for i, (t1, t2) in enumerate(verifs):
+        x = bx0 + i * (bw + bgap)
+        body.append(rect(x, y_bot + 13, bw, 60, "#FFFFFF", BD, 0.9, rx=4))
+        body.append(text(x + bw / 2, y_bot + 36, t1, 14, "middle", DK))
+        body.append(text(x + bw / 2, y_bot + 58, t2, 12, "middle", "#4A5568"))
+
+    save("fig3_framework.svg", W, y_bot + 102, body)
 
 
 # ---------------- 图 4：观测单元与全局时间轴 ----------------
