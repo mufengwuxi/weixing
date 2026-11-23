@@ -297,16 +297,13 @@ def make_plane_tilt():
 
 
 def make_q2_baseline_figs():
-    """第 6.2.1 节图形化机理图（复刻第 4/5 节立体图标与渐变绘色风格，左右双区）：
-    左：立体地球、立体卫星与喷焰展示拱线偏角 δ 与交会高度偏差 |Δa|(1−cos δ)；
-    右：漂移相位束搜索的立体节点树状扩展与剪枝示意。
+    """第 6.2.1 节双子图（完全复刻 fig1a 纯白底、无外框、极简标注 + 立体图标风格）：
+    fig10e_q2_geo.svg   交线偏角 δ 与交会高度偏差几何示意
+    fig10f_q2_beam.svg  漂移相位束搜索的逐层扩展与剪枝示意
     """
-    W, H = 1020, 420
-    DK, MD, LT, BG, BD = "#1A365D", "#2E6FB7", "#EBF2F8", "#F7FAFC", "#9BB7D4"
-    ACC = "#B01818"
-    GR = "#7F94AD"
+    DK, MD, ACC, GR = "#1A365D", "#2E6FB7", "#B01818", "#777777"
+
     def flat3d(s):
-        """将 F.sat3d / F.flame 的渐变 url 替换为高保真三明暗立体矢量面片（兼容所有 SVG→PDF 引擎）。"""
         for k, v in [
             ("url(#gRedF)", "#C9302C"), ("url(#gRedT)", "#EB6B67"), ("url(#gRedS)", "#8E1B1B"),
             ("url(#gBluF)", "#2E6FB7"), ("url(#gBluT)", "#6FA8DC"), ("url(#gBluS)", "#1A4478"),
@@ -315,126 +312,112 @@ def make_q2_baseline_figs():
             s = s.replace(k, v)
         return s
 
+    # ==================== (a) 交线偏角与高度偏差几何（纯白无框） ====================
+    W, H = 560, 400
     body = []
-
-    # 左右分区柔和浅蓝底框
-    body.append(f'<rect x="14" y="14" width="486" height="392" rx="6" ry="6" fill="#F5F9FD" stroke="{BD}" stroke-width="0.9"/>')
-    body.append(f'<rect x="518" y="14" width="488" height="392" rx="6" ry="6" fill="#F5F9FD" stroke="{BD}" stroke-width="0.9"/>')
-    body.append(F.text(257, 42, "(a) 交线偏角 δ 与交会高度偏差几何关系", 14, "middle", DK))
-    body.append(F.text(762, 42, "(b) 漂移相位束搜索的逐层扩展与剪枝", 14, "middle", DK))
-
-    # ==================== 左图：立体地球 + 立体卫星 + 轨道几何 ====================
-    cx, cy = 204.0, 224.0
-    r_geo = 90.0
-    da = 24.0
+    cx, cy = 248.0, 206.0
+    r_geo, da = 110.0, 30.0
     ang = np.linspace(0, 2 * np.pi, 180)
     geo_pts = [(cx + r_geo * np.cos(a), cy - r_geo * np.sin(a)) for a in ang]
     ell_pts = [(cx + (r_geo + da * (1.0 - np.cos(a))) * np.cos(a),
                 cy - (r_geo + da * (1.0 - np.cos(a))) * np.sin(a)) for a in ang]
 
-    # 轨道面淡蓝圆盘底色 + 名义 GEO 圆轨道（虚线）+ 脉冲后漂移椭圆（实线）
-    body.append(f'<circle cx="{cx}" cy="{cy}" r="{r_geo}" fill="#DCEBF8" fill-opacity="0.35" stroke="none"/>')
+    # 名义 GEO 圆轨道（虚线）与脉冲后椭圆漂移轨道（实线）
     body.append(F.poly(geo_pts, stroke=GR, w=1.4, dash="5,4", closed=True))
-    body.append(F.poly(ell_pts, stroke=DK, w=2.1, closed=True))
+    body.append(F.poly(ell_pts, stroke="#111111", w=1.9, closed=True))
 
-    # 三层立体地球（深海底 + 中亮海面 + 左上高光 + 绿色陆地）
-    body.append(f'<circle cx="{cx}" cy="{cy}" r="24" fill="#174980" stroke="#0D2E5C" stroke-width="0.9"/>')
-    body.append(f'<circle cx="{cx - 2.5}" cy="{cy - 2.5}" r="20" fill="#2E6FB7" stroke="none"/>')
-    body.append(f'<circle cx="{cx - 7.5}" cy="{cy - 7.5}" r="9.5" fill="#74B9EA" fill-opacity="0.72" stroke="none"/>')
-    body.append(F.poly([(cx - 10, cy - 11), (cx + 1, cy - 15), (cx + 8, cy - 5), (cx - 1, cy + 4), (cx - 12, cy - 2)],
-                       fill="#6AB366", stroke="none", opacity=0.82))
-    body.append(F.poly([(cx + 5, cy + 4), (cx + 14, cy + 2), (cx + 15, cy + 12), (cx + 7, cy + 15)],
-                       fill="#5FA85B", stroke="none", opacity=0.75))
-    body.append(F.text(cx, cy + 38, "地球", 11, "middle", DK))
+    # 立体地球（带浅蓝大气光晕）
+    body.append(f'<circle cx="{cx}" cy="{cy}" r="30" fill="#DCEBF8" fill-opacity="0.7" stroke="none"/>')
+    body.append(f'<circle cx="{cx}" cy="{cy}" r="26" fill="#174980" stroke="#0D2E5C" stroke-width="0.9"/>')
+    body.append(f'<circle cx="{cx - 2.8}" cy="{cy - 2.8}" r="21.5" fill="#2E6FB7" stroke="none"/>')
+    body.append(f'<circle cx="{cx - 8}" cy="{cy - 8}" r="10.5" fill="#7CC0EE" fill-opacity="0.72" stroke="none"/>')
+    body.append(F.poly([(cx - 11, cy - 12), (cx + 1, cy - 16), (cx + 9, cy - 5), (cx - 1, cy + 5), (cx - 13, cy - 2)],
+                       fill="#6AB366", stroke="none", opacity=0.85))
+    body.append(F.poly([(cx + 5, cy + 5), (cx + 15, cy + 3), (cx + 16, cy + 13), (cx + 7, cy + 16)],
+                       fill="#5FA85B", stroke="none", opacity=0.78))
+    body.append(F.text(cx, cy + 44, "地球", 13, "middle", "#111111"))
 
-    # 公共拱线（过脉冲点 θ=0）
-    body.append(F.line(cx - 146, cy, cx + 142, cy, MD, 1.1, "4,3"))
-    body.append(F.text(cx + 146, cy + 4, "公共拱线", 11.5, "start", MD))
+    # 公共拱线
+    body.append(F.line(cx - 182, cy, cx + 165, cy, "#555555", 1.0, "5,4"))
+    body.append(F.text(cx + 170, cy + 5, "公共拱线", 13, "start", "#111111"))
 
-    # 切向脉冲点：立体红色 R1 卫星 + 尾部橙黄喷焰
+    # 脉冲点 R1（立体红星 + 喷焰）
     px, py = cx + r_geo, cy
-    body.append(flat3d(F.flame(px, py + 11, 270, L=20, Wd=8.0)))
-    body.append(flat3d(F.sat3d(px, py, "red", 0.38)))
-    body.append(F.text(px + 24, py + 23, "R1 切向脉冲点", 11.5, "start", ACC))
+    body.append(flat3d(F.flame(px, py + 12, 270, L=22, Wd=8.5)))
+    body.append(flat3d(F.sat3d(px, py, "red", 0.44)))
+    body.append(F.text(px + 28, py + 28, "R1 脉冲点", 13, "start", ACC))
 
-    # 情形 1：小偏角交线（δ = 22°）+ 立体蓝色目标星
-    a1 = np.radians(22.0)
+    # 小偏角目标交线（20°）
+    a1 = np.radians(20.0)
     r1_e = r_geo + da * (1.0 - np.cos(a1))
     g1x, g1y = cx + r_geo * np.cos(a1), cy - r_geo * np.sin(a1)
-    body.append(F.line(cx, cy, cx + (r1_e + 22) * np.cos(a1), cy - (r1_e + 22) * np.sin(a1), MD, 1.0, "3,2"))
-    body.append(flat3d(F.sat3d(g1x, g1y, "blue", 0.30)))
-    body.append(F.text(cx + (r1_e + 26) * np.cos(a1), cy - (r1_e + 26) * np.sin(a1) - 4, "小偏角交线", 11.5, "start", MD))
-    body.append(F.text(cx + (r1_e + 26) * np.cos(a1), cy - (r1_e + 26) * np.sin(a1) + 12, "偏差小，可快漂", 10.5, "start", "#4A5568"))
+    body.append(F.line(cx, cy, cx + (r1_e + 22) * np.cos(a1), cy - (r1_e + 22) * np.sin(a1), "#444444", 1.0, "3,3"))
+    body.append(flat3d(F.sat3d(g1x, g1y, "blue", 0.34)))
+    body.append(F.text(cx + (r1_e + 28) * np.cos(a1), cy - (r1_e + 28) * np.sin(a1) + 4, "小偏角交线", 12.5, "start", "#111111"))
 
-    # 情形 2：大偏角交线（δ = 70°）+ 立体蓝色目标星 + 红色加粗高度偏差段
-    a2 = np.radians(70.0)
+    # 大偏角目标交线（68°）+ 红色高度偏差段
+    a2 = np.radians(68.0)
     r2_e = r_geo + da * (1.0 - np.cos(a2))
     g2x, g2y = cx + r_geo * np.cos(a2), cy - r_geo * np.sin(a2)
     e2x, e2y = cx + r2_e * np.cos(a2), cy - r2_e * np.sin(a2)
-    body.append(F.line(cx, cy, cx + (r2_e + 18) * np.cos(a2), cy - (r2_e + 18) * np.sin(a2), ACC, 1.1, "3,2"))
-    body.append(F.line(g2x, g2y, e2x, e2y, ACC, 3.4))
-    body.append(flat3d(F.sat3d(g2x, g2y, "blue", 0.30)))
+    body.append(F.line(cx, cy, cx + (r2_e + 16) * np.cos(a2), cy - (r2_e + 16) * np.sin(a2), "#444444", 1.0, "3,3"))
+    body.append(F.line(g2x, g2y, e2x, e2y, ACC, 3.6))
+    body.append(flat3d(F.sat3d(g2x, g2y, "blue", 0.34)))
     body.append(f'<circle cx="{e2x:.1f}" cy="{e2y:.1f}" r="4.0" fill="{ACC}" stroke="#FFFFFF" stroke-width="0.9"/>')
-    body.append(F.line(e2x + 5, e2y, e2x + 34, e2y + 4, ACC, 0.85))
-    body.append(F.text(e2x + 38, e2y - 6, "大偏角交线（δ 较大）", 11.5, "start", ACC))
-    body.append(F.text(e2x + 38, e2y + 11, "高度偏差 ≈ |Δa|(1−cos δ)", 11, "start", ACC))
-    body.append(F.text(e2x + 38, e2y + 27, "需降低漂移率 ω 慢速接近", 10.5, "start", "#4A5568"))
+    body.append(F.text(e2x + 14, e2y - 2, "大偏角交线", 12.5, "start", "#111111"))
+    body.append(F.text(e2x + 14, e2y + 17, "|Δa|(1−cos δ)", 12.5, "start", ACC))
 
-    # 角度弧 δ 标注
+    # 角度弧 δ
     arc_a = np.linspace(0, a2, 24)
-    body.append(F.poly([(cx + 42 * np.cos(t), cy - 42 * np.sin(t)) for t in arc_a], stroke=ACC, w=1.2, closed=False))
-    body.append(F.text(cx + 51 * np.cos(a2 / 2), cy - 51 * np.sin(a2 / 2) + 4, "δ", 12.5, "middle", ACC))
+    body.append(F.poly([(cx + 50 * np.cos(t), cy - 50 * np.sin(t)) for t in arc_a], stroke="#111111", w=1.1, closed=False))
+    body.append(F.text(cx + 62 * np.cos(a2 / 2), cy - 62 * np.sin(a2 / 2) + 5, "δ", 14, "middle", "#111111"))
 
-    # 左图底部图例条
-    body.append(F.line(34, 382, 60, 382, GR, 1.4, "5,4"))
-    body.append(F.text(66, 386, "名义 GEO 轨道", 11, "start", "#4A5568"))
-    body.append(F.line(176, 382, 202, 382, DK, 2.1))
-    body.append(F.text(208, 386, "脉冲后漂移轨道", 11, "start", DK))
-    body.append(F.line(324, 382, 350, 382, ACC, 3.4))
-    body.append(F.text(356, 386, "交会高度偏差", 11, "start", ACC))
+    # 轨道极简标注
+    body.append(F.text(cx - 125, cy + 128, "漂移轨道", 12.5, "end", "#111111"))
+    body.append(F.text(cx - 56, cy + 80, "GEO", 12, "middle", GR))
+    F.save("fig10e_q2_geo.svg", W, H, body)
 
-    # ==================== 右图：立体节点束搜索树 ====================
-    xs = [574, 692, 816, 942]
-    for x, lab in zip(xs, ["起点 R1", "第 1 步", "第 2 步", "第 3 步"]):
-        body.append(F.text(x, 76, lab, 12, "middle", DK))
-        body.append(F.line(x, 86, x, 338, "#DDE6F0", 0.9, "2,3"))
+    # ==================== (b) 束搜索树状扩展与剪枝（纯白无框） ====================
+    W, H = 560, 400
+    body = []
+    xs = [70, 210, 355, 495]
+    for x, lab in zip(xs, ["起点", "第 1 步", "第 2 步", "第 3 步"]):
+        body.append(F.text(x, 38, lab, 13.5, "middle", "#111111"))
+        body.append(F.line(x, 52, x, 360, "#E0E6ED", 0.9, "3,3"))
 
-    root = (xs[0], 210)
-    l1 = [(xs[1], 124, True, "e1"), (xs[1], 196, True, "e2"), (xs[1], 266, False, "×"), (xs[1], 320, False, "×")]
+    root = (xs[0], 204)
+    l1 = [(xs[1], 112, True, "e1"), (xs[1], 196, True, "e2"), (xs[1], 276, False, "×"), (xs[1], 338, False, "×")]
     l2 = [
-        (xs[2], 108, True, "e3", 0), (xs[2], 152, False, "×", 0),
-        (xs[2], 204, True, "e4", 1), (xs[2], 254, False, "×", 1),
+        (xs[2], 92, True, "e3", 0), (xs[2], 144, False, "×", 0),
+        (xs[2], 200, True, "e4", 1), (xs[2], 256, False, "×", 1),
     ]
     l3 = [
-        (xs[3], 108, True, "优选", 0), (xs[3], 150, False, "×", 0),
-        (xs[3], 204, True, "保留", 2), (xs[3], 254, False, "×", 2),
+        (xs[3], 92, True, "优选", 0), (xs[3], 144, False, "×", 0),
+        (xs[3], 200, True, "保留", 2), (xs[3], 256, False, "×", 2),
     ]
 
     for nx, ny, kept, _ in l1:
-        body.append(F.line(root[0], root[1], nx, ny, DK if kept else "#B8C4D0", 2.0 if kept else 1.0, None if kept else "4,3"))
+        body.append(F.line(root[0], root[1], nx, ny, "#111111" if kept else "#B8C4D0", 1.8 if kept else 1.0, None if kept else "4,3"))
     for nx, ny, kept, _, pid in l2:
         px0, py0 = l1[pid][0], l1[pid][1]
-        body.append(F.line(px0, py0, nx, ny, DK if kept else "#B8C4D0", 2.0 if kept else 1.0, None if kept else "4,3"))
+        body.append(F.line(px0, py0, nx, ny, "#111111" if kept else "#B8C4D0", 1.8 if kept else 1.0, None if kept else "4,3"))
     for nx, ny, kept, _, pid in l3:
         px0, py0 = l2[pid][0], l2[pid][1]
-        body.append(F.line(px0, py0, nx, ny, DK if kept else "#B8C4D0", 2.0 if kept else 1.0, None if kept else "4,3"))
+        body.append(F.line(px0, py0, nx, ny, "#111111" if kept else "#B8C4D0", 1.8 if kept else 1.0, None if kept else "4,3"))
 
-    # 起点：立体红色 R1 卫星
-    body.append(flat3d(F.sat3d(root[0], root[1], "red", 0.44)))
-    body.append(F.text(root[0], root[1] + 29, "R1", 11.5, "middle", ACC))
+    body.append(flat3d(F.sat3d(root[0], root[1], "red", 0.48)))
+    body.append(F.text(root[0], root[1] + 32, "R1", 13, "middle", ACC))
 
     def draw_node(x, y, kept, lab):
         if kept:
-            rr = 15 if len(lab) >= 2 and not lab.startswith("e") else 12.5
-            # 立体球体：柔和阴影 + 深蓝球身 + 左上高光
-            body.append(f'<circle cx="{x + 1.5}" cy="{y + 2.0}" r="{rr}" fill="#B8C9DC" fill-opacity="0.55"/>')
-            body.append(f'<circle cx="{x}" cy="{y}" r="{rr}" fill="#286098" stroke="{DK}" stroke-width="1.0"/>')
-            body.append(f'<circle cx="{x - rr * 0.28:.1f}" cy="{y - rr * 0.28:.1f}" r="{rr * 0.42:.1f}" fill="#74AEE0" fill-opacity="0.55"/>')
-            body.append(F.text(x, y + 4, lab, 10.5, "middle", "#FFFFFF"))
+            rr = 17 if len(lab) >= 2 and not lab.startswith("e") else 14
+            body.append(f'<circle cx="{x + 1.5}" cy="{y + 2.0}" r="{rr}" fill="#CBD5E1" fill-opacity="0.6"/>')
+            body.append(f'<circle cx="{x}" cy="{y}" r="{rr}" fill="#2E6FB7" stroke="#0D2E5C" stroke-width="1.0"/>')
+            body.append(f'<circle cx="{x - rr * 0.28:.1f}" cy="{y - rr * 0.28:.1f}" r="{rr * 0.42:.1f}" fill="#8EC9F2" fill-opacity="0.6"/>')
+            body.append(F.text(x, y + 4.5, lab, 12, "middle", "#FFFFFF"))
         else:
-            body.append(f'<circle cx="{x + 1}" cy="{y + 1.5}" r="9.5" fill="#D5DEE8" fill-opacity="0.5"/>')
-            body.append(f'<circle cx="{x}" cy="{y}" r="9.5" fill="#F8FAFC" stroke="#B0BEC5" stroke-width="0.9"/>')
-            body.append(F.text(x, y + 4, "×", 11, "middle", "#78909C"))
+            body.append(f'<circle cx="{x}" cy="{y}" r="11" fill="#FFFFFF" stroke="#A0AEC0" stroke-width="1.0" stroke-dasharray="2,2"/>')
+            body.append(F.text(x, y + 4.5, "×", 12, "middle", "#8896A6"))
 
     for nx, ny, kept, lab in l1:
         draw_node(nx, ny, kept, lab)
@@ -443,11 +426,10 @@ def make_q2_baseline_figs():
     for nx, ny, kept, lab, _ in l3:
         draw_node(nx, ny, kept, lab)
 
-    # 底部说明条
-    body.append(f'<rect x="546" y="354" width="432" height="36" rx="4" ry="4" fill="#FFFFFF" stroke="{BD}" stroke-width="0.9"/>')
-    body.append(F.text(762, 377, "每层按评价值 f 保留前 W 条低代价路径，剪去高代价与超 30 m/s 分支", 11.5, "middle", DK))
-
-    F.save("fig10e_q2_mechanism.svg", W, H, body)
+    # 极简标注（无框）
+    body.append(F.text(xs[1], 376, "保留前 W 条", 12.5, "middle", DK))
+    body.append(F.text(xs[2] + 55, 310, "高代价 / 超 30 m/s 剪枝", 12, "middle", "#777777"))
+    F.save("fig10f_q2_beam.svg", W, H, body)
 
 
 if __name__ == "__main__":
