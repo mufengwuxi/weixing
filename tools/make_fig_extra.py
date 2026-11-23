@@ -444,116 +444,103 @@ def make_q2_cw_dp_fig():
             s = s.replace(k, v)
         return s
 
-    def tag(x, y, lx, ly, s1, s2=None, col="#1A365D", anchor="start"):
-        body.append(F.line(x, y, lx, ly, "#666666", 0.85))
-        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.2" fill="#666666"/>')
-        dx = 5 if anchor == "start" else -5
-        if s2:
-            body.append(F.text(lx + dx, ly - 4, s1, 13, anchor, col))
-            body.append(F.text(lx + dx, ly + 13, s2, 11.5, anchor, "#555555"))
-        else:
-            body.append(F.text(lx + dx, ly + 4, s1, 13, anchor, col))
+    def tag(x, y, lx, ly, s1, col="#1A365D", anchor="start"):
+        body.append(F.line(x, y, lx, ly, "#666666", 1.0))
+        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.6" fill="#666666"/>')
+        dx = 7 if anchor == "start" else -7
+        body.append(F.text(lx + dx, ly + 5, s1, 16.5, anchor, col))
 
     def quad_curve(a, ctrl, b, n=36):
         ts = np.linspace(0, 1, n)
         return [tuple((1 - t) ** 2 * np.array(a) + 2 * (1 - t) * t * np.array(ctrl) + t ** 2 * np.array(b)) for t in ts]
 
-    W, H = 980, 440
+    W, H = 980, 450
     body = []
 
-    # ==================== 1. 底部地球弧面（替代平面投影矩阵） ====================
-    # 大半径柔和地球弧面，保证左右端点均高于底边 bot_y，绝无折返
+    # ==================== 1. 底部地球弧面 ====================
     ecx, ecy, R_e = 490.0, 1665.0, 1400.0
-    xs_e = np.linspace(70, 910, 90)
+    xs_e = np.linspace(60, 920, 90)
     top_arc = [(float(x), float(ecy - np.sqrt(R_e ** 2 - (x - ecx) ** 2))) for x in xs_e]
-    R_atm = R_e + 9.0
+    R_atm = R_e + 10.0
     atm_arc = [(float(x), float(ecy - np.sqrt(R_atm ** 2 - (x - ecx) ** 2))) for x in xs_e]
-    bot_y = 332.0
-    body.append(F.poly(atm_arc + [(910, bot_y), (70, bot_y)], fill="#D6EAF8", stroke="none", opacity=0.55))
-    body.append(F.poly(top_arc + [(910, bot_y), (70, bot_y)], fill="#2E6FB7", stroke="#174980", w=1.1))
-    # 浅亮海洋高光带（沿弧面顶部）
+    bot_y = 334.0
+    body.append(F.poly(atm_arc + [(920, bot_y), (60, bot_y)], fill="#D6EAF8", stroke="none", opacity=0.55))
+    body.append(F.poly(top_arc + [(920, bot_y), (60, bot_y)], fill="#2E6FB7", stroke="#174980", w=1.2))
     top_hi = [(x, y + 2) for x, y in top_arc]
-    bot_hi = [(x, min(bot_y - 1, y + 20)) for x, y in top_arc[::-1]]
+    bot_hi = [(x, min(bot_y - 1, y + 22)) for x, y in top_arc[::-1]]
     body.append(F.poly(top_hi + bot_hi, fill="#5D9AD4", stroke="none", opacity=0.55))
-    # 柔和绿色陆地轮廓（完全落在蓝色弧面内部）
-    body.append(F.poly([(240, 314), (295, 294), (355, 296), (378, 320), (315, 329), (248, 328)],
+    body.append(F.poly([(240, 314), (295, 294), (355, 296), (378, 320), (315, 330), (248, 329)],
                        fill="#6AB366", stroke="none", opacity=0.72))
-    body.append(F.poly([(555, 286), (630, 286), (700, 304), (712, 326), (620, 329), (562, 314)],
+    body.append(F.poly([(555, 286), (630, 286), (700, 304), (712, 328), (620, 330), (562, 314)],
                        fill="#5FA85B", stroke="none", opacity=0.68))
-    # 经纬淡线增强球面立体感
     for lx in (240, 365, 490, 615, 740):
         yt = ecy - np.sqrt(R_e ** 2 - (lx - ecx) ** 2)
-        body.append(F.line(lx, yt + 1, lx + (lx - ecx) * 0.04, bot_y, "#8EC9F2", 0.6, "3,3"))
-    body.append(F.text(490, 316, "地 球 表 面", 12.5, "middle", "#EBF5FB"))
+        body.append(F.line(lx, yt + 1, lx + (lx - ecx) * 0.04, bot_y, "#8EC9F2", 0.65, "3,3"))
+    body.append(F.text(490, 318, "地 球 表 面", 15.5, "middle", "#FFFFFF"))
 
     # ==================== 2. 左下 LVLH 坐标三轴 ====================
-    ax0 = (96.0, 248.0)
-    body.append(F.arrow(*ax0, ax0[0] + 52, ax0[1] - 8, "#333333", 1.3, 7))
-    body.append(F.text(ax0[0] + 57, ax0[1] - 6, "y", 12.5, "start", "#222222"))
-    body.append(F.arrow(*ax0, ax0[0] + 24, ax0[1] + 28, "#333333", 1.3, 7))
-    body.append(F.text(ax0[0] + 29, ax0[1] + 34, "x", 12.5, "start", "#222222"))
-    body.append(F.arrow(*ax0, ax0[0], ax0[1] - 66, "#333333", 1.3, 7))
-    body.append(F.text(ax0[0], ax0[1] - 73, "z", 12.5, "middle", "#222222"))
+    ax0 = (84.0, 252.0)
+    body.append(F.arrow(*ax0, ax0[0] + 54, ax0[1] - 8, "#222222", 1.5, 8))
+    body.append(F.text(ax0[0] + 62, ax0[1] - 5, "y", 16, "start", "#111111"))
+    body.append(F.arrow(*ax0, ax0[0] + 24, ax0[1] + 28, "#222222", 1.5, 8))
+    body.append(F.text(ax0[0] + 31, ax0[1] + 36, "x", 16, "start", "#111111"))
+    body.append(F.arrow(*ax0, ax0[0], ax0[1] - 68, "#222222", 1.5, 8))
+    body.append(F.text(ax0[0], ax0[1] - 77, "z", 16, "middle", "#111111"))
 
     # ==================== 3. 三维 CW 两脉冲转移轨迹 ====================
-    pp = (210.0, 218.0)
-    pm = (455.0, 152.0)
-    pc = (680.0, 108.0)
-    pc2 = (825.0, 122.0)
+    pp = (212.0, 214.0)
+    pm = (458.0, 148.0)
+    pc = (684.0, 106.0)
+    pc2 = (848.0, 126.0)
 
-    # 垂直到地球表面的高度虚线
     for (x, y) in (pp, pm, pc, pc2):
         ysurf = float(ecy - np.sqrt(R_e ** 2 - (x - ecx) ** 2))
-        body.append(F.line(x, y + 12, x, ysurf, "#7F98B8", 0.9, "3,3"))
-        body.append(f'<circle cx="{x:.1f}" cy="{ysurf:.1f}" r="2.6" fill="#174980"/>')
+        body.append(F.line(x, y + 18, x, ysurf, "#7F98B8", 1.0, "3,3"))
+        body.append(f'<circle cx="{x:.1f}" cy="{ysurf:.1f}" r="3.0" fill="#174980"/>')
 
-    c1 = quad_curve(pp, (330, 198), pm)
-    c2 = quad_curve(pm, (565, 102), pc)
-    c3 = quad_curve(pc, (755, 108), pc2, n=24)
+    c1 = quad_curve(pp, (332, 194), pm)
+    c2 = quad_curve(pm, (568, 98), pc)
+    c3 = quad_curve(pc, (768, 108), pc2, n=24)
 
-    body.append(F.poly(c1, stroke=DK, w=2.4, closed=False))
-    body.append(F.poly(c2, stroke=DK, w=2.4, closed=False))
-    body.append(F.poly(c3, stroke=MD, w=2.0, dash="6,4", closed=False))
+    body.append(F.poly(c1, stroke=DK, w=2.6, closed=False))
+    body.append(F.poly(c2, stroke=DK, w=2.6, closed=False))
+    body.append(F.poly(c3, stroke=MD, w=2.2, dash="6,4", closed=False))
 
-    # 终端漂移速度矢量
-    body.append(F.arrow(pc[0] + 10, pc[1] - 4, pc[0] + 72, pc[1] - 18, DK, 1.5, 7))
+    # 放大的立体卫星与喷焰
+    body.append(flat3d(F.flame(pp[0] - 18, pp[1] + 10, 200, L=28, Wd=10)))
+    body.append(flat3d(F.sat3d(pp[0], pp[1], "red", 0.66)))
 
-    # 立体卫星与喷焰
-    body.append(flat3d(F.sat3d(pp[0] - 28, pp[1] + 16, "blue", 0.34)))
-    body.append(flat3d(F.flame(pp[0] - 10, pp[1] + 8, 200, L=22, Wd=8)))
-    body.append(flat3d(F.sat3d(pp[0], pp[1], "red", 0.44)))
+    body.append(flat3d(F.flame(pm[0] - 16, pm[1] + 11, 212, L=28, Wd=10)))
+    body.append(flat3d(F.sat3d(pm[0], pm[1], "red", 0.66)))
 
-    body.append(flat3d(F.flame(pm[0] - 10, pm[1] + 8, 212, L=22, Wd=8)))
-    body.append(flat3d(F.sat3d(pm[0], pm[1], "red", 0.44)))
+    body.append(flat3d(F.sat3d(pc[0], pc[1], "blue", 0.62)))
+    body.append(flat3d(F.sat3d(pc2[0], pc2[1], "blue", 0.60)))
 
-    body.append(flat3d(F.sat3d(pc[0], pc[1], "blue", 0.42)))
-    body.append(flat3d(F.sat3d(pc2[0], pc2[1], "blue", 0.40)))
+    # ==================== 4. 纯净外置引线标注（无下划线、无灰色小字、大字号） ====================
+    tag(pp[0] - 6, pp[1] - 24, 178, 86, "首次脉冲 Δv₁", ACC, "end")
+    tag(pm[0] - 4, pm[1] - 24, 420, 48, "中段脉冲 Δv₂", ACC, "end")
+    tag(pc[0] + 6, pc[1] - 24, 650, 42, "目标交会", DK, "start")
+    tag((pc[0] + pc2[0]) / 2, (pc[1] + pc2[1]) / 2 + 4, 800, 198, "零机动伴随飞越", MD, "start")
 
-    # ==================== 4. 图 11 风格外置引线标注（不压轨迹线） ====================
-    tag(pp[0] - 4, pp[1] - 14, 175, 92, "事件 e_p 与首次脉冲 Δv₁", "起点时刻 t_p", ACC, "end")
-    tag(pm[0] - 2, pm[1] - 14, 415, 52, "中段脉冲 Δv₂", "t_m = t_p + 0.53Δt，整周期行满秩", ACC, "end")
-    tag(pc[0] + 4, pc[1] - 16, 650, 44, "目标事件 e_c", "匹配三维位置与漂移速度 v_y(w_c)", DK, "start")
-    tag((pc[0] + pc2[0]) / 2, (pc[1] + pc2[1]) / 2 + 2, 795, 194, "零机动伴随飞越", "自由滑行误差 &lt; 42 km", MD, "start")
-
-    # ==================== 5. 底部访问序列（全部用立体卫星图标替代圆球） ====================
-    by = 382.0
-    xs = [250, 375, 500, 625, 750]
+    # ==================== 5. 底部访问序列（放大立体卫星 + 放大字体） ====================
+    by = 392.0
+    xs = [258, 382, 506, 638, 766]
     labs = ["B2", "…", "B19", "B20", "…"]
     for i in range(len(xs) - 1):
         col = MD if i == 2 else DK
-        body.append(F.arrow(xs[i] + 30, by, xs[i + 1] - 30, by, col, 1.5, 6))
+        body.append(F.arrow(xs[i] + 38, by, xs[i + 1] - 38, by, col, 1.8, 7))
     for i, (x, lab) in enumerate(zip(xs, labs)):
         if lab == "…":
-            body.append(F.text(x, by + 5, "…", 18, "middle", DK))
+            body.append(F.text(x, by + 6, "…", 22, "middle", DK))
         else:
-            body.append(flat3d(F.sat3d(x, by, "blue", 0.36)))
-            body.append(F.text(x, by + 28, lab, 12, "middle", MD if lab in ("B19", "B20") else "#111111"))
+            body.append(flat3d(F.sat3d(x, by, "blue", 0.54)))
+            body.append(F.text(x, by + 36, lab, 15.5, "middle", MD if lab in ("B19", "B20") else "#111111"))
 
-    # 变邻域搜索交换虚弧 + 外置标注
-    sw = quad_curve((xs[0], by - 16), ((xs[0] + xs[2]) / 2, by - 46), (xs[2], by - 16), n=24)
-    body.append(F.poly(sw, stroke=ACC, w=1.2, dash="4,3", closed=False))
-    body.append(F.text((xs[0] + xs[2]) / 2, by - 36, "变邻域下降（Or-opt / Swap / 2-opt）", 11.5, "middle", ACC))
-    body.append(F.text(xs[0] - 92, by + 4, "访问序列 π", 13, "middle", DK))
+    # 变邻域下降弧线 + 大字号
+    sw = quad_curve((xs[0], by - 22), ((xs[0] + xs[2]) / 2, by - 54), (xs[2], by - 22), n=24)
+    body.append(F.poly(sw, stroke=ACC, w=1.4, dash="4,3", closed=False))
+    body.append(F.text((xs[0] + xs[2]) / 2, by - 42, "变邻域下降", 15, "middle", ACC))
+    body.append(F.text(xs[0] - 108, by + 6, "访问序列 π", 16.5, "middle", DK))
 
     F.save("fig10g_cw_dp.svg", W, H, body)
 
