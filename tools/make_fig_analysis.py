@@ -353,79 +353,131 @@ def fig2():
 # 参照项目申请书和建模论文常见的"总体框架图"：顶部标题条，问题特点一行，三列研究内容（虚线框 + 深色标题 + 浅色要点框 + 底部方法名），
 # 底部为支撑层（统一基础模型、模型检验）。只画思路和方法，不出现任何结果数值。
 def fig3():
-    W, H = 900, 690
-    DK, LT, LB = "#1E5B56", "#DCE6EC", "#EEF3F6"
+    W, H = 1040, 720
+    DK, MD, LT, LB = "#1B4F72", "#2874A6", "#EBF3FA", "#F4F8FB"
+    AC = "#1E5B56"
     body = []
 
-    def rect(x, y, w, h, fill, stroke="none", sw=1.0, dash=None, rx=3):
+    def rect(x, y, w, h, fill, stroke="none", sw=1.0, dash=None, rx=4):
         d = f' stroke-dasharray="{dash}"' if dash else ""
         return f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" ry="{rx}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{d}/>'
 
     def down(x, y1, y2, lab=None):
-        body.append(arrow(x, y1, x, y2, "#2F6FA8", 2.0, 9))
+        body.append(arrow(x, y1, x, y2, MD, 2.2, 10))
         if lab:
-            body.append(text(x + 12, (y1 + y2) / 2 + 4, lab, 11.5, "start", "#333333"))
+            body.append(text(x + 12, (y1 + y2) / 2 + 4, lab, 12.5, "start", "#333333"))
 
-    # 标题条
-    body.append(rect(20, 14, W - 40, 34, DK))
-    body.append(text(W / 2, 37, "高轨卫星抵近观测与机动规划总体框架", 16, color="#FFFFFF"))
-    # 问题特点
-    body.append(rect(20, 58, W - 40, 50, "#FFFFFF", "#7F7F7F", 1.0))
-    feats = ["时变非凸的观测几何", "相位漂移主导的机动代价", "离散排序与连续机动耦合", "第二颗星的轨道待设计"]
+    def up(x, y1, y2, lab=None):
+        body.append(arrow(x, y1, x, y2, AC, 2.2, 10))
+        if lab:
+            body.append(text(x + 12, (y1 + y2) / 2 + 4, lab, 12.5, "start", "#333333"))
+
+    # 1. 顶部标题条
+    body.append(rect(20, 14, W - 40, 38, DK))
+    body.append(text(W / 2, 39, "高轨卫星抵近观测与机动规划总体技术路线", 17.5, color="#FFFFFF"))
+
+    # 2. 问题物理与优化特征层
+    body.append(rect(20, 62, W - 40, 52, "#FFFFFF", "#7F8C8D", 1.0))
+    feats = [
+        "时变非凸观测管道（球壳 + 双圆锥）",
+        "相位漂移与三维跨面耦合",
+        "离散排序与连续机动强耦合",
+        "双星空间分区与初轨待设计",
+    ]
     fw = (W - 40 - 50) / 4
     for i, f in enumerate(feats):
         x = 30 + i * (fw + 10)
-        body.append(rect(x, 68, fw, 30, LT))
-        body.append(text(x + fw / 2, 88, f, 13))
-    # 三列研究内容
+        body.append(rect(x, 72, fw, 32, LT, "#BDD4E7", 0.8))
+        body.append(text(x + fw / 2, 93, f, 13))
+
+    # 3. 三列递进主线
     cols = [
-        ("问题一　单次观测单元", [("决策变量", "两次脉冲时刻 / 速度增量 / 观测开始时刻"),
-                               ("约束条件", "60 s 连续观测 / 距离球壳与双角约束"),
-                               ("求解策略", "多初值瞄准 / SLSQP 精修 / 网格逐点检验")], "两脉冲非线性规划模型"),
-        ("问题二　单星序列巡游", [("离散层", "访问顺序 / 观测日期 / 漂移代价估计"),
-                               ("连续层", "全计划脉冲联合优化 / 序列凸近似"),
-                               ("外层调整", "顺序与观测时刻调整 / 邻域搜索")], "排序—优化双层模型"),
-        ("问题三　双星选轨与分工", [("选轨", "R2 初始轨道设计 / 偏心率与半长轴约束"),
-                                 ("分工", "按相位划分目标 / 两星单向扫描"),
-                                 ("联合优化", "初始状态与脉冲联合优化 / δa 分析")], "选轨—分工—巡游模型"),
+        (
+            "问题一　单星单标观测",
+            [
+                ("候选机会锁定", "背阳侧轨道面穿越（β ≤ 90°）"),
+                ("连续区间约束", "60 s 连续观测 / 角平分线瞄准"),
+                ("精修与互证", "多初值 SLSQP / 联合凸优化复现"),
+            ],
+            "两脉冲非线性规划模型",
+        ),
+        (
+            "问题二　单星多标巡游",
+            [
+                ("离散排序层", "三维 CW 代理动态规划 + 变邻域下降"),
+                ("连续精修层", "脉冲矢量—时刻—观测时刻联合凸优化"),
+                ("重定位与对照", "主矢量退化脉冲重定位 / 束搜索与 LNS"),
+            ],
+            "CW 代理—时空联合序列凸优化模型",
+        ),
+        (
+            "问题三　双星协同巡游",
+            [
+                ("双星空间分区", "按相位划西 10 / 东 20 + 边界消融验证"),
+                ("R2 初轨嵌入", "六维初态入模（e &lt; 0.001, |Δa| ≤ δa）"),
+                ("协同联合求解", "双星时空联合序列凸优化 + 主矢量重定位"),
+            ],
+            "分区—初轨—巡游联合优化模型",
+        ),
     ]
-    cg, cy0, chh = 18, 150, 300
+    cg, cy0, chh = 22, 156, 316
     cw = (W - 40 - 2 * cg) / 3
     for i, (title, items, method) in enumerate(cols):
         x = 20 + i * (cw + cg)
-        body.append(rect(x, cy0, cw, chh, "#FFFFFF", "#555555", 1.0, "5,3"))
-        body.append(rect(x + 10, cy0 + 10, cw - 20, 32, DK))
-        body.append(text(x + cw / 2, cy0 + 31, title, 14, color="#FFFFFF"))
+        body.append(rect(x, cy0, cw, chh, "#FFFFFF", "#5D6D7E", 1.1, "5,3"))
+        body.append(rect(x + 10, cy0 + 10, cw - 20, 34, DK))
+        body.append(text(x + cw / 2, cy0 + 33, title, 15, color="#FFFFFF"))
         for j, (k, v) in enumerate(items):
-            yy = cy0 + 54 + j * 64
-            body.append(rect(x + 10, yy, cw - 20, 54, LT))
-            body.append(text(x + 20, yy + 22, k, 12.5, "start", DK))
-            body.append(text(x + 20, yy + 42, v, 12, "start", "#333333"))
-        body.append(rect(x + 34, cy0 + chh - 46, cw - 68, 30, DK, rx=4))
+            yy = cy0 + 56 + j * 68
+            body.append(rect(x + 10, yy, cw - 20, 58, LT, "#C8DCEE", 0.7))
+            body.append(text(x + 20, yy + 23, k, 13.5, "start", DK))
+            body.append(text(x + 20, yy + 45, v, 12.5, "start", "#222222"))
+        body.append(rect(x + 18, cy0 + chh - 48, cw - 36, 34, AC, rx=4))
         body.append(text(x + cw / 2, cy0 + chh - 26, method, 13.5, color="#FFFFFF"))
         if i < 2:
-            ax = x + cw + 1
-            body.append(poly([(ax + 2, cy0 + 132), (ax + cg - 2, cy0 + 142), (ax + 2, cy0 + 152)], fill="#9FBCD6", stroke="none"))
-    # 顶部到三列
+            ax = x + cw + 2
+            body.append(poly([(ax + 2, cy0 + 140), (ax + cg - 4, cy0 + 152), (ax + 2, cy0 + 164)], fill="#7FB3D5", stroke="none"))
+
+    # 特征层到三列箭头
     for i in range(3):
-        down(20 + i * (cw + cg) + cw / 2, 112, cy0 - 4, "问题驱动" if i == 0 else None)
-    # 支撑层
-    by0 = cy0 + chh + 44
-    bw = (W - 40 - 20) / 2
-    blocks = [("统一基础模型", ["二体传播与脉冲状态转移", "时变可观测区域：双圆锥与球壳", "两级字典序目标"]),
-              ("模型检验与分析", ["精确传播与 0.05 s 网格认证", "ATK 独立复核", "安全裕量、偏心率与 δa 灵敏度分析"])]
-    for i, (title, rows) in enumerate(blocks):
-        x = 20 + i * (bw + 20)
-        body.append(rect(x, by0, bw, 160, "#FFFFFF", "#555555", 1.0, "5,3"))
-        body.append(rect(x + 10, by0 + 10, bw - 20, 30, DK))
-        body.append(text(x + bw / 2, by0 + 30, title, 14, color="#FFFFFF"))
+        down(20 + i * (cw + cg) + cw / 2, 116, cy0 - 4, "问题驱动" if i == 0 else None)
+
+    # 4. 底部双支撑闭环层
+    by0 = cy0 + chh + 46
+    bw = (W - 40 - 24) / 2
+    blocks = [
+        (
+            "统一物理与数学基础",
+            AC,
+            [
+                "二体状态转移映射与三维 Hill/CW 相对运动",
+                "时变可观测管道与动态切平面内近似凸化",
+                "两级字典序目标（先覆目标数、再降累计 Δv）",
+            ],
+        ),
+        (
+            "全链条独立检验与灵敏度分析",
+            DK,
+            [
+                "0.05 s 加密网格认证与 30 天面外倾转角检验",
+                "ATK 4.2.0 单星机动规划（MCS）连续数值积分复核",
+                "安全裕量 m、偏心率上限 e_max 与 δa 灵敏度分析",
+            ],
+        ),
+    ]
+    for i, (title, hdr, rows) in enumerate(blocks):
+        x = 20 + i * (bw + 24)
+        body.append(rect(x, by0, bw, 166, "#FFFFFF", "#5D6D7E", 1.1, "5,3"))
+        body.append(rect(x + 10, by0 + 10, bw - 20, 32, hdr))
+        body.append(text(x + bw / 2, by0 + 31, title, 14.5, color="#FFFFFF"))
         for j, r in enumerate(rows):
-            yy = by0 + 50 + j * 35
-            body.append(rect(x + 10, yy, bw - 20, 28, LB, "#C9D6DF", 0.6))
-            body.append(text(x + 22, yy + 19, r, 12.5, "start"))
-    down(20 + cw / 2 + 80, cy0 + chh + 4, by0 - 4, "支撑 / 约束")
-    down(W - 20 - cw / 2 - 80, cy0 + chh + 4, by0 - 4, "检验 / 评价")
-    save("fig3_framework.svg", W, by0 + 175, body)
+            yy = by0 + 52 + j * 36
+            body.append(rect(x + 10, yy, bw - 20, 29, LB, "#C9D6DF", 0.7))
+            body.append(text(x + 22, yy + 20, r, 13, "start", "#222222"))
+
+    up(20 + bw / 2, by0 - 4, cy0 + chh + 4, "机理支撑")
+    down(W - 20 - bw / 2, cy0 + chh + 4, by0 - 4, "独立验证")
+    save("fig3_framework.svg", W, by0 + 182, body)
 
 
 # ---------------- 图 4：观测单元与全局时间轴 ----------------
