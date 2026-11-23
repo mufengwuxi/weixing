@@ -296,6 +296,89 @@ def make_plane_tilt():
     F.save("fig15b_plane_tilt.svg", W, H, body)
 
 
+def make_q2_baseline_figs():
+    """第 6.2.1 节配图：(a) 最大允许交会漂移率 ω_max(δ) 与 30 颗目标分布；(b) 基线束搜索流程。"""
+    d = json.load(open(REPO / "results/q2/m_uni_q2_best.json", encoding="utf-8"))
+    r1 = np.array(d["r1_km"][:3], float)
+    v1 = np.array(d["r1_km"][3:], float)
+    h1 = np.cross(r1, v1)
+    h1 = h1 / np.linalg.norm(h1)
+    # R1 轨道面与赤道面的交线方向（升交点方向）
+    n_eq = np.cross([0.0, 0.0, 1.0], h1)
+    n_eq = n_eq / np.linalg.norm(n_eq)
+
+    deltas = []
+    for name, st in d["targets_km"].items():
+        rt, vt = np.array(st[:3], float), np.array(st[3:], float)
+        ht = np.cross(rt, vt)
+        ht = ht / np.linalg.norm(ht)
+        if name.lower() == "b7":
+            deltas.append((name.upper(), 90.0))
+            continue
+        lvec = np.cross(h1, ht)
+        ln = np.linalg.norm(lvec)
+        if ln < 1e-8:
+            deltas.append((name.upper(), 90.0))
+        else:
+            lvec /= ln
+            c = abs(float(np.dot(lvec, n_eq)))
+            deltas.append((name.upper(), float(np.degrees(np.arccos(np.clip(c, 0.0, 1.0))))))
+
+    # 式 (6.5): ω_max(δ) = min(4.0, (3/2) * 360.9856 * (25 / 42164.17) / (1 - cos δ))
+    def wmax_deg(deg):
+        rad = np.radians(deg)
+        denom = max(1.0 - np.cos(rad), 1e-9)
+        return min(4.0, 1.5 * 360.9856 * (25.0 / 42164.17) / denom)
+
+    # (a) ω_max(δ) 曲线与 30 颗目标
+    W, H = 620, 360
+    L, T, W_, H_ = 78, 22, 512, 272
+    X = lambda v: L + v / 94.0 * W_  # noqa: E731
+    Y = lambda v: T + (4.5 - v) / 4.5 * H_  # noqa: E731
+    body = []
+    dd = np.linspace(0.5, 90.0, 300)
+    ww = [wmax_deg(x) for x in dd]
+    body.append(F.poly([(X(a), Y(b)) for a, b in zip(dd, ww)], stroke=C_MAIN, w=1.8, closed=False))
+    # 标注慢速区参考线 δ = 55°
+    body.append(F.line(X(55), T, X(55), T + H_, C_GR, 0.8, "3,3"))
+    for name, dg in deltas:
+        w = wmax_deg(dg)
+        col = C_ACC if dg > 55.0 else C_SUB
+        body.append(f'<circle cx="{X(dg):.1f}" cy="{Y(w):.1f}" r="3.4" fill="{col}" stroke="#FFFFFF" stroke-width="0.7"/>')
+    F.axes_box(body, L, T, W_, H_, [0, 15, 30, 45, 60, 75, 90], [0, 1, 2, 3, 4],
+               X, Y, "交线相对公共拱线偏角 δ / (°)", "最大允许交会漂移率 ω_max / (°/天)")
+    F.legend_box(body, L + W_ - 196, T + 10, [
+        ("line", C_MAIN, None, "理论上限 ω_max(δ)"),
+        ("dot", C_SUB, None, "高速/中速目标（δ ≤ 55°）"),
+        ("dot", C_ACC, None, "慢速交会目标（δ > 55°）"),
+    ])
+    F.save("fig10e_wmax_delta.svg", W, H, body)
+
+    # (b) 基线束搜索流程（单色深蓝极简四步）
+    W, H = 620, 360
+    DK, MD, LT, BG, BD = "#1A365D", "#3D72A4", "#EBF2F8", "#F6F9FC", "#9BB7D4"
+    body = []
+    steps = [
+        ("候选事件生成", "轨道面穿越且 β ≤ 90°，共 1047 个观测事件"),
+        ("漂移相位估价", "单/双脉冲追赶估计，施加 ω_max(δ) 约束"),
+        ("束搜索剪枝", "按 f = J_est + μ·t_day + c·Λ_rem 保留前 W 状态"),
+        ("逐段求解与合并", "接力求解观测单元，邻近目标尝试同次飞越"),
+    ]
+    bx, bw, bh, gap = 64, 492, 56, 24
+    y0 = 26
+    for i, (t1, t2) in enumerate(steps):
+        yy = y0 + i * (bh + gap)
+        fill = DK if i == 3 else (LT if i % 2 == 1 else BG)
+        c1 = "#FFFFFF" if i == 3 else DK
+        c2 = "#DCE8F4" if i == 3 else "#4A5568"
+        body.append(f'<rect x="{bx}" y="{yy}" width="{bw}" height="{bh}" rx="5" ry="5" fill="{fill}" stroke="{DK if i == 3 else BD}" stroke-width="1.1"/>')
+        body.append(F.text(bx + bw / 2, yy + 23, t1, 14, "middle", c1))
+        body.append(F.text(bx + bw / 2, yy + 44, t2, 12, "middle", c2))
+        if i < len(steps) - 1:
+            body.append(F.arrow(bx + bw / 2, yy + bh + 2, bx + bw / 2, yy + bh + gap - 2, MD, 1.8, 8))
+    F.save("fig10f_beam_flow.svg", W, H, body)
+
+
 if __name__ == "__main__":
     make_q2_ablation()
     make_q2_cumdv()
@@ -303,3 +386,4 @@ if __name__ == "__main__":
     make_q3_ablation()
     make_obs_verify()
     make_plane_tilt()
+    make_q2_baseline_figs()

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="360" viewBox="0 0 620 360">
+<rect x="0" y="0" width="620" height="360" fill="#FFFFFF"/>
+<rect x="64" y="26" width="492" height="56" rx="5" ry="5" fill="#F6F9FC" stroke="#9BB7D4" stroke-width="1.1"/>
+<text x="310.0" y="49.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1A365D">候选事件生成</text>
+<text x="310.0" y="70.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">轨道面穿越且 β ≤ 90°，共 1047 个观测事件</text>
+<line x1="310.0" y1="84.0" x2="310.0" y2="104.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="310.0,104.0 306.9,96.6 313.1,96.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="64" y="106" width="492" height="56" rx="5" ry="5" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="1.1"/>
+<text x="310.0" y="129.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1A365D">漂移相位估价</text>
+<text x="310.0" y="150.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">单/双脉冲追赶估计，施加 ω_max(δ) 约束</text>
+<line x1="310.0" y1="164.0" x2="310.0" y2="184.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="310.0,184.0 306.9,176.6 313.1,176.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="64" y="186" width="492" height="56" rx="5" ry="5" fill="#F6F9FC" stroke="#9BB7D4" stroke-width="1.1"/>
+<text x="310.0" y="209.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1A365D">束搜索剪枝</text>
+<text x="310.0" y="230.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">按 f = J_est + μ·t_day + c·Λ_rem 保留前 W 状态</text>
+<line x1="310.0" y1="244.0" x2="310.0" y2="264.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="310.0,264.0 306.9,256.6 313.1,256.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="64" y="266" width="492" height="56" rx="5" ry="5" fill="#1A365D" stroke="#1A365D" stroke-width="1.1"/>
+<text x="310.0" y="289.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">逐段求解与合并</text>
+<text x="310.0" y="310.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#DCE8F4">接力求解观测单元，邻近目标尝试同次飞越</text>
+</svg>
