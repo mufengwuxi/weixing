@@ -383,7 +383,7 @@ def fig3():
     body.append(text(96, y_top + 60, "与统一基础", 15, color="#FFFFFF"))
 
     bases = [
-        ("二体与三维 CW 运动", "精确传播 / 代理转移代价"),
+        ("二体与三维 CW 运动", "精确传播 / 线性近似代价"),
         ("时变可观测管道", "球壳 + 双圆锥 / 切平面凸化"),
         ("两级字典序目标", "先最大化目标数，再最小化 Δv"),
     ]
@@ -437,7 +437,7 @@ def fig3():
     # 离散层
     yy = cy0 + 58
     body.append(rect(x2 + 16, yy, w2 - 32, 62, "#FFFFFF", MD, 1.0, rx=4))
-    body.append(text(x2 + w2 / 2, yy + 24, "离散排序层：三维 CW 代理动态规划", 13.5, "middle", DK))
+    body.append(text(x2 + w2 / 2, yy + 24, "离散排序层：三维 CW 相对运动动态规划", 13.5, "middle", DK))
     body.append(text(x2 + w2 / 2, yy + 46, "确定性变邻域下降 · 自动识别伴随飞越", 12, "middle", "#4A5568"))
     v_arr(x2 + w2 / 2, yy + 63, yy + 84)
 
@@ -464,7 +464,7 @@ def fig3():
 
     v_arr(x2 + w2 / 2, yy3 + 49, cy0 + ch - 52)
     body.append(rect(x2 + 16, cy0 + ch - 50, w2 - 32, 36, DK, rx=4))
-    body.append(text(x2 + w2 / 2, cy0 + ch - 27, "CW 代理—时空联合序列凸优化模型", 13.5, color="#FFFFFF"))
+    body.append(text(x2 + w2 / 2, cy0 + ch - 27, "CW 动态规划—时空联合序列凸优化", 13.5, color="#FFFFFF"))
 
     # --- 列 3：问题三（清晰递进） ---
     body.append(rect(x3, cy0, w3, ch, "#FFFFFF", BD, 1.1, "5,3", rx=5))
