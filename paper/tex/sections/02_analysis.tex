@@ -33,7 +33,7 @@
 
 \subsection{机动代价分析}
 
-所有卫星都在同步带附近，彼此之间的相对运动以沿轨道方向的相位漂移为主。设观测卫星的半长轴比同步轨道大 $\Delta a$，它相对同步轨道的经度漂移率为 $\dot\lambda = -\tfrac32 n\,\Delta a/a$，而在近圆轨道上改变半长轴 $\Delta a$ 需要的切向速度增量为 $\Delta v = \tfrac{v}{2a}\Delta a$。两式合起来得到
+所有卫星都在同步带附近，彼此之间的相对运动以沿轨道方向的相位漂移为主。为统一描述各卫星沿同步带的位置分布与漂移演化，以 $t_0$ 时刻 R1 的地心经度 $\lambda_0$ 为基准，将任意卫星在时刻 $t$ 相对地球恒星日自转参考架的经度偏移定义为相对经度 $\lambda_{\mathrm{rel}}(t) = \operatorname{atan2}(r_y(t), r_x(t)) - \omega_E t - \lambda_0$（折算至 $(-180^\circ, 180^\circ]$），约定向东为正、向西为负，其中 $\omega_E = 2\pi / 86164.0905~\mathrm{rad/s}$ 为地球恒星日自转角速度。设观测卫星的半长轴比同步轨道大 $\Delta a$，它相对同步轨道的经度漂移率为 $\dot\lambda = -\tfrac32 n\,\Delta a/a$，而在近圆轨道上改变半长轴 $\Delta a$ 需要的切向速度增量为 $\Delta v = \tfrac{v}{2a}\Delta a$。两式合起来得到
 \begin{equation}
   \Delta v = \frac{v}{3n}\,\big|\Delta\dot\lambda\big| \approx 2.84~\mathrm{m/s}\ \text{每}\ 1^\circ/\text{天} .
   \label{eq:drift}
