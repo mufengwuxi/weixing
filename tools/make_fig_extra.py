@@ -582,6 +582,126 @@ def make_q2_cw_dp_fig():
     F.save("fig10g_cw_dp.svg", W, H, body)
 
 
+def make_q3_partition_fig():
+    """第 7.2.1 节双星空间分区与无折返协同巡游立体示意图（纯白无框、地球弧面、立体卫星、外置引线）。"""
+    DK, MD, ACC, GR = "#1A365D", "#2E6FB7", "#B01818", "#666666"
+
+    def flat3d(s):
+        for k, v in [
+            ("url(#gRedF)", "#C9302C"), ("url(#gRedT)", "#EB6B67"), ("url(#gRedS)", "#8E1B1B"),
+            ("url(#gBluF)", "#2E6FB7"), ("url(#gBluT)", "#6FA8DC"), ("url(#gBluS)", "#1A4478"),
+            ("url(#gPanel)", "#3B78B8"), ("url(#gFlame)", "#F39C12"),
+        ]:
+            s = s.replace(k, v)
+        return s
+
+    def tag(x, y, lx, ly, s1, col="#1A365D", anchor="start"):
+        body.append(F.line(x, y, lx, ly, "#666666", 1.0))
+        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.6" fill="#666666"/>')
+        dx = 7 if anchor == "start" else -7
+        body.append(F.text(lx + dx, ly + 5, s1, 16.0, anchor, col))
+
+    def quad_curve(a, ctrl, b, n=36):
+        ts = np.linspace(0, 1, n)
+        return [tuple((1 - t) ** 2 * np.array(a) + 2 * (1 - t) * t * np.array(ctrl) + t ** 2 * np.array(b)) for t in ts]
+
+    W, H = 980, 480
+    body = []
+
+    # ==================== 1. 底部地球弧面 ====================
+    ecx, ecy, R_e = 490.0, 1665.0, 1400.0
+    xs_e = np.linspace(60, 920, 90)
+    top_arc = [(float(x), float(ecy - np.sqrt(R_e ** 2 - (x - ecx) ** 2))) for x in xs_e]
+    R_atm = R_e + 10.0
+    atm_arc = [(float(x), float(ecy - np.sqrt(R_atm ** 2 - (x - ecx) ** 2))) for x in xs_e]
+    bot_y = 334.0
+    body.append(F.poly(atm_arc + [(920, bot_y), (60, bot_y)], fill="#D6EAF8", stroke="none", opacity=0.55))
+    body.append(F.poly(top_arc + [(920, bot_y), (60, bot_y)], fill="#2E6FB7", stroke="#174980", w=1.2))
+    top_hi = [(x, y + 2) for x, y in top_arc]
+    bot_hi = [(x, min(bot_y - 1, y + 22)) for x, y in top_arc[::-1]]
+    body.append(F.poly(top_hi + bot_hi, fill="#5D9AD4", stroke="none", opacity=0.55))
+    body.append(F.poly([(225, 314), (285, 292), (350, 296), (372, 320), (310, 330), (242, 329)],
+                       fill="#6AB366", stroke="none", opacity=0.72))
+    body.append(F.poly([(565, 286), (645, 286), (710, 304), (722, 328), (625, 330), (570, 314)],
+                       fill="#5FA85B", stroke="none", opacity=0.68))
+    for lx in (240, 365, 490, 615, 740):
+        yt = ecy - np.sqrt(R_e ** 2 - (lx - ecx) ** 2)
+        body.append(F.line(lx, yt + 1, lx + (lx - ecx) * 0.04, bot_y, "#8EC9F2", 0.65, "3,3"))
+    body.append(F.text(490, 318, "地 球 表 面", 15.5, "middle", "#FFFFFF"))
+
+    # ==================== 2. 同步轨道弧线与 0° 分界线 ====================
+    R_geo = 1522.0
+    xs_g = np.linspace(96, 884, 80)
+    geo_arc = [(float(x), float(ecy - np.sqrt(R_geo ** 2 - (x - ecx) ** 2))) for x in xs_g]
+    body.append(F.poly(geo_arc, stroke="#94A3B8", w=1.4, dash="5,4", closed=False))
+
+    # 中心 0° 经度分界竖线
+    x0 = 490.0
+    y0_surf = float(ecy - np.sqrt(R_e ** 2 - (x0 - ecx) ** 2))
+    body.append(F.line(x0, 74, x0, y0_surf, "#475569", 1.3, "5,4"))
+    body.append(f'<circle cx="{x0:.1f}" cy="{y0_surf:.1f}" r="3.4" fill="#1A365D"/>')
+    body.append(F.text(x0, 62, "最优分割点（0°）", 16.0, "middle", DK))
+
+    # ==================== 3. 两侧目标卫星（3D 蓝色）与观测星 R1/R2（3D 红色） ====================
+    def y_on_geo(x):
+        return float(ecy - np.sqrt(R_geo ** 2 - (x - ecx) ** 2))
+
+    # 西侧目标（左）：B30, B9, B2
+    west_t = [(136.0, "B30"), (260.0, "B9"), (386.0, "B2")]
+    # 东侧目标（右）：B4, B15, B29
+    east_t = [(604.0, "B4"), (734.0, "B15"), (856.0, "B29")]
+
+    for x, lab in west_t + east_t:
+        yg = y_on_geo(x)
+        ys = float(ecy - np.sqrt(R_e ** 2 - (x - ecx) ** 2))
+        body.append(F.line(x, yg + 18, x, ys, "#7F98B8", 0.9, "3,3"))
+        body.append(f'<circle cx="{x:.1f}" cy="{ys:.1f}" r="2.8" fill="#174980"/>')
+        body.append(flat3d(F.sat3d(x, yg, "blue", 0.56)))
+        body.append(F.text(x, yg - 24, lab, 15.0, "middle", "#111111"))
+
+    # R1（位于 0° 稍高轨道，单向西行）
+    r1_pos = (450.0, y_on_geo(450.0) - 34.0)
+    r1_end = (158.0, y_on_geo(158.0) - 38.0)
+    c_r1 = quad_curve(r1_pos, (305.0, y_on_geo(305.0) - 52.0), r1_end, n=32)
+    body.append(F.poly(c_r1, stroke=ACC, w=2.5, closed=False))
+    body.append(F.arrow(c_r1[-2][0], c_r1[-2][1], c_r1[-1][0], c_r1[-1][1], ACC, 2.5, 8))
+    body.append(flat3d(F.sat3d(r1_pos[0], r1_pos[1], "red", 0.62)))
+    body.append(F.text(r1_pos[0], r1_pos[1] - 28, "R1", 15.5, "middle", ACC))
+
+    # R2（自由选址于东侧西端、稍低轨道自带东漂，单向东行）
+    r2_pos = (552.0, y_on_geo(552.0) + 34.0)
+    r2_end = (838.0, y_on_geo(838.0) + 30.0)
+    c_r2 = quad_curve(r2_pos, (695.0, y_on_geo(695.0) + 42.0), r2_end, n=32)
+    body.append(F.poly(c_r2, stroke=DK, w=2.5, closed=False))
+    body.append(F.arrow(c_r2[-2][0], c_r2[-2][1], c_r2[-1][0], c_r2[-1][1], DK, 2.5, 8))
+    body.append(flat3d(F.sat3d(r2_pos[0], r2_pos[1], "red", 0.62)))
+    body.append(F.text(r2_pos[0], r2_pos[1] + 35, "R2", 15.5, "middle", DK))
+
+    # ==================== 4. 外置引线标注 ====================
+    tag(c_r1[15][0], c_r1[15][1] - 4, 236, 48, "R1 单向西行（西侧 10 颗）", ACC, "end")
+    tag(c_r2[15][0], c_r2[15][1] + 6, 704, 250, "R2 单向东行（东侧 20 颗）", DK, "start")
+    tag(r2_pos[0] + 4, r2_pos[1] - 20, 582, 62, "初始半长轴偏低（自带东漂）", MD, "start")
+
+    # ==================== 5. 底部相对经度一维分区标尺 ====================
+    ay = 414.0
+    xL, xR = 128.0, 858.0
+    body.append(F.arrow(xL, ay, xR + 22, ay, "#222222", 1.6, 8))
+    body.append(F.text(xR + 30, ay + 5, "相对经度", 15.5, "start", "#111111"))
+
+    # 刻度
+    for xv, lab in [(136.0, "−18.8°"), (490.0, "0°"), (856.0, "+18.9°")]:
+        body.append(F.line(xv, ay - 7, xv, ay + 7, "#222222", 1.4))
+        body.append(F.text(xv, ay + 27, lab, 14.5, "middle", "#111111"))
+
+    # 两侧双向跨度括号线
+    body.append(F.arrow(482.0, ay - 22, 142.0, ay - 22, ACC, 1.9, 7))
+    body.append(F.text(312.0, ay - 33, "西侧跨度 18.8°（无折返）", 15.0, "middle", ACC))
+    body.append(F.arrow(498.0, ay - 22, 850.0, ay - 22, DK, 1.9, 7))
+    body.append(F.text(674.0, ay - 33, "东侧跨度 18.9°（无折返）", 15.0, "middle", DK))
+
+    F.save("fig12e_q3_partition.svg", W, H, body)
+
+
 if __name__ == "__main__":
     make_q2_ablation()
     make_q2_cumdv()
@@ -591,3 +711,4 @@ if __name__ == "__main__":
     make_plane_tilt()
     make_q2_baseline_figs()
     make_q2_cw_dp_fig()
+    make_q3_partition_fig()
