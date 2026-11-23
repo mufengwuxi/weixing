@@ -236,7 +236,7 @@
   \end{tabular}
 \end{table}
 
-本文主方案的约束检验与 ATK 独立复核结果见表~\ref{tab:q3check}。两星均按 0.05~s 网格做解析重放认证（ERFA 几何/视太阳双口径），并在 ATK 4.2.0 中通过单星机动规划（MCS）连续数值积分独立复核，R1 10/10（最大位置差 0.003~m）、R2 20/20（最大位置差 0.004~m）全部满足约束。全程 R1 与 R2 的最低地心距分别为 42118.5~km 和 42052.5~km，始终处于地球同步轨道带附近。
+本文主方案的约束检验与 ATK 独立复核结果见表~\ref{tab:q3check}。两星均按 0.05~s 网格做解析重放认证（ERFA 几何/视太阳双口径），并在 ATK 4.2.0 中通过单星机动规划（MCS）连续数值积分独立复核，R1 10/10（最大位置差 0.003~m）、R2 20/20（最大位置差 0.004~m）全部满足约束。全程 R1 与 R2 的最低地心距分别为 42118.5~km 和 42052.5~km，始终处于地球同步轨道带附近，双星 ATK 三维仿真轨迹如图~\ref{fig:q3atk} 所示。
 
 \begin{table}[!htb]
   \centering
@@ -259,3 +259,10 @@
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.82\textwidth]{q3_dual_overview.jpg}
+  \caption{问题三 ATK 4.2.0 双星三维仿真轨迹（白线：R1 与 R2；紫点：30 颗目标）}
+  \label{fig:q3atk}
+\end{figure}

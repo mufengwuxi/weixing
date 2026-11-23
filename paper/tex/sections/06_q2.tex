@@ -230,7 +230,7 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从队列中部出发�
   \label{fig:q2ablation}
 \end{figure}
 
-方案的约束检验见表~\ref{tab:q2check}。优化时在距离和角度上各留 0.05~km 和 $0.05^\circ$ 的安全裕量，观测时长均取 60.5~s。经 0.05~s 加密网格解析重放（ERFA 几何与视太阳双口径）以及 ATK 4.2.0 单星机动规划（MCS）连续数值积分独立复核，全部 30 次观测均严格满足所有约束，ATK 连续积分与解析轨迹的最大位置差仅 0.152~m。全程 R1 最低地心距为 41569.7~km，始终处于同步带附近。
+方案的约束检验见表~\ref{tab:q2check}。优化时在距离和角度上各留 0.05~km 和 $0.05^\circ$ 的安全裕量，观测时长均取 60.5~s。经 0.05~s 加密网格解析重放（ERFA 几何与视太阳双口径）以及 ATK 4.2.0 单星机动规划（MCS）连续数值积分独立复核，全部 30 次观测均严格满足所有约束，ATK 连续积分与解析轨迹的最大位置差仅 0.152~m。全程 R1 最低地心距为 41569.7~km，始终处于同步带附近，其 ATK 三维仿真轨迹如图~\ref{fig:q2atk} 所示。
 
 \begin{table}[!htb]
   \centering
@@ -252,3 +252,10 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从队列中部出发�
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.82\textwidth]{q2_overview.jpg}
+  \caption{问题二 ATK 4.2.0 三维仿真轨迹（白线：R1；紫点：30 颗目标）}
+  \label{fig:q2atk}
+\end{figure}
