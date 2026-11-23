@@ -19,8 +19,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import make_fig_analysis as F  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
-PLAN_R1 = REPO / "results/q3/m3d_v2_r1.json"
-PLAN_R2 = REPO / "results/q3/m3d_v2_r2.json"
+PLAN_R1 = REPO / "results/q3/m_uni_q3_r1_best.json"
+PLAN_R2 = REPO / "results/q3/m_uni_q3_r2_best.json"
 W_E = 2 * np.pi / 86164.0905
 
 C_R1 = "#1F4E79"   # 深蓝（R1）
@@ -99,7 +99,7 @@ def make_route_and_dv():
     L, T, W_, H_ = 70, 20, 530, 290
     n = len(vals)
     bw = W_ / n
-    Y = lambda v: T + (8.0 - v) / 8.0 * H_  # noqa: E731
+    Y = lambda v: T + (6.0 - v) / 6.0 * H_  # noqa: E731
     body = []
     med = float(np.median([v for _, v, _ in vals]))
     x_sep = L + len(obs1) * bw
@@ -110,59 +110,52 @@ def make_route_and_dv():
         xc = L + (k + 0.5) * bw
         body.append(F.text(xc + 4, T + H_ + 12, name, 10.5, "end", rot=-60))
     body.append(F.line(L, Y(med), L + W_, Y(med), C_GRAY, 0.8, "4,3"))
-    F.axes_box(body, L, T, W_, H_, [], range(0, 9, 2), lambda v: v, Y, None, "速度增量 / (m/s)")
+    F.axes_box(body, L, T, W_, H_, [], range(0, 7, 1), lambda v: v, Y, None, "速度增量 / (m/s)")
     body.append(F.text(L + W_ / 2, T + H_ + 58, "观测目标（左 10 颗 R1，右 20 颗 R2）", 13))
     F.legend_box(body, L + 8, T + 8, [
-        ("rect", C_R1, None, "R1 各次观测（合计 13.50 m/s）"),
-        ("rect", C_R2, None, "R2 各次观测（合计 14.61 m/s）"),
+        ("rect", C_R1, None, "R1 各次观测（合计 11.94 m/s）"),
+        ("rect", C_R2, None, "R2 各次观测（合计 14.12 m/s）"),
         ("line", C_GRAY, "4,3", f"全部 30 颗中位数 {med:.2f} m/s"),
     ])
     F.save("fig12b_q3_dv.svg", W, H + 30, body)
 
 
 def make_da_curve():
-    """δa 参数曲线 J*(δa)，学术常规样式，图例左上角。"""
+    """δa 参数曲线 J*(δa)（M-Uni 主模型），学术常规样式，图例左上角。"""
     pts = [
-        (3.0, 33.566),
-        (5.0, 33.493),
-        (5.90, 33.460),
-        (8.0, 33.383),
-        (15.0, 33.298),
-        (19.01, 33.274),
-        (22.0, 33.274),
+        (3.0, 26.142),
+        (5.0, 26.069),
+        (5.90, 26.036),
+        (8.0, 25.960),
+        (15.0, 25.709),
+        (20.0, 25.529),
     ]
     W, H = 620, 360
     L, T, W_, H_ = 84, 20, 506, 280
-    X = lambda v: L + (v - 2.0) / 21.0 * W_  # noqa: E731
-    Y = lambda v: T + (33.70 - v) / 0.55 * H_  # noqa: E731
+    X = lambda v: L + (v - 2.0) / 19.5 * W_  # noqa: E731
+    Y = lambda v: T + (26.35 - v) / 0.95 * H_  # noqa: E731
     body = []
-    # 饱和区参考虚线
-    body.append(F.line(L, Y(33.274), X(19.01), Y(33.274), "#888888", 0.8, "4,3"))
-    body.append(F.line(X(19.01), Y(33.274), X(19.01), T + H_, "#888888", 0.8, "4,3"))
     # 主方案 δa = 5.90 km 投影线
-    body.append(F.line(X(5.90), Y(33.460), X(5.90), T + H_, C_R2, 0.9, "3,3"))
-    body.append(F.line(L, Y(33.460), X(5.90), Y(33.460), C_R2, 0.9, "3,3"))
+    body.append(F.line(X(5.90), Y(26.036), X(5.90), T + H_, C_R2, 0.9, "3,3"))
+    body.append(F.line(L, Y(26.036), X(5.90), Y(26.036), C_R2, 0.9, "3,3"))
     # 曲线与数据点
     body.append(F.poly([(X(a), Y(j)) for a, j in pts], stroke=C_R1, w=1.8, closed=False))
-    for a, j in pts[:-1]:
+    for a, j in pts:
         if abs(a - 5.90) < 0.01:
             body.append(f'<circle cx="{X(a):.1f}" cy="{Y(j):.1f}" r="4.6" fill="{C_R2}" stroke="white" stroke-width="1.2"/>')
-        elif abs(a - 19.01) < 0.02:
-            body.append(f'<rect x="{X(a)-4.0:.1f}" y="{Y(j)-4.0:.1f}" width="8" height="8" fill="{C_R1}" stroke="white" stroke-width="1"/>')
         else:
             body.append(f'<circle cx="{X(a):.1f}" cy="{Y(j):.1f}" r="3.4" fill="{C_R1}" stroke="none"/>')
 
     F.axes_box(
         body, L, T, W_, H_,
         [3, 6, 9, 12, 15, 18, 21],
-        [33.2, 33.3, 33.4, 33.5, 33.6, 33.7],
+        [25.4, 25.6, 25.8, 26.0, 26.2],
         X, Y, "半长轴偏离上限 δa / km", "两星合计速度增量 J*(δa) / (m/s)",
         yfmt=lambda v: f"{v:.1f}",
     )
     F.legend_box(body, L + 8, T + 8, [
-        ("line", C_R1, None, "连续联合优化曲线 J*(δa)"),
-        ("dot", C_R2, None, "主方案 δa = 5.90 km（33.46 m/s）"),
-        ("rect", C_R1, None, "饱和点 δa = 19.01 km（33.27 m/s）"),
+        ("line", C_R1, None, "M-Uni 联合优化曲线 J*(δa)"),
+        ("dot", C_R2, None, "主方案边界 δa = 5.90 km（26.04 m/s）"),
     ])
     F.save("fig13_q3_da.svg", W, H, body)
 
