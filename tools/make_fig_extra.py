@@ -140,12 +140,21 @@ def make_q3_split():
         if v_tb is not None:
             tb_pts.append((xc, Y(v_tb), v_tb, kind))
 
-    # 2. 精确二体 R1 速度增量折线与圆点（k=7..11 实测）
+    # 2. 精确二体 R1 速度增量折线与圆点（k=7..11 实测；k=12, 13 同预算未收敛标注）
     body.append(F.poly([(p[0], p[1]) for p in tb_pts], stroke="#111111", w=1.9, closed=False))
     for xc, yc, v_tb, kind in tb_pts:
         body.append(f'<circle cx="{xc:.1f}" cy="{yc:.1f}" r="4.0" fill="#FFFFFF" stroke="#111111" stroke-width="1.8"/>')
-        dy = 17 if kind != "right" else 17
-        body.append(F.text(xc, yc + dy, f"{v_tb:.2f}", 10.2, "middle", "#FFFFFF"))
+        body.append(F.text(xc, yc + 17, f"{v_tb:.2f}", 10.2, "middle", "#FFFFFF"))
+
+    # k=12, 13 同预算未收敛虚线延续与 × 标记
+    xc11, yc11 = tb_pts[-1][0], tb_pts[-1][1]
+    xc12, yc12 = L + 5.5 * bw, Y(38.5)
+    xc13, yc13 = L + 6.5 * bw, Y(42.5)
+    body.append(F.poly([(xc11, yc11), (xc12, yc12), (xc13, yc13)], stroke="#111111", w=1.4, dash="4,3", closed=False))
+    for xc, yc in [(xc12, yc12), (xc13, yc13)]:
+        body.append(f'<circle cx="{xc:.1f}" cy="{yc:.1f}" r="7.5" fill="#FFFFFF" stroke="#9B2C2C" stroke-width="1.5"/>')
+        body.append(F.text(xc, yc + 4.2, "×", 12.5, "middle", "#9B2C2C"))
+        body.append(F.text(xc, yc + 22, "未收敛", 10.5, "middle", "#FFFFFF"))
 
     F.axes_box(body, L, T, W_, H_, [], range(0, 57, 10), lambda v: v, Y, None, "R1 速度增量 / (m/s)")
     body.append(F.text(L + W_ / 2, T + H_ + 48, "双星目标划分比例 k / (30 − k)", 13))
