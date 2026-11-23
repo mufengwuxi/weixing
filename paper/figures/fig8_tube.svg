@@ -107,15 +107,15 @@
 <line x1="515.0" y1="310.3" x2="585.0" y2="292.1" stroke="#F2A515" stroke-width="6"/>
 <line x1="550.0" y1="301.2" x2="640.0" y2="540.0" stroke="#B5770A" stroke-width="0.9"/>
 <rect x="636" y="510" width="232" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#B5770A" stroke-width="1.2"/>
-<text x="646" y="529" font-family="SimSun, Times New Roman" font-size="13.5" fill="#B5770A">定时：候选观测时刻 t<tspan baseline-shift="sub" font-size="10">c</tspan></text>
+<text x="646" y="529" font-family="SimSun, Times New Roman" font-size="13.5" fill="#B5770A">第一步：候选观测时刻 t<tspan baseline-shift="sub" font-size="10">c</tspan></text>
 <text x="646.0" y="548.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#444444">轨道面交线附近且 β ≤ 90°</text>
 <line x1="539.3" y1="224.0" x2="700.0" y2="80.0" stroke="#1B7A1B" stroke-width="0.9"/>
 <rect x="696" y="50" width="232" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#1B7A1B" stroke-width="1.2"/>
-<text x="706.0" y="69.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="start" fill="#1B7A1B">定点：瞄准点</text>
+<text x="706.0" y="69.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="start" fill="#1B7A1B">第二步：截面瞄准点选取</text>
 <text x="706.0" y="88.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#444444">截面角平分线方向，离边界最远</text>
 <line x1="353.5" y1="267.7" x2="330.0" y2="560.0" stroke="#B01818" stroke-width="0.9"/>
 <rect x="326" y="530" width="232" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#B01818" stroke-width="1.2"/>
-<text x="336.0" y="549.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="start" fill="#B01818">定推力：两次脉冲</text>
+<text x="336.0" y="549.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="start" fill="#B01818">第三步：脉冲初值与精修</text>
 <text x="336.0" y="568.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#444444">相位漂移估计初值，非线性规划精修</text>
 <text x="807.4" y="110.9" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="middle" fill="#1F4E79">管道截面 C(t)：双圆锥 ∩ 球壳</text>
 <rect x="40" y="510" width="26" height="14" fill="url(#gTube)" stroke="#2E6FB7" stroke-width="0.7"/>

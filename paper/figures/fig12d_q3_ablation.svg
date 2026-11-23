@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="360" viewBox="0 0 620 360">
+<rect x="0" y="0" width="620" height="360" fill="#FFFFFF"/>
+<rect x="100.5" y="171.3" width="57.3" height="122.7" fill="#1A365D"/>
+<rect x="100.5" y="61.8" width="57.3" height="109.5" fill="#9B2C2C"/>
+<text x="129.2" y="54.8" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#222222">35.85</text>
+<text x="129.2" y="314.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#222222">M3-A</text>
+<rect x="202.9" y="176.5" width="57.3" height="117.5" fill="#1A365D"/>
+<rect x="202.9" y="73.1" width="57.3" height="103.3" fill="#9B2C2C"/>
+<text x="231.6" y="66.1" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#222222">34.10</text>
+<text x="231.6" y="314.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#222222">M3-B</text>
+<rect x="305.3" y="176.5" width="57.3" height="117.5" fill="#1A365D"/>
+<rect x="305.3" y="77.3" width="57.3" height="99.2" fill="#9B2C2C"/>
+<text x="334.0" y="70.3" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#222222">33.46</text>
+<text x="334.0" y="314.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#222222">M3-C</text>
+<rect x="407.7" y="206.6" width="57.3" height="87.4" fill="#1A365D"/>
+<rect x="407.7" y="111.9" width="57.3" height="94.6" fill="#9B2C2C"/>
+<text x="436.4" y="104.9" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#222222">28.11</text>
+<text x="436.4" y="314.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#222222">M3-D</text>
+<rect x="510.1" y="216.7" width="57.3" height="77.3" fill="#1A365D"/>
+<rect x="510.1" y="125.2" width="57.3" height="91.5" fill="#9B2C2C"/>
+<text x="538.8" y="118.2" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#9B2C2C">26.07</text>
+<text x="538.8" y="314.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#222222">本文主模型</text>
+<rect x="78" y="22" width="512" height="272" fill="none" stroke="#000000" stroke-width="0.9"/>
+<line x1="78.0" y1="294.0" x2="83.0" y2="294.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="294.0" x2="585.0" y2="294.0" stroke="#000000" stroke-width="0.9"/>
+<text x="71.0" y="298.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">0</text>
+<line x1="78.0" y1="229.2" x2="83.0" y2="229.2" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="229.2" x2="585.0" y2="229.2" stroke="#000000" stroke-width="0.9"/>
+<text x="71.0" y="233.2" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">10</text>
+<line x1="78.0" y1="164.5" x2="83.0" y2="164.5" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="164.5" x2="585.0" y2="164.5" stroke="#000000" stroke-width="0.9"/>
+<text x="71.0" y="168.5" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">20</text>
+<line x1="78.0" y1="99.7" x2="83.0" y2="99.7" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="99.7" x2="585.0" y2="99.7" stroke="#000000" stroke-width="0.9"/>
+<text x="71.0" y="103.7" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">30</text>
+<line x1="78.0" y1="35.0" x2="83.0" y2="35.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="35.0" x2="585.0" y2="35.0" stroke="#000000" stroke-width="0.9"/>
+<text x="71.0" y="39.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">40</text>
+<text x="34.0" y="158.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 34.0 158.0)">两星累计速度增量 / (m/s)</text>
+<text x="334.0" y="340.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">模型与求解阶段</text>
+<rect x="440" y="32" width="135.4" height="44" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
+<rect x="446" y="38" width="22" height="11" fill="#1A365D" stroke="none"/>
+<text x="474.0" y="48.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">R1（西侧 10 颗）</text>
+<rect x="446" y="56" width="22" height="11" fill="#9B2C2C" stroke="none"/>
+<text x="474.0" y="66.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">R2（东侧 20 颗）</text>
+</svg>

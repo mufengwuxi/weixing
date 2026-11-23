@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="400" viewBox="0 0 620 400">
+<rect x="0" y="0" width="620" height="400" fill="#FFFFFF"/>
+<rect x="212.6" y="20" width="64.6" height="300" fill="#F3F6FA" stroke="none"/>
+<line x1="212.6" y1="20.0" x2="212.6" y2="320.0" stroke="#999999" stroke-width="0.8" stroke-dasharray="3,3"/>
+<line x1="277.2" y1="20.0" x2="277.2" y2="320.0" stroke="#999999" stroke-width="0.8" stroke-dasharray="3,3"/>
+<text x="146.3" y="38.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#666666">西行去程</text>
+<text x="244.9" y="38.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#666666">折返</text>
+<text x="433.6" y="38.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#666666">东向单程巡游</text>
+<polyline points="80.0,320.0 80.0,320.0 80.0,300.3 90.3,300.3 90.3,282.9 110.1,282.9 110.1,281.3 121.9,281.3 121.9,277.4 124.5,277.4 124.5,276.8 158.7,276.8 158.7,272.2 167.2,272.2 167.2,272.2 175.8,272.2 175.8,256.9 183.9,256.9 183.9,254.8 195.6,254.8 195.6,227.2 228.7,227.2 228.7,222.3 245.5,222.3 245.5,220.8 255.7,220.8 255.7,219.1 278.9,219.1 278.9,218.1 312.4,218.1 312.4,212.8 329.4,212.8 329.4,204.8 347.1,204.8 347.1,202.1 359.9,202.1 359.9,199.5 366.0,199.5 366.0,195.1 378.3,195.1 378.3,195.0 396.9,195.0 396.9,189.4 412.8,189.4 412.8,185.6 427.1,185.6 427.1,182.9 429.3,182.9 429.3,182.8 448.3,182.8 448.3,175.7 449.0,175.7 449.0,168.3 459.7,168.3 459.7,164.6 468.0,164.6 468.0,157.5 477.2,157.5 477.2,154.3 491.0,154.3 491.0,147.8 496.5,147.8 496.5,114.2 500.7,114.2 500.7,84.4 506.7,84.4 506.7,77.2 528.5,77.2 528.5,69.6 541.7,69.6 541.7,69.0 553.7,69.0 553.7,63.8 565.5,63.8 565.5,57.9 575.1,57.9 575.1,53.9 590.0,53.9" fill="none" stroke="#1A365D" stroke-width="1.8"/>
+<circle cx="195.6" cy="227.2" r="3.6" fill="#9B2C2C" stroke="#FFFFFF" stroke-width="0.9"/>
+<circle cx="496.5" cy="114.2" r="3.6" fill="#9B2C2C" stroke="#FFFFFF" stroke-width="0.9"/>
+<circle cx="500.7" cy="84.4" r="3.6" fill="#9B2C2C" stroke="#FFFFFF" stroke-width="0.9"/>
+<rect x="80" y="20" width="510" height="300" fill="none" stroke="#000000" stroke-width="0.9"/>
+<line x1="80.0" y1="320.0" x2="85.0" y2="320.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="320.0" x2="585.0" y2="320.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="324.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">0</text>
+<line x1="80.0" y1="260.0" x2="85.0" y2="260.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="260.0" x2="585.0" y2="260.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="264.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">30</text>
+<line x1="80.0" y1="200.0" x2="85.0" y2="200.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="200.0" x2="585.0" y2="200.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="204.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">60</text>
+<line x1="80.0" y1="140.0" x2="85.0" y2="140.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="140.0" x2="585.0" y2="140.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="144.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">90</text>
+<line x1="80.0" y1="80.0" x2="85.0" y2="80.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="80.0" x2="585.0" y2="80.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="84.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">120</text>
+<line x1="80.0" y1="20.0" x2="85.0" y2="20.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="20.0" x2="585.0" y2="20.0" stroke="#000000" stroke-width="0.9"/>
+<text x="73.0" y="24.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">150</text>
+<line x1="80.0" y1="320.0" x2="80.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="80.0" y1="20.0" x2="80.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="80.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">0</text>
+<line x1="165.0" y1="320.0" x2="165.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="165.0" y1="20.0" x2="165.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="165.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">5</text>
+<line x1="250.0" y1="320.0" x2="250.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="250.0" y1="20.0" x2="250.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="250.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">10</text>
+<line x1="335.0" y1="320.0" x2="335.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="335.0" y1="20.0" x2="335.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="335.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">15</text>
+<line x1="420.0" y1="320.0" x2="420.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="420.0" y1="20.0" x2="420.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="420.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">20</text>
+<line x1="505.0" y1="320.0" x2="505.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="505.0" y1="20.0" x2="505.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="505.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">25</text>
+<line x1="590.0" y1="320.0" x2="590.0" y2="315.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="590.0" y1="20.0" x2="590.0" y2="25.0" stroke="#000000" stroke-width="0.9"/>
+<text x="590.0" y="337.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">30</text>
+<text x="335.0" y="358.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">时间 / 天</text>
+<text x="36.0" y="170.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 36.0 170.0)">累计速度增量 / (m/s)</text>
+<rect x="90" y="54" width="176.3" height="44" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
+<line x1="96.0" y1="66.0" x2="118.0" y2="66.0" stroke="#1A365D" stroke-width="1.6"/>
+<text x="124.0" y="70.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">累计速度增量</text>
+<circle cx="107" cy="84" r="3.2" fill="#9B2C2C" stroke="none"/>
+<text x="124.0" y="88.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">大脉冲节点（≥ 10 m/s）</text>
+</svg>

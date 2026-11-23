@@ -1,85 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="669" viewBox="0 0 900 669">
-<rect x="0" y="0" width="900" height="669" fill="#FFFFFF"/>
-<rect x="20.0" y="14.0" width="860.0" height="34.0" rx="3" ry="3" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="450.0" y="37.0" font-family="SimSun, Times New Roman" font-size="16" text-anchor="middle" fill="#FFFFFF">高轨卫星抵近观测与机动规划总体框架</text>
-<rect x="20.0" y="58.0" width="860.0" height="50.0" rx="3" ry="3" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="1.0"/>
-<rect x="30.0" y="68.0" width="202.5" height="30.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="131.2" y="88.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">时变非凸的观测几何</text>
-<rect x="242.5" y="68.0" width="202.5" height="30.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="343.8" y="88.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">相位漂移主导的机动代价</text>
-<rect x="455.0" y="68.0" width="202.5" height="30.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="556.2" y="88.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">离散排序与连续机动耦合</text>
-<rect x="667.5" y="68.0" width="202.5" height="30.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="768.8" y="88.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">第二颗星的轨道待设计</text>
-<rect x="20.0" y="150.0" width="274.7" height="300.0" rx="3" ry="3" fill="#FFFFFF" stroke="#555555" stroke-width="1.0" stroke-dasharray="5,3"/>
-<rect x="30.0" y="160.0" width="254.7" height="32.0" rx="3" ry="3" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="157.3" y="181.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">问题一　单次观测单元</text>
-<rect x="30.0" y="204.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="40.0" y="226.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">决策变量</text>
-<text x="40.0" y="246.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">两次脉冲时刻 / 速度增量 / 观测开始时刻</text>
-<rect x="30.0" y="268.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="40.0" y="290.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">约束条件</text>
-<text x="40.0" y="310.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">60 s 连续观测 / 距离球壳与双角约束</text>
-<rect x="30.0" y="332.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="40.0" y="354.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">求解策略</text>
-<text x="40.0" y="374.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">多初值瞄准 / SLSQP 精修 / 网格逐点检验</text>
-<rect x="54.0" y="404.0" width="206.7" height="30.0" rx="4" ry="4" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="157.3" y="424.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#FFFFFF">两脉冲非线性规划模型</text>
-<polygon points="297.7,282.0 311.7,292.0 297.7,302.0" fill="#9FBCD6" stroke="none" stroke-width="1.0"/>
-<rect x="312.7" y="150.0" width="274.7" height="300.0" rx="3" ry="3" fill="#FFFFFF" stroke="#555555" stroke-width="1.0" stroke-dasharray="5,3"/>
-<rect x="322.7" y="160.0" width="254.7" height="32.0" rx="3" ry="3" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="450.0" y="181.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">问题二　单星序列巡游</text>
-<rect x="322.7" y="204.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="332.7" y="226.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">离散层</text>
-<text x="332.7" y="246.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">访问顺序 / 观测日期 / 漂移代价估计</text>
-<rect x="322.7" y="268.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="332.7" y="290.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">连续层</text>
-<text x="332.7" y="310.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">全计划脉冲联合优化 / 序列凸近似</text>
-<rect x="322.7" y="332.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="332.7" y="354.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">外层调整</text>
-<text x="332.7" y="374.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">顺序与观测时刻调整 / 邻域搜索</text>
-<rect x="346.7" y="404.0" width="206.7" height="30.0" rx="4" ry="4" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="450.0" y="424.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#FFFFFF">排序—优化双层模型</text>
-<polygon points="590.3,282.0 604.3,292.0 590.3,302.0" fill="#9FBCD6" stroke="none" stroke-width="1.0"/>
-<rect x="605.3" y="150.0" width="274.7" height="300.0" rx="3" ry="3" fill="#FFFFFF" stroke="#555555" stroke-width="1.0" stroke-dasharray="5,3"/>
-<rect x="615.3" y="160.0" width="254.7" height="32.0" rx="3" ry="3" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="742.7" y="181.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">问题三　双星选轨与分工</text>
-<rect x="615.3" y="204.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="625.3" y="226.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">选轨</text>
-<text x="625.3" y="246.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">R2 初始轨道设计 / 偏心率与半长轴约束</text>
-<rect x="615.3" y="268.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="625.3" y="290.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">分工</text>
-<text x="625.3" y="310.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">按相位划分目标 / 两星单向扫描</text>
-<rect x="615.3" y="332.0" width="254.7" height="54.0" rx="3" ry="3" fill="#DCE6EC" stroke="none" stroke-width="1.0"/>
-<text x="625.3" y="354.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#1E5B56">联合优化</text>
-<text x="625.3" y="374.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="start" fill="#333333">初始状态与脉冲联合优化 / δa 分析</text>
-<rect x="639.3" y="404.0" width="206.7" height="30.0" rx="4" ry="4" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="742.7" y="424.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#FFFFFF">选轨—分工—巡游模型</text>
-<line x1="157.3" y1="112.0" x2="157.3" y2="146.0" stroke="#2F6FA8" stroke-width="2.0"/><polygon points="157.3,146.0 153.8,137.7 160.8,137.7" fill="#2F6FA8" stroke="#2F6FA8" stroke-width="0.5"/>
-<text x="169.3" y="133.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#333333">问题驱动</text>
-<line x1="450.0" y1="112.0" x2="450.0" y2="146.0" stroke="#2F6FA8" stroke-width="2.0"/><polygon points="450.0,146.0 446.5,137.7 453.5,137.7" fill="#2F6FA8" stroke="#2F6FA8" stroke-width="0.5"/>
-<line x1="742.7" y1="112.0" x2="742.7" y2="146.0" stroke="#2F6FA8" stroke-width="2.0"/><polygon points="742.7,146.0 739.2,137.7 746.2,137.7" fill="#2F6FA8" stroke="#2F6FA8" stroke-width="0.5"/>
-<rect x="20.0" y="494.0" width="420.0" height="160.0" rx="3" ry="3" fill="#FFFFFF" stroke="#555555" stroke-width="1.0" stroke-dasharray="5,3"/>
-<rect x="30.0" y="504.0" width="400.0" height="30.0" rx="3" ry="3" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="230.0" y="524.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">统一基础模型</text>
-<rect x="30.0" y="544.0" width="400.0" height="28.0" rx="3" ry="3" fill="#EEF3F6" stroke="#C9D6DF" stroke-width="0.6"/>
-<text x="42.0" y="563.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#000000">二体传播与脉冲状态转移</text>
-<rect x="30.0" y="579.0" width="400.0" height="28.0" rx="3" ry="3" fill="#EEF3F6" stroke="#C9D6DF" stroke-width="0.6"/>
-<text x="42.0" y="598.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#000000">时变可观测区域：双圆锥与球壳</text>
-<rect x="30.0" y="614.0" width="400.0" height="28.0" rx="3" ry="3" fill="#EEF3F6" stroke="#C9D6DF" stroke-width="0.6"/>
-<text x="42.0" y="633.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#000000">两级字典序目标</text>
-<rect x="460.0" y="494.0" width="420.0" height="160.0" rx="3" ry="3" fill="#FFFFFF" stroke="#555555" stroke-width="1.0" stroke-dasharray="5,3"/>
-<rect x="470.0" y="504.0" width="400.0" height="30.0" rx="3" ry="3" fill="#1E5B56" stroke="none" stroke-width="1.0"/>
-<text x="670.0" y="524.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#FFFFFF">模型检验与分析</text>
-<rect x="470.0" y="544.0" width="400.0" height="28.0" rx="3" ry="3" fill="#EEF3F6" stroke="#C9D6DF" stroke-width="0.6"/>
-<text x="482.0" y="563.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#000000">精确传播与 0.05 s 网格认证</text>
-<rect x="470.0" y="579.0" width="400.0" height="28.0" rx="3" ry="3" fill="#EEF3F6" stroke="#C9D6DF" stroke-width="0.6"/>
-<text x="482.0" y="598.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#000000">ATK 独立复核</text>
-<rect x="470.0" y="614.0" width="400.0" height="28.0" rx="3" ry="3" fill="#EEF3F6" stroke="#C9D6DF" stroke-width="0.6"/>
-<text x="482.0" y="633.0" font-family="SimSun, Times New Roman" font-size="12.5" text-anchor="start" fill="#000000">安全裕量、偏心率与 δa 灵敏度分析</text>
-<line x1="237.3" y1="454.0" x2="237.3" y2="490.0" stroke="#2F6FA8" stroke-width="2.0"/><polygon points="237.3,490.0 233.8,481.7 240.8,481.7" fill="#2F6FA8" stroke="#2F6FA8" stroke-width="0.5"/>
-<text x="249.3" y="476.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#333333">支撑 / 约束</text>
-<line x1="662.7" y1="454.0" x2="662.7" y2="490.0" stroke="#2F6FA8" stroke-width="2.0"/><polygon points="662.7,490.0 659.2,481.7 666.2,481.7" fill="#2F6FA8" stroke="#2F6FA8" stroke-width="0.5"/>
-<text x="674.7" y="476.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#333333">检验 / 评价</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="640" viewBox="0 0 1040 640">
+<rect x="0" y="0" width="1040" height="640" fill="#FFFFFF"/>
+<rect x="20.0" y="16.0" width="1000.0" height="86.0" rx="5" ry="5" fill="#F6F9FC" stroke="#9BB7D4" stroke-width="1.0"/>
+<rect x="20.0" y="16.0" width="152.0" height="86.0" rx="5" ry="5" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="96.0" y="54.0" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#FFFFFF">物理机理</text>
+<text x="96.0" y="76.0" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#FFFFFF">与统一基础</text>
+<rect x="186.0" y="29.0" width="264.0" height="60.0" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="318.0" y="52.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1F4E79">二体与三维 CW 运动</text>
+<text x="318.0" y="74.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">精确传播 / 线性近似代价</text>
+<rect x="464.0" y="29.0" width="264.0" height="60.0" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="596.0" y="52.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1F4E79">时变可观测管道</text>
+<text x="596.0" y="74.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">球壳 + 双圆锥 / 切平面凸化</text>
+<rect x="742.0" y="29.0" width="264.0" height="60.0" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="874.0" y="52.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1F4E79">两级字典序目标</text>
+<text x="874.0" y="74.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">先最大化目标数，再最小化 Δv</text>
+<line x1="155.0" y1="104.0" x2="155.0" y2="133.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="155.0,133.0 151.9,125.6 158.1,125.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<line x1="520.0" y1="104.0" x2="520.0" y2="133.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="520.0,133.0 516.9,125.6 523.1,125.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<line x1="885.0" y1="104.0" x2="885.0" y2="133.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="885.0,133.0 881.9,125.6 888.1,125.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="20.0" y="136.0" width="270.0" height="368.0" rx="5" ry="5" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="1.1" stroke-dasharray="5,3"/>
+<rect x="30.0" y="146.0" width="250.0" height="34.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="155.0" y="168.0" font-family="SimSun, Times New Roman" font-size="14.5" text-anchor="middle" fill="#FFFFFF">问题一 · 单星单标观测</text>
+<rect x="36.0" y="198.0" width="238.0" height="54.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.8"/>
+<text x="155.0" y="221.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1A2530">背阳侧轨道面穿越</text>
+<text x="155.0" y="241.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">锁定候选观测时段</text>
+<line x1="155.0" y1="253.0" x2="155.0" y2="274.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="155.0,274.0 151.9,266.6 158.1,266.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="36.0" y="276.0" width="238.0" height="54.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.8"/>
+<text x="155.0" y="299.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1A2530">角平分线瞄准</text>
+<text x="155.0" y="319.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">连续 60 s 区间约束</text>
+<line x1="155.0" y1="331.0" x2="155.0" y2="352.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="155.0,352.0 151.9,344.6 158.1,344.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="36.0" y="354.0" width="238.0" height="54.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.8"/>
+<text x="155.0" y="377.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1A2530">多初值 SLSQP 精修</text>
+<text x="155.0" y="397.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">主模型同步复现互证</text>
+<line x1="155.0" y1="409.0" x2="155.0" y2="452.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="155.0,452.0 151.9,444.6 158.1,444.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="36.0" y="454.0" width="238.0" height="36.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="155.0" y="477.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#FFFFFF">两脉冲非线性规划模型</text>
+<rect x="342.0" y="136.0" width="356.0" height="368.0" rx="5" ry="5" fill="#F6F9FC" stroke="#1F4E79" stroke-width="1.8"/>
+<rect x="352.0" y="146.0" width="336.0" height="34.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="520.0" y="168.0" font-family="SimSun, Times New Roman" font-size="14.5" text-anchor="middle" fill="#FFFFFF">问题二 · 单星多标巡游（核心主模型）</text>
+<rect x="358.0" y="194.0" width="324.0" height="62.0" rx="4" ry="4" fill="#FFFFFF" stroke="#3D72A4" stroke-width="1.0"/>
+<text x="520.0" y="218.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1F4E79">离散排序层：三维 CW 动态规划</text>
+<text x="520.0" y="240.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">确定性变邻域下降 · 自动识别伴随飞越</text>
+<line x1="520.0" y1="257.0" x2="520.0" y2="278.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="520.0,278.0 516.9,270.6 523.1,270.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="358.0" y="280.0" width="296.0" height="66.0" rx="4" ry="4" fill="#FFFFFF" stroke="#3D72A4" stroke-width="1.0"/>
+<text x="506.0" y="305.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1F4E79">连续精修层：时空联合序列凸优化</text>
+<text x="506.0" y="328.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">脉冲矢量 + 脉冲时刻 + 观测窗联合求解</text>
+<line x1="506.0" y1="347.0" x2="506.0" y2="366.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="506.0,366.0 502.9,358.6 509.1,358.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="358.0" y="368.0" width="296.0" height="48.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="506.0" y="389.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#1A2530">主矢量退化脉冲重定位</text>
+<text x="506.0" y="407.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#4A5568">激活归零脉冲 · 突破局部极小</text>
+<polyline points="654.0,392.0 672.0,392.0 672.0,313.0" fill="none" stroke="#3D72A4" stroke-width="1.7"/>
+<line x1="672.0" y1="313.0" x2="655.0" y2="313.0" stroke="#3D72A4" stroke-width="1.7"/><polygon points="655.0,313.0 661.4,310.3 661.4,315.7" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<text x="683.0" y="348.5" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#3D72A4">迭</text>
+<text x="683.0" y="363.5" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#3D72A4">代</text>
+<line x1="520.0" y1="417.0" x2="520.0" y2="452.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="520.0,452.0 516.9,444.6 523.1,444.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="358.0" y="454.0" width="324.0" height="36.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="520.0" y="477.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#FFFFFF">CW 动态规划—时空联合序列凸优化</text>
+<rect x="750.0" y="136.0" width="270.0" height="368.0" rx="5" ry="5" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="1.1" stroke-dasharray="5,3"/>
+<rect x="760.0" y="146.0" width="250.0" height="34.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="885.0" y="168.0" font-family="SimSun, Times New Roman" font-size="14.5" text-anchor="middle" fill="#FFFFFF">问题三 · 双星协同巡游</text>
+<rect x="766.0" y="198.0" width="238.0" height="54.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.8"/>
+<text x="885.0" y="221.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1A2530">双星空间分区</text>
+<text x="885.0" y="241.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">西 10 / 东 20 单向巡游 + 边界验证</text>
+<line x1="885.0" y1="253.0" x2="885.0" y2="274.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="885.0,274.0 881.9,266.6 888.1,266.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="766.0" y="276.0" width="238.0" height="54.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.8"/>
+<text x="885.0" y="299.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1A2530">R2 初轨变量嵌入</text>
+<text x="885.0" y="319.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">e &lt; 0.001，|a − aGEO| ≤ δa</text>
+<line x1="885.0" y1="331.0" x2="885.0" y2="352.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="885.0,352.0 881.9,344.6 888.1,344.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="766.0" y="354.0" width="238.0" height="54.0" rx="4" ry="4" fill="#EBF2F8" stroke="#9BB7D4" stroke-width="0.8"/>
+<text x="885.0" y="377.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1A2530">复用主模型联合求解</text>
+<text x="885.0" y="397.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">初轨 + 脉冲 + 观测窗同步优化</text>
+<line x1="885.0" y1="409.0" x2="885.0" y2="452.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="885.0,452.0 881.9,444.6 888.1,444.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="766.0" y="454.0" width="238.0" height="36.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="885.0" y="477.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#FFFFFF">分区—初轨—巡游协同模型</text>
+<line x1="294.0" y1="320.0" x2="338.0" y2="320.0" stroke="#3D72A4" stroke-width="2.0"/><polygon points="338.0,320.0 329.7,323.5 329.7,316.5" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<text x="316.0" y="311.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#1F4E79">串接</text>
+<line x1="702.0" y1="320.0" x2="746.0" y2="320.0" stroke="#3D72A4" stroke-width="2.0"/><polygon points="746.0,320.0 737.7,323.5 737.7,316.5" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<text x="724.0" y="311.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#1F4E79">推广</text>
+<line x1="155.0" y1="506.0" x2="155.0" y2="535.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="155.0,535.0 151.9,527.6 158.1,527.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<line x1="520.0" y1="506.0" x2="520.0" y2="535.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="520.0,535.0 516.9,527.6 523.1,527.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<line x1="885.0" y1="506.0" x2="885.0" y2="535.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="885.0,535.0 881.9,527.6 888.1,527.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
+<rect x="20.0" y="538.0" width="1000.0" height="86.0" rx="5" ry="5" fill="#F6F9FC" stroke="#9BB7D4" stroke-width="1.0"/>
+<rect x="20.0" y="538.0" width="152.0" height="86.0" rx="5" ry="5" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
+<text x="96.0" y="576.0" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#FFFFFF">独立验证</text>
+<text x="96.0" y="598.0" font-family="SimSun, Times New Roman" font-size="15" text-anchor="middle" fill="#FFFFFF">与灵敏度</text>
+<rect x="186.0" y="551.0" width="264.0" height="60.0" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="318.0" y="574.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1F4E79">0.05 s 网格与面外检验</text>
+<text x="318.0" y="596.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">约束零漏检 / 轨道面倾转验证</text>
+<rect x="464.0" y="551.0" width="264.0" height="60.0" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="596.0" y="574.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1F4E79">ATK 4.2.0 独立复核</text>
+<text x="596.0" y="596.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">单星 MCS 连续数值积分全通过</text>
+<rect x="742.0" y="551.0" width="264.0" height="60.0" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="874.0" y="574.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1F4E79">多维参数灵敏度分析</text>
+<text x="874.0" y="596.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">安全裕量 m / 偏心率 e_max / δa</text>
 </svg>

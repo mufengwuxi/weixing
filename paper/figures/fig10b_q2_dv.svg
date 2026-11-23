@@ -1,94 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="410" viewBox="0 0 620 410">
-<rect x="0" y="0" width="620" height="410" fill="#FFFFFF"/>
-<rect x="73.2" y="214.2" width="11.3" height="95.8" fill="#1F4E79"/>
-<text x="82.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 82.8 322.0)">B2</text>
-<rect x="90.8" y="220.9" width="11.3" height="89.1" fill="#1F4E79"/>
-<text x="100.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 100.5 322.0)">B3</text>
-<rect x="108.5" y="306.0" width="11.3" height="4.0" fill="#1F4E79"/>
-<text x="118.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 118.2 322.0)">B9</text>
-<rect x="126.2" y="287.2" width="11.3" height="22.8" fill="#1F4E79"/>
-<text x="135.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 135.8 322.0)">B18</text>
-<rect x="143.8" y="284.9" width="11.3" height="25.1" fill="#1F4E79"/>
-<text x="153.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 153.5 322.0)">B30</text>
-<rect x="161.5" y="231.1" width="11.3" height="78.9" fill="#1F4E79"/>
-<text x="171.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 171.2 322.0)">B26</text>
-<rect x="179.2" y="251.9" width="11.3" height="58.1" fill="#1F4E79"/>
-<text x="188.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 188.8 322.0)">B17</text>
-<rect x="196.8" y="293.7" width="11.3" height="16.3" fill="#1F4E79"/>
-<text x="206.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 206.5 322.0)">B8</text>
-<rect x="214.5" y="295.5" width="11.3" height="14.5" fill="#1F4E79"/>
-<text x="224.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 224.2 322.0)">B5</text>
-<rect x="232.2" y="298.7" width="11.3" height="11.3" fill="#1F4E79"/>
-<text x="241.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 241.8 322.0)">B1</text>
-<rect x="249.8" y="306.5" width="11.3" height="3.5" fill="#1F4E79"/>
-<text x="259.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 259.5 322.0)">B4</text>
-<rect x="267.5" y="278.4" width="11.3" height="31.6" fill="#1F4E79"/>
-<text x="277.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 277.2 322.0)">B11</text>
-<rect x="285.2" y="206.5" width="11.3" height="103.5" fill="#1F4E79"/>
-<text x="294.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 294.8 322.0)">B6</text>
-<rect x="302.8" y="205.7" width="11.3" height="104.3" fill="#1F4E79"/>
-<text x="312.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 312.5 322.0)">B7</text>
-<rect x="320.5" y="295.1" width="11.3" height="14.9" fill="#1F4E79"/>
-<text x="330.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 330.2 322.0)">B10</text>
-<rect x="338.2" y="309.0" width="11.3" height="1.0" fill="#1F4E79"/>
-<text x="347.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 347.8 322.0)">B12</text>
-<rect x="355.8" y="282.4" width="11.3" height="27.6" fill="#1F4E79"/>
-<text x="365.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 365.5 322.0)">B13</text>
-<rect x="373.5" y="290.1" width="11.3" height="19.9" fill="#1F4E79"/>
-<text x="383.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 383.2 322.0)">B15</text>
-<rect x="391.2" y="295.4" width="11.3" height="14.6" fill="#1F4E79"/>
-<text x="400.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 400.8 322.0)">B14</text>
-<rect x="408.8" y="310.0" width="11.3" height="0.0" fill="#1F4E79"/>
-<text x="418.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 418.5 322.0)">B16</text>
-<rect x="426.5" y="310.0" width="11.3" height="0.0" fill="#1F4E79"/>
-<text x="436.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 436.2 322.0)">B19</text>
-<rect x="444.2" y="221.6" width="11.3" height="88.4" fill="#1F4E79"/>
-<text x="453.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 453.8 322.0)">B20</text>
-<rect x="461.8" y="61.5" width="11.3" height="248.5" fill="#1F4E79"/>
-<text x="471.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 471.5 322.0)">B21</text>
-<rect x="479.5" y="109.5" width="11.3" height="200.5" fill="#1F4E79"/>
-<text x="489.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 489.2 322.0)">B23</text>
-<rect x="497.2" y="286.2" width="11.3" height="23.8" fill="#1F4E79"/>
-<text x="506.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 506.8 322.0)">B22</text>
-<rect x="514.8" y="294.3" width="11.3" height="15.7" fill="#1F4E79"/>
-<text x="524.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 524.5 322.0)">B24</text>
-<rect x="532.5" y="153.3" width="11.3" height="156.7" fill="#1F4E79"/>
-<text x="542.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 542.2 322.0)">B25</text>
-<rect x="550.2" y="133.1" width="11.3" height="176.9" fill="#1F4E79"/>
-<text x="559.8" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 559.8 322.0)">B27</text>
-<rect x="567.8" y="287.0" width="11.3" height="23.0" fill="#1F4E79"/>
-<text x="577.5" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 577.5 322.0)">B29</text>
-<rect x="585.5" y="275.9" width="11.3" height="34.1" fill="#1F4E79"/>
-<text x="595.2" y="322.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 595.2 322.0)">B28</text>
-<line x1="70.0" y1="285.5" x2="600.0" y2="285.5" stroke="#555555" stroke-width="0.8" stroke-dasharray="4,3"/>
-<rect x="70" y="20" width="530" height="290" fill="none" stroke="#000000" stroke-width="0.9"/>
-<line x1="70.0" y1="310.0" x2="75.0" y2="310.0" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="310.0" x2="595.0" y2="310.0" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="314.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">0</text>
-<line x1="70.0" y1="261.7" x2="75.0" y2="261.7" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="261.7" x2="595.0" y2="261.7" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="265.7" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">5</text>
-<line x1="70.0" y1="213.3" x2="75.0" y2="213.3" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="213.3" x2="595.0" y2="213.3" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="217.3" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">10</text>
-<line x1="70.0" y1="165.0" x2="75.0" y2="165.0" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="165.0" x2="595.0" y2="165.0" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="169.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">15</text>
-<line x1="70.0" y1="116.7" x2="75.0" y2="116.7" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="116.7" x2="595.0" y2="116.7" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="120.7" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">20</text>
-<line x1="70.0" y1="68.3" x2="75.0" y2="68.3" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="68.3" x2="595.0" y2="68.3" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="72.3" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">25</text>
-<line x1="70.0" y1="20.0" x2="75.0" y2="20.0" stroke="#000000" stroke-width="0.9"/>
-<line x1="600.0" y1="20.0" x2="595.0" y2="20.0" stroke="#000000" stroke-width="0.9"/>
-<text x="63.0" y="24.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">30</text>
-<text x="26.0" y="165.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 26.0 165.0)">速度增量 / (m/s)</text>
-<text x="335.0" y="368.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">观测目标（按观测先后）</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="400" viewBox="0 0 620 400">
+<rect x="0" y="0" width="620" height="400" fill="#FFFFFF"/>
+<rect x="73.2" y="185.6" width="11.3" height="134.4" fill="#1F4E79"/>
+<text x="82.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 82.8 332.0)">B2</text>
+<rect x="90.8" y="201.2" width="11.3" height="118.8" fill="#1F4E79"/>
+<text x="100.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 100.5 332.0)">B3</text>
+<rect x="108.5" y="282.7" width="11.3" height="37.3" fill="#1F4E79"/>
+<text x="118.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 118.2 332.0)">B8</text>
+<rect x="126.2" y="316.1" width="11.3" height="3.9" fill="#1F4E79"/>
+<text x="135.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 135.8 332.0)">B18</text>
+<rect x="143.8" y="288.2" width="11.3" height="31.8" fill="#1F4E79"/>
+<text x="153.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 153.5 332.0)">B26</text>
+<rect x="161.5" y="201.9" width="11.3" height="118.1" fill="#1F4E79"/>
+<text x="171.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 171.2 332.0)">B30</text>
+<rect x="179.2" y="131.5" width="11.3" height="188.5" fill="#1F4E79"/>
+<text x="188.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 188.8 332.0)">B17</text>
+<rect x="196.8" y="286.4" width="11.3" height="33.6" fill="#1F4E79"/>
+<text x="206.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 206.5 332.0)">B9</text>
+<rect x="214.5" y="298.4" width="11.3" height="21.6" fill="#1F4E79"/>
+<text x="224.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 224.2 332.0)">B5</text>
+<rect x="232.2" y="320.0" width="11.3" height="0.0" fill="#1F4E79"/>
+<text x="241.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 241.8 332.0)">B1</text>
+<rect x="249.8" y="313.4" width="11.3" height="6.6" fill="#1F4E79"/>
+<text x="259.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 259.5 332.0)">B4</text>
+<rect x="267.5" y="283.8" width="11.3" height="36.2" fill="#1F4E79"/>
+<text x="277.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 277.2 332.0)">B11</text>
+<rect x="285.2" y="265.5" width="11.3" height="54.5" fill="#1F4E79"/>
+<text x="294.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 294.8 332.0)">B6</text>
+<rect x="302.8" y="283.7" width="11.3" height="36.3" fill="#1F4E79"/>
+<text x="312.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 312.5 332.0)">B7</text>
+<rect x="320.5" y="289.9" width="11.3" height="30.1" fill="#1F4E79"/>
+<text x="330.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 330.2 332.0)">B10</text>
+<rect x="338.2" y="319.0" width="11.3" height="1.0" fill="#1F4E79"/>
+<text x="347.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 347.8 332.0)">B12</text>
+<rect x="355.8" y="281.9" width="11.3" height="38.1" fill="#1F4E79"/>
+<text x="365.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 365.5 332.0)">B13</text>
+<rect x="373.5" y="275.5" width="11.3" height="44.5" fill="#1F4E79"/>
+<text x="383.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 383.2 332.0)">B15</text>
+<rect x="391.2" y="319.5" width="11.3" height="0.5" fill="#1F4E79"/>
+<text x="400.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 400.8 332.0)">B14</text>
+<rect x="408.8" y="271.5" width="11.3" height="48.5" fill="#1F4E79"/>
+<text x="418.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 418.5 332.0)">B16</text>
+<rect x="426.5" y="244.8" width="11.3" height="75.2" fill="#1F4E79"/>
+<text x="436.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 436.2 332.0)">B19</text>
+<rect x="444.2" y="320.0" width="11.3" height="0.0" fill="#1F4E79"/>
+<text x="453.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 453.8 332.0)">B20</text>
+<rect x="461.8" y="249.8" width="11.3" height="70.2" fill="#1F4E79"/>
+<text x="471.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 471.5 332.0)">B21</text>
+<rect x="479.5" y="275.4" width="11.3" height="44.6" fill="#1F4E79"/>
+<text x="489.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 489.2 332.0)">B23</text>
+<rect x="497.2" y="90.8" width="11.3" height="229.2" fill="#1F4E79"/>
+<text x="506.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 506.8 332.0)">B22</text>
+<rect x="514.8" y="67.6" width="11.3" height="252.4" fill="#1F4E79"/>
+<text x="524.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 524.5 332.0)">B24</text>
+<rect x="532.5" y="268.1" width="11.3" height="51.9" fill="#1F4E79"/>
+<text x="542.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 542.2 332.0)">B25</text>
+<rect x="550.2" y="316.2" width="11.3" height="3.8" fill="#1F4E79"/>
+<text x="559.8" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 559.8 332.0)">B27</text>
+<rect x="567.8" y="284.7" width="11.3" height="35.3" fill="#1F4E79"/>
+<text x="577.5" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 577.5 332.0)">B28</text>
+<rect x="585.5" y="252.7" width="11.3" height="67.3" fill="#1F4E79"/>
+<text x="595.2" y="332.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="end" fill="#000000" transform="rotate(-60 595.2 332.0)">B29</text>
+<line x1="70.0" y1="282.3" x2="600.0" y2="282.3" stroke="#555555" stroke-width="0.8" stroke-dasharray="4,3"/>
+<rect x="70" y="20" width="530" height="300" fill="none" stroke="#000000" stroke-width="0.9"/>
+<line x1="70.0" y1="320.0" x2="75.0" y2="320.0" stroke="#000000" stroke-width="0.9"/>
+<line x1="600.0" y1="320.0" x2="595.0" y2="320.0" stroke="#000000" stroke-width="0.9"/>
+<text x="63.0" y="324.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">0</text>
+<line x1="70.0" y1="251.8" x2="75.0" y2="251.8" stroke="#000000" stroke-width="0.9"/>
+<line x1="600.0" y1="251.8" x2="595.0" y2="251.8" stroke="#000000" stroke-width="0.9"/>
+<text x="63.0" y="255.8" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">5</text>
+<line x1="70.0" y1="183.6" x2="75.0" y2="183.6" stroke="#000000" stroke-width="0.9"/>
+<line x1="600.0" y1="183.6" x2="595.0" y2="183.6" stroke="#000000" stroke-width="0.9"/>
+<text x="63.0" y="187.6" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">10</text>
+<line x1="70.0" y1="115.5" x2="75.0" y2="115.5" stroke="#000000" stroke-width="0.9"/>
+<line x1="600.0" y1="115.5" x2="595.0" y2="115.5" stroke="#000000" stroke-width="0.9"/>
+<text x="63.0" y="119.5" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">15</text>
+<line x1="70.0" y1="47.3" x2="75.0" y2="47.3" stroke="#000000" stroke-width="0.9"/>
+<line x1="600.0" y1="47.3" x2="595.0" y2="47.3" stroke="#000000" stroke-width="0.9"/>
+<text x="63.0" y="51.3" font-family="SimSun, Times New Roman" font-size="12" text-anchor="end" fill="#000000">20</text>
+<text x="26.0" y="170.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 26.0 170.0)">速度增量 / (m/s)</text>
+<text x="335.0" y="378.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">观测目标（按观测先后）</text>
 <rect x="78" y="28" width="143.5" height="44" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
 <rect x="84" y="34" width="22" height="11" fill="#1F4E79" stroke="none"/>
 <text x="112.0" y="44.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">单次观测的速度增量</text>
 <line x1="84.0" y1="58.0" x2="106.0" y2="58.0" stroke="#555555" stroke-width="1.6" stroke-dasharray="4,3"/>
-<text x="112.0" y="62.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">中位数 2.53 m/s</text>
+<text x="112.0" y="62.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">中位数 2.76 m/s</text>
 </svg>
