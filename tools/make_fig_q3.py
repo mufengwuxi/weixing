@@ -19,8 +19,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import make_fig_analysis as F  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
-PLAN_R1 = REPO / "solutions/q3/v6_p3_r1.json"
-PLAN_R2 = REPO / "solutions/q3/v6_p3_r2.json"
+PLAN_R1 = REPO / "results/q3/m3d_v2_r1.json"
+PLAN_R2 = REPO / "results/q3/m3d_v2_r2.json"
 W_E = 2 * np.pi / 86164.0905
 
 C_R1 = "#1F4E79"   # 深蓝（R1）
@@ -52,7 +52,7 @@ def make_route_and_dv():
     wrap = lambda a: (a - lam0 + 180) % 360 - 180  # noqa: E731
 
     # (a) 双星相对经度–时间
-    ts1 = np.arange(0, 19 * 86400 + 1, 1800.0)
+    ts1 = np.arange(0, 30 * 86400 + 1, 1800.0)
     ts2 = np.arange(0, 30 * 86400 + 1, 1800.0)
     lr1 = wrap(lon(track(d1, ts1, "r1_km"), ts1))
     lr2 = wrap(lon(track(d2, ts2, "r1_km" if "r1_km" in d2 else "r2_km"), ts2))
@@ -99,7 +99,7 @@ def make_route_and_dv():
     L, T, W_, H_ = 70, 20, 530, 290
     n = len(vals)
     bw = W_ / n
-    Y = lambda v: T + (5.5 - v) / 5.5 * H_  # noqa: E731
+    Y = lambda v: T + (8.0 - v) / 8.0 * H_  # noqa: E731
     body = []
     med = float(np.median([v for _, v, _ in vals]))
     x_sep = L + len(obs1) * bw
@@ -110,11 +110,11 @@ def make_route_and_dv():
         xc = L + (k + 0.5) * bw
         body.append(F.text(xc + 4, T + H_ + 12, name, 10.5, "end", rot=-60))
     body.append(F.line(L, Y(med), L + W_, Y(med), C_GRAY, 0.8, "4,3"))
-    F.axes_box(body, L, T, W_, H_, [], range(0, 6, 1), lambda v: v, Y, None, "速度增量 / (m/s)")
+    F.axes_box(body, L, T, W_, H_, [], range(0, 9, 2), lambda v: v, Y, None, "速度增量 / (m/s)")
     body.append(F.text(L + W_ / 2, T + H_ + 58, "观测目标（左 10 颗 R1，右 20 颗 R2）", 13))
     F.legend_box(body, L + 8, T + 8, [
-        ("rect", C_R1, None, "R1 各次观测（合计 18.15 m/s）"),
-        ("rect", C_R2, None, "R2 各次观测（合计 15.31 m/s）"),
+        ("rect", C_R1, None, "R1 各次观测（合计 13.50 m/s）"),
+        ("rect", C_R2, None, "R2 各次观测（合计 14.61 m/s）"),
         ("line", C_GRAY, "4,3", f"全部 30 颗中位数 {med:.2f} m/s"),
     ])
     F.save("fig12b_q3_dv.svg", W, H + 30, body)

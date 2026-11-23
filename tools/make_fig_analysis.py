@@ -1053,10 +1053,10 @@ def fig_tube():
             body.append(text(lx + 6, ly - 11, title, 13.5, "start", col))
         body.append(text(lx + 6, ly + 8, sub, 11.5, "start", "#444444"))
     cxa, cya = P((tc0 + tc1) / 2, 0, 0)
-    tag(cxa, cya, 640, 540, "定时：候选观测时刻 t_c", "轨道面交线附近且 β ≤ 90°", "#B5770A")
-    tag(ax_ + 8, ay_ - 4, 700, 80, "定点：瞄准点", "截面角平分线方向，离边界最远", "#1B7A1B")
+    tag(cxa, cya, 640, 540, "第一步：候选观测时刻 t_c", "轨道面交线附近且 β ≤ 90°", "#B5770A")
+    tag(ax_ + 8, ay_ - 4, 700, 80, "第二步：截面瞄准点选取", "截面角平分线方向，离边界最远", "#1B7A1B")
     x2, y2 = P(255, *rel(255))
-    tag(x2 + 10, y2 + 10, 330, 560, "定推力：两次脉冲", "相位漂移估计初值，非线性规划精修", "#B01818")
+    tag(x2 + 10, y2 + 10, 330, 560, "第三步：脉冲初值与精修", "相位漂移估计初值，非线性规划精修", "#B01818")
     # 截面说明
     top = min((P(t1, r_out * np.cos(a), r_out * np.sin(a)) for a in np.linspace(phi(t1) - half, phi(t1) + half, 30)), key=lambda q: q[1])
     body.append(text(top[0] + 40, top[1] - 14, "管道截面 C(t)：双圆锥 ∩ 球壳", 12.5, "middle", "#1F4E79"))
