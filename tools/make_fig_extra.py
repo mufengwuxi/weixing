@@ -34,8 +34,8 @@ def make_q2_ablation():
         ("M2-C", 159.33, C_MAIN),
         ("本文主模型", 133.03, C_ACC),
     ]
-    W, H = 620, 360
-    L, T, W_, H_ = 78, 22, 512, 272
+    W, H = 620, 400
+    L, T, W_, H_ = 80, 20, 510, 300
     n = len(items)
     bw = W_ / n
     Y = lambda v: T + (240 - v) / 240 * H_  # noqa: E731
@@ -64,8 +64,8 @@ def make_q2_cumdv():
         [(b["t_s"] / 86400.0, float(np.linalg.norm(b["dv_km_s"])) * 1000.0) for b in d["burns"]],
         key=lambda z: z[0],
     )
-    W, H = 620, 360
-    L, T, W_, H_ = 78, 22, 512, 272
+    W, H = 620, 400
+    L, T, W_, H_ = 80, 20, 510, 300
     X = lambda v: L + v / 30.0 * W_  # noqa: E731
     Y = lambda v: T + (150 - v) / 150 * H_  # noqa: E731
     body = []
@@ -111,8 +111,8 @@ def make_q3_split():
         ("9 / 21（B2→R2）", 14.63, None, C_SUB),
         ("11 / 19（B4→R1）", 35.69, None, C_ACC),
     ]
-    W, H = 620, 360
-    L, T, W_, H_ = 78, 22, 512, 272
+    W, H = 620, 400
+    L, T, W_, H_ = 80, 20, 510, 300
     n = len(items)
     bw = W_ / n
     Y = lambda v: T + (42 - v) / 42 * H_  # noqa: E731
@@ -148,8 +148,8 @@ def make_q3_ablation():
         ("M3-D", 13.499, 14.615),
         ("本文主模型", 11.9435, 14.1231),
     ]
-    W, H = 620, 360
-    L, T, W_, H_ = 78, 22, 512, 272
+    W, H = 620, 400
+    L, T, W_, H_ = 80, 20, 510, 300
     n = len(items)
     bw = W_ / n
     Y = lambda v: T + (42 - v) / 42 * H_  # noqa: E731
@@ -227,8 +227,8 @@ def make_obs_verify():
     p_r2 = eval_plan(REPO / "results/q3/m_uni_q3_r2_best.json")
     p_q3 = [(a, b, C_SUB) for a, b, _ in p_r1] + [(a, b, C_ACC) for a, b, _ in p_r2]
 
-    W, H = 620, 360
-    L, T, W_, H_ = 78, 22, 512, 272
+    W, H = 620, 400
+    L, T, W_, H_ = 80, 20, 510, 300
     X = lambda k: L + (k + 0.5) / 30.0 * W_  # noqa: E731
     Y = lambda v: T + (56.0 - v) / 50.0 * H_  # noqa: E731
     body = []

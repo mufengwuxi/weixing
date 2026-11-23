@@ -200,7 +200,7 @@ R1 在事件之间的转移用漂移相位模型估计。把 R1 和目标的位�
 
 R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从目标队列中部出发后先向西漂移，去程依次观测 B2、B3、B8、B18 与 B26，并于第 7.8 天抵达最西端的 B30；随后折返向东，在回程顺路完成 B17、B9、B5 与 B1，继而单向扫过东侧全部 20 颗目标，最终在第 29.54 天于初始经度以东约 $18.4^\circ$ 处完成 B29。与基线方案相比，三维 CW 动态规划自动将 B26 编入西向去程、将 B9 留待东向回程，使西侧往返分配更为均衡，同时也为东侧密集目标区留出了更充裕的相位调整窗口。
 
-图~\ref{fig:q2route}(b) 展示了各次观测对应的速度增量分布。绝大多数观测的机动代价控制在 4.0~m/s 以内，中位数仅为 2.76~m/s。得益于观测起始时刻 $\delta s_k$ 的连续耦合以及退化脉冲重定位，R1 能够在轨道面节点与有利光照相位附近高效施加脉冲，从而显著削减高代价转移段的燃料消耗。例如，原先在 M2-C 中高达 15.09~m/s 和 24.38~m/s 的 B19 与 B22 分别降至 5.51~m/s 和 16.81~m/s，B27 也由 4.27~m/s 降至 0.28~m/s；此外，B1 与 B20 均实现了零脉冲自然滑行观测，其中 B19 与 B20 在同一次近距离飞越中仅相隔 11.5~min。
+结合表~\ref{tab:q2plan} 与图~\ref{fig:q2route}(b) 可以看出，30 天内累计速度增量呈平缓阶梯式增长，绝大多数观测的机动代价控制在 4.0~m/s 以内，中位数仅为 2.76~m/s。得益于观测起始时刻 $\delta s_k$ 的连续耦合以及退化脉冲重定位，R1 能够在轨道面节点与有利光照相位附近高效施加脉冲，从而显著削减高代价转移段的燃料消耗。例如，原先在 M2-C 中高达 15.09~m/s 和 24.38~m/s 的 B19 与 B22 分别降至 5.51~m/s 和 16.81~m/s，B27 也由 4.27~m/s 降至 0.28~m/s；此外，B1 与 B20 均实现了零脉冲自然滑行观测，其中 B19 与 B20 在同一次近距离飞越中仅相隔 11.5~min。
 
 \begin{figure}[!htb]
   \centering
@@ -211,10 +211,10 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从目标队列中部�
   \end{subfigure}\hfill
   \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{fig10b_q2_dv.pdf}
-    \caption{各次观测的速度增量}
+    \includegraphics[width=\linewidth]{fig10d_q2_cumdv.pdf}
+    \caption{30 天累计速度增量演化}
   \end{subfigure}
-  \caption{问题二的巡游方案}
+  \caption{问题二的巡游方案与燃料演化}
   \label{fig:q2route}
 \end{figure}
 
@@ -235,7 +235,7 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从目标队列中部�
   \end{tabular}
 \end{table}
 
-为明确主模型内部各技术点的贡献，表~\ref{tab:q2ablation} 与图~\ref{fig:q2ablation} 给出了三阶段递进消融结果及 30 天内的累计燃料演化。阶段 1 仅用三维 CW 动态规划配合固定时刻优化便达到 177.53~m/s；阶段 2 放开脉冲施加时刻后，机动得以滑移至轨道节点与有利相位处施加，单步再降 18.20~m/s 至 159.33~m/s；阶段 3 进一步耦合观测起始时刻 $\delta s_k$ 并引入退化脉冲重定位，累计速度增量再度下降 26.30~m/s 至最终的 \textbf{133.03~m/s}。将该方案在 0.05~s 加密网格下复算并导入 ATK 4.2.0 做连续数值积分检验（表~\ref{tab:q2check}、图~\ref{fig:q2atk}），全部 30 次观测均满足距离与角度约束，ATK 与解析轨迹的最大位置偏差仅 0.152~m，全程最低地心距 41569.7~km，始终稳定运行在同步带附近。
+为明确主模型内部各技术点的贡献，表~\ref{tab:q2ablation} 给出了三阶段递进消融结果。阶段 1 仅用三维 CW 动态规划配合固定时刻优化便达到 177.53~m/s；阶段 2 放开脉冲施加时刻后，机动得以滑移至轨道节点与有利相位处施加，单步再降 18.20~m/s 至 159.33~m/s；阶段 3 进一步耦合观测起始时刻 $\delta s_k$ 并引入退化脉冲重定位，累计速度增量再度下降 26.30~m/s 至最终的 \textbf{133.03~m/s}。将该方案在 0.05~s 加密网格下复算并导入 ATK 4.2.0 做连续数值积分检验（表~\ref{tab:q2check}、图~\ref{fig:q2atk}），全部 30 次观测均满足距离与角度约束，ATK 与解析轨迹的最大位置偏差仅 0.152~m，全程最低地心距 41569.7~km，始终稳定运行在同步带附近。
 
 \begin{table}[!htb]
   \centering
@@ -252,22 +252,6 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从目标队列中部�
     \bottomrule
   \end{tabular}
 \end{table}
-
-\begin{figure}[!htb]
-  \centering
-  \begin{subfigure}[b]{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{fig10c_q2_ablation.pdf}
-    \caption{各求解阶段累计速度增量对比}
-  \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{fig10d_q2_cumdv.pdf}
-    \caption{30 天累计速度增量演化}
-  \end{subfigure}
-  \caption{问题二的模型消融与燃料演化}
-  \label{fig:q2ablation}
-\end{figure}
 
 \begin{table}[!htb]
   \centering
