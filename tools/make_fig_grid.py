@@ -49,32 +49,38 @@ def dump():
 def main():
     D = json.load(open(DATA)) if DATA.exists() and "--recompute" not in sys.argv else dump()
     t, d = np.array(D["t"]), np.array(D["d"])
-    C_LINE, C_PT, GR = "#1F4E79", "#C0392B", "#555555"
+    C_MAIN, C_ACC, GR = "#1A365D", "#9B2C2C", "#666666"
 
-    # (a) 最小距离附近
-    lo, hi = 39.0, 46.0
+    # (a) 最小距离附近（缩放到 [41.2, 43.8] s，避免两侧大面积留白）
+    lo, hi = 41.2, 43.8
     m = (t >= lo) & (t <= hi)
     yv = (d[m] - 10.0) * 1000
-    ys = [(k, (float(np.interp(k, t, d)) - 10) * 1000) for k in range(int(lo), int(hi) + 1)]
+    ys = [(k, (float(np.interp(k, t, d)) - 10) * 1000) for k in range(42, 44)]
     y0, y1 = 279.3, 281.3
     W, H = 620, 360
     L, T, W_, H_ = 80, 20, 510, 280
     X = lambda v: L + (v - lo) / (hi - lo) * W_  # noqa: E731
     Y = lambda v: T + (y1 - v) / (y1 - y0) * H_  # noqa: E731
     body = []
-    smin = min(ys, key=lambda q: q[1])
-    for v in ((D["d_min"] - 10) * 1000, smin[1]):
-        body.append(F.line(L, Y(v), L + W_, Y(v), GR, 0.8, "4,3"))
-    body.append(F.poly([(X(a), Y(b)) for a, b in zip(t[m], yv) if y0 <= b <= y1], stroke=C_LINE, w=1.6, closed=False))
+    d_true = (D["d_min"] - 10) * 1000
+    d_1s = min(ys, key=lambda q: q[1])[1]
+    body.append(F.line(L, Y(d_true), L + W_, Y(d_true), GR, 0.9, "4,3"))
+    body.append(F.line(L, Y(d_1s), L + W_, Y(d_1s), C_ACC, 0.9, "2,3"))
+    body.append(F.poly([(X(a), Y(b)) for a, b in zip(t[m], yv) if y0 <= b <= y1], stroke=C_MAIN, w=1.8, closed=False))
     for a, b in ys:
         if y0 <= b <= y1:
-            body.append(f'<circle cx="{X(a):.1f}" cy="{Y(b):.1f}" r="3.4" fill="{C_PT}" stroke="none"/>')
-    F.axes_box(body, L, T, W_, H_, range(39, 47, 1), [279.5, 280.0, 280.5, 281.0], X, Y, "相对观测开始时刻 / s", "距离 d − 10 km / m")
-    F.legend_box(body, L + 8, T + 8, [("line", C_LINE, None, "连续曲线（0.001 s）"), ("dot", C_PT, None, "1 s 采样点"),
-                                      ("line", GR, "4,3", "两者的最小值")])
+            body.append(f'<circle cx="{X(a):.1f}" cy="{Y(b):.1f}" r="4.0" fill="{C_ACC}" stroke="#FFFFFF" stroke-width="1.0"/>')
+    F.axes_box(body, L, T, W_, H_, [41.5, 42.0, 42.5, 43.0, 43.5], [279.5, 280.0, 280.5, 281.0], X, Y,
+               "相对观测开始时刻 / s", "距离 d − 10 km / m", xfmt=lambda v: f"{v:.1f}")
+    F.legend_box(body, L + W_ / 2 - 78, T + 12, [
+        ("line", C_MAIN, None, "连续曲线（0.001 s）"),
+        ("dot", C_ACC, None, "1 s 采样点"),
+        ("line", GR, "4,3", "连续最小距离"),
+        ("line", C_ACC, "2,3", "1 s 采样最小距离"),
+    ])
     F.save("fig7a_grid_zoom.svg", W, H, body)
 
-    # (b) 采样误差随步长
+    # (b) 采样误差随步长（图例置右下角空白区，彻底避免与 10 m 线重叠；三线配色清晰区分）
     hs, err = np.array(D["hs"]), np.array(D["err_m"])
     W, H = 620, 360
     L, T, W_, H_ = 80, 20, 510, 280
@@ -84,17 +90,20 @@ def main():
     body = []
     hh = np.logspace(xl, xh, 50)
     bound = D["M"]["d"] * hh ** 2 / 8 * 1000
-    body.append(F.line(L, Y(10), L + W_, Y(10), GR, 0.8, "4,3"))
-    body.append(F.poly([(X(a), Y(b)) for a, b in zip(hh, bound) if yl <= np.log10(b) <= yh], stroke=GR, w=1.2, closed=False, dash="7,3"))
-    body.append(F.poly([(X(a), Y(b)) for a, b in zip(hs, err)], stroke=C_LINE, w=1.6, closed=False))
+    body.append(F.line(L, Y(10), L + W_, Y(10), GR, 1.0, "3,3"))
+    body.append(F.poly([(X(a), Y(b)) for a, b in zip(hh, bound) if yl <= np.log10(b) <= yh], stroke=C_ACC, w=1.4, closed=False, dash="6,3"))
+    body.append(F.poly([(X(a), Y(b)) for a, b in zip(hs, err)], stroke=C_MAIN, w=1.8, closed=False))
     for a, b in zip(hs, err):
-        body.append(f'<circle cx="{X(a):.1f}" cy="{Y(b):.1f}" r="3.4" fill="{C_LINE}"/>')
+        body.append(f'<circle cx="{X(a):.1f}" cy="{Y(b):.1f}" r="3.6" fill="#FFFFFF" stroke="{C_MAIN}" stroke-width="1.5"/>')
     sup = {-5: "⁻⁵", -4: "⁻⁴", -3: "⁻³", -2: "⁻²", -1: "⁻¹", 0: "⁰", 1: "¹", 2: "²"}
     minor = [k * 10 ** e for e in range(-5, 2) for k in range(2, 10)]
     F.axes_box(body, L, T, W_, H_, [0.01, 0.1, 1], [10 ** e for e in range(-5, 3)], X, Y, "采样步长 h / s", "最小距离的采样误差 / m",
                yfmt=lambda v: "10" + sup[int(round(np.log10(v)))], xfmt=lambda v: {0.01: "0.01", 0.1: "0.1", 1: "1"}[v], minor_y=minor)
-    F.legend_box(body, L + 8, T + 8, [("line", C_LINE, None, "实测误差（网格平移取最坏）"), ("line", GR, "7,3", "误差界 h²M/8"),
-                                      ("line", GR, "4,3", "距离裕量 10 m")])
+    F.legend_box(body, L + W_ - 166, T + H_ - 76, [
+        ("line", C_MAIN, None, "实测最大误差"),
+        ("line", C_ACC, "6,3", "理论误差界 h²M/8"),
+        ("line", GR, "3,3", "距离裕量 10 m"),
+    ])
     F.save("fig7b_grid_err.svg", W, H, body)
 
 
