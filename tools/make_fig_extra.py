@@ -105,36 +105,55 @@ def make_q2_cumdv():
 
 
 def make_q3_split():
-    """图 (a)：问题三边界目标重分配消融（10/20 vs 9/21 vs 11/19，R1 侧对比）。"""
+    """问题三以 k*=10 为中心的 7 档对称边界重分配消融（7/23 至 13/17，三维 CW 代价柱状图 + 精确二体收敛曲线）。"""
+    # 全部为 208 核服务器实测值：(标签, CW 动态规划代价, 精确二体 R1 Δv 或 None, 类型)
     items = [
-        ("10 / 20（基准）", 13.39, 11.94, C_MAIN),
-        ("9 / 21（B2→R2）", 14.63, None, C_SUB),
-        ("11 / 19（B4→R1）", 35.69, None, C_ACC),
+        ("7 / 23", 28.32, 21.54, "left"),
+        ("8 / 22", 28.74, 21.88, "left"),
+        ("9 / 21", 24.76, 14.62, "left"),
+        ("10 / 20*", 23.40, 13.37, "opt"),
+        ("11 / 19", 39.81, 35.69, "right"),
+        ("12 / 18", 43.89, None, "right"),
+        ("13 / 17", 48.69, None, "right"),
     ]
-    W, H = 620, 400
-    L, T, W_, H_ = 80, 20, 510, 300
+    W, H = 640, 400
+    L, T, W_, H_ = 80, 20, 530, 300
     n = len(items)
     bw = W_ / n
-    Y = lambda v: T + (42 - v) / 42 * H_  # noqa: E731
+    Y = lambda v: T + (56.0 - v) / 56.0 * H_  # noqa: E731
     body = []
-    # 双星总和参考线（26.07 m/s）
-    body.append(F.line(L, Y(26.07), L + W_, Y(26.07), C_GR, 0.9, "4,3"))
-    for k, (lab, v1, v_full, col) in enumerate(items):
+
+    # 最优分界 k*=10 浅色竖向高亮带
+    xc_opt = L + 3.5 * bw
+    body.append(f'<rect x="{xc_opt - bw * 0.46:.1f}" y="{T + 1:.1f}" width="{bw * 0.92:.1f}" height="{H_ - 2:.1f}" fill="#EDF2F7" stroke="none"/>')
+
+    # 1. 三维 CW 动态规划代价柱状图（7 档完整实测）
+    tb_pts = []
+    for k, (lab, v_cw, v_tb, kind) in enumerate(items):
         xc = L + (k + 0.5) * bw
-        w_bar = bw * 0.42
+        w_bar = bw * 0.44
         x0 = xc - w_bar / 2
-        body.append(f'<rect x="{x0:.1f}" y="{Y(v1):.1f}" width="{w_bar:.1f}" height="{Y(0) - Y(v1):.1f}" fill="{col}"/>')
-        lbl = f">{v1:.2f}（未收敛）" if k == 2 else f"{v1:.2f}"
-        body.append(F.text(xc, Y(v1) - 8, lbl, 11.5, "middle", col if k == 2 else "#222222"))
-        if v_full is not None:
-            body.append(F.line(x0, Y(v_full), x0 + w_bar, Y(v_full), "#FFFFFF", 1.6, "3,2"))
-        body.append(F.text(xc, T + H_ + 20, lab, 12, "middle", "#222222"))
-    F.axes_box(body, L, T, W_, H_, [], range(0, 43, 10), lambda v: v, Y, None, "R1 速度增量 / (m/s)")
-    body.append(F.text(L + W_ / 2, T + H_ + 46, "双星目标划分方案", 13))
+        col = C_MAIN if kind == "opt" else ("#6C8EBF" if kind == "left" else C_ACC)
+        body.append(f'<rect x="{x0:.1f}" y="{Y(v_cw):.1f}" width="{w_bar:.1f}" height="{Y(0) - Y(v_cw):.1f}" fill="{col}" fill-opacity="0.88"/>')
+        body.append(F.text(xc, Y(v_cw) - 7, f"{v_cw:.2f}", 10.5, "middle", col if kind == "right" else "#1A365D"))
+        body.append(F.text(xc, T + H_ + 20, lab, 11.5, "middle", C_MAIN if kind == "opt" else "#222222"))
+        if v_tb is not None:
+            tb_pts.append((xc, Y(v_tb), v_tb, kind))
+
+    # 2. 精确二体 R1 速度增量折线与圆点（k=7..11 实测）
+    body.append(F.poly([(p[0], p[1]) for p in tb_pts], stroke="#111111", w=1.9, closed=False))
+    for xc, yc, v_tb, kind in tb_pts:
+        body.append(f'<circle cx="{xc:.1f}" cy="{yc:.1f}" r="4.0" fill="#FFFFFF" stroke="#111111" stroke-width="1.8"/>')
+        dy = 17 if kind != "right" else 17
+        body.append(F.text(xc, yc + dy, f"{v_tb:.2f}", 10.2, "middle", "#FFFFFF"))
+
+    F.axes_box(body, L, T, W_, H_, [], range(0, 57, 10), lambda v: v, Y, None, "R1 速度增量 / (m/s)")
+    body.append(F.text(L + W_ / 2, T + H_ + 48, "双星目标划分比例 k / (30 − k)", 13))
     F.legend_box(body, L + 10, T + 10, [
-        ("rect", C_MAIN, None, "基准 10/20（精修后 11.94 m/s）"),
-        ("rect", C_ACC, None, "折返 11/19（单星超双星总和）"),
-        ("line", C_GR, "4,3", "10/20 双星合计（26.07 m/s）"),
+        ("rect", "#6C8EBF", None, "左移划分 CW 代价（k = 7, 8, 9）"),
+        ("rect", C_MAIN, None, "最优划分 10 / 20*（CW 23.40 m/s）"),
+        ("rect", C_ACC, None, "右移折返 CW 代价（k = 11, 12, 13）"),
+        ("line", "#111111", None, "精确二体单轮优化（10/20 精修至 11.94 m/s）"),
     ])
     F.save("fig12c_q3_split.svg", W, H, body)
 
