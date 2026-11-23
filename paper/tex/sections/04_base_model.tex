@@ -28,19 +28,19 @@
 \end{equation}
 光照角和侦测角都按有向夹角计算，$\alpha = \arccos(\hat{\bm u}_\odot\cdot\bm\rho/\|\bm\rho\|)$，$\theta = \arccos(\hat{\bm u}_E\cdot\bm\rho/\|\bm\rho\|)$，取值在 $[0^\circ, 180^\circ]$。由于 $\alpha \le 45^\circ$ 等价于 $\hat{\bm u}_\odot\cdot\bm\rho \ge \|\bm\rho\|\cos 45^\circ$，三个观测条件可以写成相对位置所属的一个集合
 \begin{equation}
-  \mathcal C_b(t) = \Big\{\bm\rho \;\Big|\; 10 \le \|\bm\rho\| \le 50,\ \
+  \mathcal C_b(t) = \Big\{\bm\rho \;\Big|\; 10~\mathrm{km} \le \|\bm\rho\| \le 50~\mathrm{km},\ \
   \|\bm\rho\|\cos 45^\circ \le \hat{\bm u}_\odot(t)\cdot\bm\rho,\ \
   \|\bm\rho\|\cos 45^\circ \le \hat{\bm u}_E(t)\cdot\bm\rho \Big\} .
   \label{eq:feasset}
 \end{equation}
-后两个不等式都是二阶锥约束，距离上界是球约束，这三者都是凸的。只有距离下界 $\|\bm\rho\| \ge 10$ 是非凸约束，它把集合的中心挖空。
+后两个不等式都是二阶锥约束，距离上界是球约束，这三者都是凸的。只有距离下界 $\|\bm\rho\| \ge 10~\mathrm{km}$ 是非凸约束，它把集合的中心挖空。
 
 一次有效观测要求在整个观测区间内都满足条件，即存在观测开始时刻 $s$，使得
 \begin{equation}
   \bm\rho(t) \in \mathcal C_b(t), \qquad \forall\, t \in [s,\ s + \tau],\quad \tau = 60~\mathrm s .
   \label{eq:validobs}
 \end{equation}
-这是对连续时间区间的约束，属于半无限约束。求解时在时间网格上离散化，再在更细的网格上逐点检验。
+这是对连续时间区间的约束，求解时先在离散时间网格上施加，再在更细的网格上逐点检验。
 
 \subsection{观测单元}
 
@@ -48,7 +48,7 @@
 \begin{equation}
   \begin{aligned}
     \min_{t_1,t_2,\Delta\bm v_1,\Delta\bm v_2,s}\quad & \|\Delta\bm v_1\| + \|\Delta\bm v_2\| \\
-    \text{s.t.}\quad & t_0 \le t_1,\quad t_2 - t_1 \ge 3600,\quad t_2 \le s,\quad [s, s+\tau] \subseteq W, \\
+    \text{s.t.}\quad & t_0 \le t_1,\quad t_2 - t_1 \ge 3600~\mathrm s,\quad t_2 \le s,\quad [s, s+\tau] \subseteq W, \\
     & \|\Delta\bm v_j\| \le 30~\mathrm{m/s},\quad j = 1, 2, \\
     & \bm\rho(t) \in \mathcal C_b(t),\quad \forall\, t \in [s, s+\tau] .
   \end{aligned}
@@ -65,10 +65,10 @@
 
 \subsection{机动约束与目标函数}
 
-对每颗观测卫星，全部脉冲都排在同一条时间轴上，需要满足
+对每颗观测卫星，全部非零有效脉冲排在同一条时间轴上，需要满足
 \begin{equation}
   \|\Delta\bm v_k\| \le 30~\mathrm{m/s},\qquad t_{k+1} - t_k \ge 3600~\mathrm s,\qquad
-  J = \sum_k \|\Delta\bm v_k\| \le 300~\mathrm{m/s} .
+  \sum_k \|\Delta\bm v_k\| \le 300~\mathrm{m/s} .
   \label{eq:maneuver}
 \end{equation}
 此外，按假设 (5)，相邻两次观测之间的脉冲不超过两次，所有观测须在任务时长 $T$ 内结束。
