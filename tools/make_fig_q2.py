@@ -49,7 +49,7 @@ def main():
     for s, n in obs:
         rT = F.kepler(np.array(d["targets_km"][n][:3]), np.array(d["targets_km"][n][3:]), s)[0][0]
         pts.append((s / 86400, float(wrap(lon(rT, s)))))
-    W, H = 620, 380
+    W, H = 620, 400
     L, T, W_, H_ = 80, 20, 510, 300
     X = lambda v: L + v / 30 * W_  # noqa: E731
     Y = lambda v: T + (22 - v) / 44 * H_  # noqa: E731
@@ -68,8 +68,8 @@ def main():
     for b in d["burns"]:
         c[b["for"]] += np.linalg.norm(b["dv_km_s"]) * 1000
     vals = [(n.upper(), c.get(n, 0.0)) for _, n in obs]
-    W, H = 620, 380
-    L, T, W_, H_ = 70, 20, 530, 290
+    W, H = 620, 400
+    L, T, W_, H_ = 70, 20, 530, 300
     n = len(vals)
     bw = W_ / n
     Y = lambda v: T + (22 - v) / 22 * H_  # noqa: E731
@@ -85,7 +85,7 @@ def main():
     body.append(F.text(L + W_ / 2, T + H_ + 58, "观测目标（按观测先后）", 13))
     F.legend_box(body, L + 8, T + 8, [("rect", C_LINE, None, "单次观测的速度增量"),
                                       ("line", "#555555", "4,3", f"中位数 {med:.2f} m/s")])
-    F.save("fig10b_q2_dv.svg", W, H + 30, body)
+    F.save("fig10b_q2_dv.svg", W, H, body)
 
 
 

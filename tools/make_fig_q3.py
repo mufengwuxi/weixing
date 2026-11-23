@@ -67,7 +67,7 @@ def make_route_and_dv():
         rT = F.kepler(np.array(d2["targets_km"][n][:3]), np.array(d2["targets_km"][n][3:]), s)[0][0]
         pts2.append((s / 86400, float(wrap(lon(rT, s)))))
 
-    W, H = 620, 380
+    W, H = 620, 400
     L, T, W_, H_ = 80, 20, 510, 300
     X = lambda v: L + v / 30 * W_  # noqa: E731
     Y = lambda v: T + (22 - v) / 44 * H_  # noqa: E731
@@ -95,8 +95,8 @@ def make_route_and_dv():
         c2[b["for"]] += np.linalg.norm(b["dv_km_s"]) * 1000
     vals = [(n.upper(), c1.get(n, 0.0), C_R1) for _, n in obs1] + [(n.upper(), c2.get(n, 0.0), C_R2) for _, n in obs2]
 
-    W, H = 620, 380
-    L, T, W_, H_ = 70, 20, 530, 290
+    W, H = 620, 400
+    L, T, W_, H_ = 70, 20, 530, 300
     n = len(vals)
     bw = W_ / n
     Y = lambda v: T + (6.0 - v) / 6.0 * H_  # noqa: E731
@@ -117,7 +117,7 @@ def make_route_and_dv():
         ("rect", C_R2, None, "R2 各次观测（合计 14.12 m/s）"),
         ("line", C_GRAY, "4,3", f"全部 30 颗中位数 {med:.2f} m/s"),
     ])
-    F.save("fig12b_q3_dv.svg", W, H + 30, body)
+    F.save("fig12b_q3_dv.svg", W, H, body)
 
 
 def make_da_curve():
