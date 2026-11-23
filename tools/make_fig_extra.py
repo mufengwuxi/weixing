@@ -427,7 +427,7 @@ def make_q2_baseline_figs():
         draw_node(nx, ny, kept, lab)
 
     # 极简标注（无框）
-    body.append(F.text(xs[1], 376, "保留前 W 条", 12.5, "middle", DK))
+    body.append(F.text(xs[1], 376, "按束宽截断", 12.5, "middle", DK))
     F.save("fig10f_q2_beam.svg", W, H, body)
 
 

@@ -11,9 +11,9 @@
 \end{equation}
 这个方程有解析解，给定初始状态和飞行时间即可由开普勒方程直接求出任意时刻的状态，记为 $\bm x(t) = \Phi(\bm x(t_0),\, t - t_0)$。
 
-观测卫星的机动方案是一列脉冲 $\{(t_k, \Delta\bm v_k)\}_{k=1}^{K}$，满足 $t_1 < t_2 < \cdots < t_K$。脉冲时刻位置不变、速度跳变，即
+观测卫星的机动方案是一列脉冲 $\{(t_m, \Delta\bm v_m)\}_{m=1}^{M_{\mathrm{b}}}$，满足 $t_1 < t_2 < \cdots < t_{M_{\mathrm{b}}}$。脉冲时刻位置不变、速度跳变，即
 \begin{equation}
-  \bm r(t_k^+) = \bm r(t_k^-), \qquad \bm v(t_k^+) = \bm v(t_k^-) + \Delta\bm v_k .
+  \bm r(t_m^+) = \bm r(t_m^-), \qquad \bm v(t_m^+) = \bm v(t_m^-) + \Delta\bm v_m .
   \label{eq:impulse}
 \end{equation}
 在相邻两次脉冲之间用 $\Phi$ 传播，于是观测卫星的整条轨迹 $\bm r_O(t)$ 由初始状态和脉冲序列唯一确定。目标卫星不机动，轨迹为 $\bm r_b(t) = \Phi(\bm x_b(0), t)$ 的位置分量。
