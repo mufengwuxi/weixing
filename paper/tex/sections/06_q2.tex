@@ -224,14 +224,13 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从目标队列中部�
   \centering
   \caption{问题二基线方案与本文主模型综合对比}
   \label{tab:q2compare}
-  \zihao{-5}\setlength{\tabcolsep}{2.5pt}
+  \zihao{-5}\setlength{\tabcolsep}{3pt}
   \begin{tabular}{lccccc}
     \toprule
-    求解方案 & 目标数 & 累计 $\Delta v$/(m/s) & 相对 M2-A & 最大单脉冲/(m/s) & 求解耗时 \\
+    求解方案 & 目标数 & 累计 $\Delta v$/(m/s) & 相对基线 & 最大单脉冲/(m/s) & 求解耗时 \\
     \midrule
-    基线初解（M2-A，束搜索 + 逐段） & 30 & 210.39 & — & 29.8 & 分钟级 \\
-    基线完全（M2-B，大邻域搜索） & 30 & 176.31 & $-16.2\%$ & 28.4 & 数小时 \\
-    \textbf{本文主模型（CW 动态规划 + 时空联合）} & \textbf{30} & \textbf{133.03} & $\mathbf{-36.8\%}$ & \textbf{16.81} & \textbf{数分钟} \\
+    基线方案（M2-B，束搜索 + 大邻域搜索） & 30 & 176.31 & — & 28.4 & 数小时 \\
+    \textbf{本文主模型（CW 动态规划 + 时空联合）} & \textbf{30} & \textbf{133.03} & $\mathbf{-24.6\%}$ & \textbf{16.81} & \textbf{数分钟} \\
     \bottomrule
   \end{tabular}
 \end{table}
