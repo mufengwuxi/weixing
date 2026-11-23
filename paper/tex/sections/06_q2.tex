@@ -107,7 +107,7 @@ R1 在事件之间的转移用漂移相位模型估计。把 R1 和目标的位�
 
 \paragraph{（1）离散层：三维 CW 动态规划}
 
-将每个候选观测事件的瞄准点投影到以 R1 名义圆轨道为参考的共转当地垂线坐标系（LVLH）中，记其三维相对位置为 $\bm\rho_e = (x_e, y_e, z_e)^{\mathrm T}$。根据 Hill/CW 方程的能量积分关系，卫星在径向偏移 $x_e$ 处保持长期漂移率 $\dot y_{\mathrm{sec}}$（对应漂移率 $w$，单位度/天）所需的切向相对速度满足\cite{cw1960}
+将每个候选观测事件的瞄准点投影到以 R1 参考圆轨道建立的当地垂线坐标系（LVLH）中，记其三维相对位置为 $\bm\rho_e = (x_e, y_e, z_e)^{\mathrm T}$。根据 Hill/CW 方程的能量积分关系，卫星在径向偏移 $x_e$ 处保持长期漂移率 $\dot y_{\mathrm{sec}}$（对应漂移率 $w$，单位度/天）所需的切向相对速度满足\cite{cw1960}
 \begin{equation}
   v_y(x_e, w) = -2n x_e - \frac{1}{3}\dot y_{\mathrm{sec}}(w) ,
   \label{eq:cwdrift}
