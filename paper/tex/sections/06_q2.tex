@@ -83,21 +83,12 @@ R1 在事件之间的转移用漂移相位模型估计。把 R1 和目标的位�
 \end{equation}
 其中 $J_{\mathrm{est}}$ 是已累计的估计代价，$t_{\mathrm{day}}$ 是已用天数，$\Lambda_{\mathrm{rem}}$ 是扫过剩余全部目标还需要的最小相位跨度。第二项避免搜索在一处停留过久，第三项避免搜索只顾一侧、来不及扫过另一侧。漂移相位模型下每次扩展只需代数运算，束宽可以取到数千。
 
-束搜索给出访问顺序和观测日期后，按顺序逐段求解观测单元，每一段就是一个以上一次观测结束状态为初值的问题一，用第 5.2 节的方法求出精确的两脉冲方案，上一段的终端状态接力传给下一段。某一段在排定日期无解时，改用该目标相邻几天的观测事件。逐段求解之后仍缺少的目标，尝试与相邻目标合并为同一次飞越：把两颗目标的观测约束写进同一段，两次观测共用一组机动。最大允许交会漂移率随偏角的变化规律以及基线求解流程如图~\ref{fig:q2beam} 所示。
+束搜索给出访问顺序和观测日期后，按顺序逐段求解观测单元，每一段就是一个以上一次观测结束状态为初值的问题一，用第 5.2 节的方法求出精确的两脉冲方案，上一段的终端状态接力传给下一段。某一段在排定日期无解时，改用该目标相邻几天的观测事件。逐段求解之后仍缺少的目标，尝试与相邻目标合并为同一次飞越：把两颗目标的观测约束写进同一段，两次观测共用一组机动。上述交会高度偏差的轨道几何关系与束搜索剪枝过程如图~\ref{fig:q2beam} 所示。
 
 \begin{figure}[!htb]
   \centering
-  \begin{subfigure}[b]{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{fig10e_wmax_delta.pdf}
-    \caption{最大允许交会漂移率 $\omega_{\max}(\delta)$ 与目标分布}
-  \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{fig10f_beam_flow.pdf}
-    \caption{基线束搜索与逐段求解流程}
-  \end{subfigure}
-  \caption{基线漂移相位模型与束搜索流程}
+  \includegraphics[width=0.96\textwidth]{fig10e_q2_mechanism.pdf}
+  \caption{交会高度偏差几何关系与束搜索剪枝示意}
   \label{fig:q2beam}
 \end{figure}
 

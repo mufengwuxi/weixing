@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="410" viewBox="0 0 1000 410">
+<rect x="0" y="0" width="1000" height="410" fill="#FFFFFF"/>
+<rect x="14" y="14" width="470" height="382" rx="6" ry="6" fill="#F7FAFC" stroke="#9BB7D4" stroke-width="0.9"/>
+<rect x="506" y="14" width="480" height="382" rx="6" ry="6" fill="#F7FAFC" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="249.0" y="42.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1A365D">(a) 交线偏角 δ 与交会高度偏差几何关系</text>
+<text x="746.0" y="42.0" font-family="SimSun, Times New Roman" font-size="14" text-anchor="middle" fill="#1A365D">(b) 漂移相位束搜索的逐层扩展与剪枝</text>
+<circle cx="204.0" cy="222.0" r="18" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.2"/>
+<text x="204.0" y="226.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">地球</text>
+<polygon points="294.0,222.0 293.9,218.8 293.8,215.7 293.5,212.5 293.1,209.4 292.6,206.3 292.0,203.2 291.3,200.1 290.5,197.1 289.5,194.0 288.5,191.1 287.4,188.1 286.1,185.2 284.8,182.3 283.3,179.5 281.8,176.8 280.2,174.1 278.4,171.4 276.6,168.8 274.7,166.3 272.7,163.9 270.6,161.5 268.5,159.2 266.2,157.0 263.9,154.8 261.5,152.8 259.0,150.8 256.5,148.9 253.9,147.1 251.3,145.4 248.5,143.8 245.8,142.3 242.9,140.9 240.1,139.5 237.2,138.3 234.2,137.2 231.2,136.2 228.2,135.3 225.1,134.5 222.0,133.8 218.9,133.2 215.8,132.8 212.7,132.4 209.5,132.2 206.4,132.0 203.2,132.0 200.1,132.1 196.9,132.3 193.8,132.6 190.6,133.0 187.5,133.5 184.4,134.2 181.3,134.9 178.3,135.7 175.3,136.7 172.3,137.8 169.4,138.9 166.5,140.2 163.6,141.6 160.8,143.0 158.1,144.6 155.4,146.2 152.8,148.0 150.2,149.8 147.7,151.8 145.3,153.8 142.9,155.9 140.6,158.1 138.4,160.3 136.3,162.7 134.3,165.1 132.3,167.6 130.5,170.1 128.7,172.7 127.0,175.4 125.4,178.1 123.9,180.9 122.5,183.8 121.2,186.6 120.0,189.6 119.0,192.5 118.0,195.5 117.1,198.6 116.3,201.6 115.7,204.7 115.1,207.8 114.7,211.0 114.3,214.1 114.1,217.3 114.0,220.4 114.0,223.6 114.1,226.7 114.3,229.9 114.7,233.0 115.1,236.2 115.7,239.3 116.3,242.4 117.1,245.4 118.0,248.5 119.0,251.5 120.0,254.4 121.2,257.4 122.5,260.2 123.9,263.1 125.4,265.9 127.0,268.6 128.7,271.3 130.5,273.9 132.3,276.4 134.3,278.9 136.3,281.3 138.4,283.7 140.6,285.9 142.9,288.1 145.3,290.2 147.7,292.2 150.2,294.2 152.8,296.0 155.4,297.8 158.1,299.4 160.8,301.0 163.6,302.4 166.5,303.8 169.4,305.1 172.3,306.2 175.3,307.3 178.3,308.3 181.3,309.1 184.4,309.8 187.5,310.5 190.6,311.0 193.8,311.4 196.9,311.7 200.1,311.9 203.2,312.0 206.4,312.0 209.5,311.8 212.7,311.6 215.8,311.2 218.9,310.8 222.0,310.2 225.1,309.5 228.2,308.7 231.2,307.8 234.2,306.8 237.2,305.7 240.1,304.5 242.9,303.1 245.8,301.7 248.5,300.2 251.3,298.6 253.9,296.9 256.5,295.1 259.0,293.2 261.5,291.2 263.9,289.2 266.2,287.0 268.5,284.8 270.6,282.5 272.7,280.1 274.7,277.7 276.6,275.2 278.4,272.6 280.2,269.9 281.8,267.2 283.3,264.5 284.8,261.7 286.1,258.8 287.4,255.9 288.5,252.9 289.5,250.0 290.5,246.9 291.3,243.9 292.0,240.8 292.6,237.7 293.1,234.6 293.5,231.5 293.8,228.3 293.9,225.2 294.0,222.0" fill="none" stroke="#8A99AD" stroke-width="1.4" stroke-dasharray="5,4"/>
+<polygon points="294.0,222.0 294.0,218.8 293.8,215.7 293.6,212.5 293.3,209.4 293.0,206.2 292.5,203.1 292.0,199.9 291.4,196.8 290.7,193.7 289.9,190.6 289.0,187.4 288.0,184.3 287.0,181.3 285.9,178.2 284.6,175.1 283.3,172.1 281.9,169.1 280.4,166.1 278.8,163.1 277.1,160.2 275.2,157.3 273.3,154.5 271.3,151.6 269.2,148.8 267.1,146.1 264.8,143.4 262.3,140.8 259.8,138.2 257.2,135.7 254.5,133.3 251.7,130.9 248.8,128.6 245.8,126.4 242.7,124.2 239.6,122.2 236.3,120.3 232.9,118.4 229.4,116.7 225.9,115.0 222.3,113.5 218.5,112.1 214.8,110.8 210.9,109.7 207.0,108.7 203.0,107.8 199.0,107.1 194.9,106.5 190.7,106.0 186.5,105.7 182.3,105.6 178.1,105.6 173.8,105.8 169.5,106.2 165.2,106.7 160.9,107.4 156.6,108.3 152.3,109.3 148.0,110.5 143.8,111.9 139.6,113.4 135.4,115.1 131.3,117.0 127.3,119.1 123.3,121.3 119.4,123.7 115.6,126.3 111.8,129.0 108.2,131.9 104.7,135.0 101.3,138.2 98.0,141.5 94.8,145.0 91.8,148.6 88.9,152.4 86.1,156.2 83.6,160.2 81.1,164.3 78.9,168.6 76.8,172.9 74.9,177.3 73.1,181.7 71.6,186.3 70.2,190.9 69.0,195.6 68.0,200.3 67.2,205.1 66.6,209.9 66.2,214.7 66.0,219.6 66.0,224.4 66.2,229.3 66.6,234.1 67.2,238.9 68.0,243.7 69.0,248.4 70.2,253.1 71.6,257.7 73.1,262.3 74.9,266.7 76.8,271.1 78.9,275.4 81.1,279.7 83.6,283.8 86.1,287.8 88.9,291.6 91.8,295.4 94.8,299.0 98.0,302.5 101.3,305.8 104.7,309.0 108.2,312.1 111.8,315.0 115.6,317.7 119.4,320.3 123.3,322.7 127.3,324.9 131.3,327.0 135.4,328.9 139.6,330.6 143.8,332.1 148.0,333.5 152.3,334.7 156.6,335.7 160.9,336.6 165.2,337.3 169.5,337.8 173.8,338.2 178.1,338.4 182.3,338.4 186.5,338.3 190.7,338.0 194.9,337.5 199.0,336.9 203.0,336.2 207.0,335.3 210.9,334.3 214.8,333.2 218.5,331.9 222.3,330.5 225.9,329.0 229.4,327.3 232.9,325.6 236.3,323.7 239.6,321.8 242.7,319.8 245.8,317.6 248.8,315.4 251.7,313.1 254.5,310.7 257.2,308.3 259.8,305.8 262.3,303.2 264.8,300.6 267.1,297.9 269.2,295.2 271.3,292.4 273.3,289.5 275.2,286.7 277.1,283.8 278.8,280.9 280.4,277.9 281.9,274.9 283.3,271.9 284.6,268.9 285.9,265.8 287.0,262.7 288.0,259.7 289.0,256.6 289.9,253.4 290.7,250.3 291.4,247.2 292.0,244.1 292.5,240.9 293.0,237.8 293.3,234.6 293.6,231.5 293.8,228.3 294.0,225.2 294.0,222.0" fill="none" stroke="#1A365D" stroke-width="2.0"/>
+<line x1="56.0" y1="222.0" x2="344.0" y2="222.0" stroke="#3D72A4" stroke-width="1.1" stroke-dasharray="4,3"/>
+<text x="348.0" y="226.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#3D72A4">公共拱线</text>
+<circle cx="294.0" cy="222.0" r="4.5" fill="#1A365D" stroke="#FFFFFF" stroke-width="1.0"/>
+<text x="302.0" y="240.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#1A365D">切向脉冲点</text>
+<line x1="204.0" y1="222.0" x2="310.6" y2="183.2" stroke="#3D72A4" stroke-width="1.0" stroke-dasharray="3,2"/>
+<circle cx="288.6" cy="191.2" r="3.5" fill="#3D72A4"/>
+<text x="314.4" y="179.8" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#3D72A4">小偏角交线</text>
+<text x="314.4" y="195.8" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="start" fill="#4A5568">偏差小，可快漂</text>
+<line x1="204.0" y1="222.0" x2="245.7" y2="107.6" stroke="#9B2C2C" stroke-width="1.1" stroke-dasharray="3,2"/>
+<line x1="234.8" y1="137.4" x2="240.2" y2="122.6" stroke="#9B2C2C" stroke-width="3.2"/>
+<circle cx="234.8" cy="137.4" r="3.5" fill="#8A99AD"/>
+<circle cx="240.2" cy="122.6" r="4.0" fill="#9B2C2C"/>
+<text x="276.2" y="116.6" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#9B2C2C">大偏角交线（δ 较大）</text>
+<text x="276.2" y="133.6" font-family="SimSun, Times New Roman" font-size="11" text-anchor="start" fill="#9B2C2C">高度偏差 ≈ |Δa|(1−cos δ)</text>
+<text x="276.2" y="149.6" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="start" fill="#4A5568">需降低漂移率 ω 慢速接近</text>
+<line x1="245.2" y1="122.6" x2="272.2" y2="126.6" stroke="#9B2C2C" stroke-width="0.8"/>
+<polyline points="242.0,222.0 241.9,220.0 241.8,218.0 241.5,216.0 241.1,214.0 240.7,212.0 240.1,210.1 239.4,208.2 238.6,206.3 237.7,204.5 236.8,202.8 235.7,201.0 234.5,199.4 233.3,197.8 232.0,196.3 230.6,194.8 229.1,193.5 227.5,192.2 225.9,191.0 224.2,189.8 222.5,188.8 220.7,187.9 218.9,187.0 217.0,186.3" fill="none" stroke="#9B2C2C" stroke-width="1.2"/>
+<text x="241.7" y="199.6" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#9B2C2C">δ</text>
+<line x1="36.0" y1="372.0" x2="62.0" y2="372.0" stroke="#8A99AD" stroke-width="1.4" stroke-dasharray="5,4"/>
+<text x="68.0" y="376.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="start" fill="#4A5568">名义 GEO 轨道</text>
+<line x1="176.0" y1="372.0" x2="202.0" y2="372.0" stroke="#1A365D" stroke-width="2.0"/>
+<text x="208.0" y="376.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="start" fill="#1A365D">脉冲后漂移轨道</text>
+<line x1="322.0" y1="372.0" x2="348.0" y2="372.0" stroke="#9B2C2C" stroke-width="3.0"/>
+<text x="354.0" y="376.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="start" fill="#9B2C2C">交会高度偏差</text>
+<text x="556.0" y="76.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#1A365D">起点 R1</text>
+<line x1="556.0" y1="86.0" x2="556.0" y2="336.0" stroke="#E2E8F0" stroke-width="0.9" stroke-dasharray="2,3"/>
+<text x="672.0" y="76.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#1A365D">第 1 步</text>
+<line x1="672.0" y1="86.0" x2="672.0" y2="336.0" stroke="#E2E8F0" stroke-width="0.9" stroke-dasharray="2,3"/>
+<text x="796.0" y="76.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#1A365D">第 2 步</text>
+<line x1="796.0" y1="86.0" x2="796.0" y2="336.0" stroke="#E2E8F0" stroke-width="0.9" stroke-dasharray="2,3"/>
+<text x="922.0" y="76.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#1A365D">第 3 步</text>
+<line x1="922.0" y1="86.0" x2="922.0" y2="336.0" stroke="#E2E8F0" stroke-width="0.9" stroke-dasharray="2,3"/>
+<line x1="556.0" y1="210.0" x2="672.0" y2="124.0" stroke="#1A365D" stroke-width="1.8"/>
+<line x1="556.0" y1="210.0" x2="672.0" y2="196.0" stroke="#1A365D" stroke-width="1.8"/>
+<line x1="556.0" y1="210.0" x2="672.0" y2="266.0" stroke="#B8C4D0" stroke-width="1.0" stroke-dasharray="4,3"/>
+<line x1="556.0" y1="210.0" x2="672.0" y2="320.0" stroke="#B8C4D0" stroke-width="1.0" stroke-dasharray="4,3"/>
+<line x1="672.0" y1="124.0" x2="796.0" y2="108.0" stroke="#1A365D" stroke-width="1.8"/>
+<line x1="672.0" y1="124.0" x2="796.0" y2="152.0" stroke="#B8C4D0" stroke-width="1.0" stroke-dasharray="4,3"/>
+<line x1="672.0" y1="196.0" x2="796.0" y2="204.0" stroke="#1A365D" stroke-width="1.8"/>
+<line x1="672.0" y1="196.0" x2="796.0" y2="254.0" stroke="#B8C4D0" stroke-width="1.0" stroke-dasharray="4,3"/>
+<line x1="796.0" y1="108.0" x2="922.0" y2="108.0" stroke="#1A365D" stroke-width="1.8"/>
+<line x1="796.0" y1="108.0" x2="922.0" y2="150.0" stroke="#B8C4D0" stroke-width="1.0" stroke-dasharray="4,3"/>
+<line x1="796.0" y1="204.0" x2="922.0" y2="204.0" stroke="#1A365D" stroke-width="1.8"/>
+<line x1="796.0" y1="204.0" x2="922.0" y2="254.0" stroke="#B8C4D0" stroke-width="1.0" stroke-dasharray="4,3"/>
+<circle cx="556" cy="210" r="12" fill="#1A365D"/>
+<text x="556.0" y="214.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#FFFFFF">R1</text>
+<circle cx="672" cy="124" r="11" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.6"/>
+<text x="672.0" y="128.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">e1</text>
+<circle cx="672" cy="196" r="11" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.6"/>
+<text x="672.0" y="200.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">e2</text>
+<circle cx="672" cy="266" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>
+<text x="672.0" y="270.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#9AA5B1">×</text>
+<circle cx="672" cy="320" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>
+<text x="672.0" y="324.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#9AA5B1">×</text>
+<circle cx="796" cy="108" r="11" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.6"/>
+<text x="796.0" y="112.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">e3</text>
+<circle cx="796" cy="152" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>
+<text x="796.0" y="156.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#9AA5B1">×</text>
+<circle cx="796" cy="204" r="11" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.6"/>
+<text x="796.0" y="208.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">e4</text>
+<circle cx="796" cy="254" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>
+<text x="796.0" y="258.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#9AA5B1">×</text>
+<circle cx="922" cy="108" r="14" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.6"/>
+<text x="922.0" y="112.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">优选</text>
+<circle cx="922" cy="150" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>
+<text x="922.0" y="154.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#9AA5B1">×</text>
+<circle cx="922" cy="204" r="14" fill="#EBF2F8" stroke="#1A365D" stroke-width="1.6"/>
+<text x="922.0" y="208.0" font-family="SimSun, Times New Roman" font-size="10.5" text-anchor="middle" fill="#1A365D">保留</text>
+<circle cx="922" cy="254" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>
+<text x="922.0" y="258.0" font-family="SimSun, Times New Roman" font-size="11" text-anchor="middle" fill="#9AA5B1">×</text>
+<rect x="536" y="346" width="420" height="36" rx="4" ry="4" fill="#FFFFFF" stroke="#9BB7D4" stroke-width="0.9"/>
+<text x="746.0" y="369.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="middle" fill="#1A365D">每层按评价值 f 保留前 W 条低代价路径，剪去高代价与超 30 m/s 分支</text>
+</svg>

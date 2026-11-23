@@ -297,86 +297,139 @@ def make_plane_tilt():
 
 
 def make_q2_baseline_figs():
-    """第 6.2.1 节配图：(a) 最大允许交会漂移率 ω_max(δ) 与 30 颗目标分布；(b) 基线束搜索流程。"""
-    d = json.load(open(REPO / "results/q2/m_uni_q2_best.json", encoding="utf-8"))
-    r1 = np.array(d["r1_km"][:3], float)
-    v1 = np.array(d["r1_km"][3:], float)
-    h1 = np.cross(r1, v1)
-    h1 = h1 / np.linalg.norm(h1)
-    # R1 轨道面与赤道面的交线方向（升交点方向）
-    n_eq = np.cross([0.0, 0.0, 1.0], h1)
-    n_eq = n_eq / np.linalg.norm(n_eq)
-
-    deltas = []
-    for name, st in d["targets_km"].items():
-        rt, vt = np.array(st[:3], float), np.array(st[3:], float)
-        ht = np.cross(rt, vt)
-        ht = ht / np.linalg.norm(ht)
-        if name.lower() == "b7":
-            deltas.append((name.upper(), 90.0))
-            continue
-        lvec = np.cross(h1, ht)
-        ln = np.linalg.norm(lvec)
-        if ln < 1e-8:
-            deltas.append((name.upper(), 90.0))
-        else:
-            lvec /= ln
-            c = abs(float(np.dot(lvec, n_eq)))
-            deltas.append((name.upper(), float(np.degrees(np.arccos(np.clip(c, 0.0, 1.0))))))
-
-    # 式 (6.5): ω_max(δ) = min(4.0, (3/2) * 360.9856 * (25 / 42164.17) / (1 - cos δ))
-    def wmax_deg(deg):
-        rad = np.radians(deg)
-        denom = max(1.0 - np.cos(rad), 1e-9)
-        return min(4.0, 1.5 * 360.9856 * (25.0 / 42164.17) / denom)
-
-    # (a) ω_max(δ) 曲线与 30 颗目标
-    W, H = 620, 360
-    L, T, W_, H_ = 78, 22, 512, 272
-    X = lambda v: L + v / 94.0 * W_  # noqa: E731
-    Y = lambda v: T + (4.5 - v) / 4.5 * H_  # noqa: E731
+    """第 6.2.1 节图形化机理图（单色深蓝系，左右双区）：
+    左：拱线偏角 δ 引起交会高度偏差 |Δa|(1−cos δ) 的轨道几何示意；
+    右：漂移相位束搜索的树状扩展与剪枝示意。
+    """
+    W, H = 1000, 410
+    DK, MD, LT, BG, BD = "#1A365D", "#3D72A4", "#EBF2F8", "#F7FAFC", "#9BB7D4"
+    ACC = "#9B2C2C"
+    GR = "#8A99AD"
     body = []
-    dd = np.linspace(0.5, 90.0, 300)
-    ww = [wmax_deg(x) for x in dd]
-    body.append(F.poly([(X(a), Y(b)) for a, b in zip(dd, ww)], stroke=C_MAIN, w=1.8, closed=False))
-    # 标注慢速区参考线 δ = 55°
-    body.append(F.line(X(55), T, X(55), T + H_, C_GR, 0.8, "3,3"))
-    for name, dg in deltas:
-        w = wmax_deg(dg)
-        col = C_ACC if dg > 55.0 else C_SUB
-        body.append(f'<circle cx="{X(dg):.1f}" cy="{Y(w):.1f}" r="3.4" fill="{col}" stroke="#FFFFFF" stroke-width="0.7"/>')
-    F.axes_box(body, L, T, W_, H_, [0, 15, 30, 45, 60, 75, 90], [0, 1, 2, 3, 4],
-               X, Y, "交线相对公共拱线偏角 δ / (°)", "最大允许交会漂移率 ω_max / (°/天)")
-    F.legend_box(body, L + W_ - 196, T + 10, [
-        ("line", C_MAIN, None, "理论上限 ω_max(δ)"),
-        ("dot", C_SUB, None, "高速/中速目标（δ ≤ 55°）"),
-        ("dot", C_ACC, None, "慢速交会目标（δ > 55°）"),
-    ])
-    F.save("fig10e_wmax_delta.svg", W, H, body)
 
-    # (b) 基线束搜索流程（单色深蓝极简四步）
-    W, H = 620, 360
-    DK, MD, LT, BG, BD = "#1A365D", "#3D72A4", "#EBF2F8", "#F6F9FC", "#9BB7D4"
-    body = []
-    steps = [
-        ("候选事件生成", "轨道面穿越且 β ≤ 90°，共 1047 个观测事件"),
-        ("漂移相位估价", "单/双脉冲追赶估计，施加 ω_max(δ) 约束"),
-        ("束搜索剪枝", "按 f = J_est + μ·t_day + c·Λ_rem 保留前 W 状态"),
-        ("逐段求解与合并", "接力求解观测单元，邻近目标尝试同次飞越"),
+    # 左右分区柔和背景框
+    body.append(f'<rect x="14" y="14" width="470" height="382" rx="6" ry="6" fill="{BG}" stroke="{BD}" stroke-width="0.9"/>')
+    body.append(f'<rect x="506" y="14" width="480" height="382" rx="6" ry="6" fill="{BG}" stroke="{BD}" stroke-width="0.9"/>')
+    body.append(F.text(249, 42, "(a) 交线偏角 δ 与交会高度偏差几何关系", 14, "middle", DK))
+    body.append(F.text(746, 42, "(b) 漂移相位束搜索的逐层扩展与剪枝", 14, "middle", DK))
+
+    # ==================== 左图：轨道拱线与高度偏差几何 ====================
+    cx, cy = 204.0, 222.0
+    r_geo = 90.0
+    # 中心地球
+    body.append(f'<circle cx="{cx}" cy="{cy}" r="18" fill="{LT}" stroke="{DK}" stroke-width="1.2"/>')
+    body.append(F.text(cx, cy + 4, "地球", 10.5, "middle", DK))
+
+    # 名义 GEO 圆轨道（虚线）
+    ang = np.linspace(0, 2 * np.pi, 180)
+    geo_pts = [(cx + r_geo * np.cos(a), cy - r_geo * np.sin(a)) for a in ang]
+    body.append(F.poly(geo_pts, stroke=GR, w=1.4, dash="5,4", closed=True))
+
+    # 切向脉冲后的椭圆漂移轨道（在右侧 θ=0 处与 GEO 相切，近地点在 θ=0，远地点在 θ=π）
+    da = 24.0
+    ell_pts = [(cx + (r_geo + da * (1.0 - np.cos(a))) * np.cos(a),
+                cy - (r_geo + da * (1.0 - np.cos(a))) * np.sin(a)) for a in ang]
+    body.append(F.poly(ell_pts, stroke=DK, w=2.0, closed=True))
+
+    # 公共拱线（水平轴，过脉冲点 θ=0）
+    body.append(F.line(cx - 148, cy, cx + 140, cy, MD, 1.1, "4,3"))
+    body.append(F.text(cx + 144, cy + 4, "公共拱线", 11.5, "start", MD))
+
+    # 脉冲点（切点 θ=0）
+    px, py = cx + r_geo, cy
+    body.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="4.5" fill="{DK}" stroke="#FFFFFF" stroke-width="1.0"/>')
+    body.append(F.text(px + 8, py + 18, "切向脉冲点", 11.5, "start", DK))
+
+    # 情形 1：小偏角交线（δ = 20°）
+    a1 = np.radians(20.0)
+    r1_e = r_geo + da * (1.0 - np.cos(a1))
+    body.append(F.line(cx, cy, cx + (r1_e + 22) * np.cos(a1), cy - (r1_e + 22) * np.sin(a1), MD, 1.0, "3,2"))
+    body.append(f'<circle cx="{cx + r_geo * np.cos(a1):.1f}" cy="{cy - r_geo * np.sin(a1):.1f}" r="3.5" fill="{MD}"/>')
+    body.append(F.text(cx + (r1_e + 26) * np.cos(a1), cy - (r1_e + 26) * np.sin(a1) - 2, "小偏角交线", 11.5, "start", MD))
+    body.append(F.text(cx + (r1_e + 26) * np.cos(a1), cy - (r1_e + 26) * np.sin(a1) + 14, "偏差小，可快漂", 10.5, "start", "#4A5568"))
+
+    # 情形 2：大偏角交线（δ = 70°）
+    a2 = np.radians(70.0)
+    r2_e = r_geo + da * (1.0 - np.cos(a2))
+    g2x, g2y = cx + r_geo * np.cos(a2), cy - r_geo * np.sin(a2)
+    e2x, e2y = cx + r2_e * np.cos(a2), cy - r2_e * np.sin(a2)
+    body.append(F.line(cx, cy, cx + (r2_e + 16) * np.cos(a2), cy - (r2_e + 16) * np.sin(a2), ACC, 1.1, "3,2"))
+    # 红色加粗线段突出径向高度偏差 |Δa|(1-cos δ)
+    body.append(F.line(g2x, g2y, e2x, e2y, ACC, 3.2))
+    body.append(f'<circle cx="{g2x:.1f}" cy="{g2y:.1f}" r="3.5" fill="{GR}"/>')
+    body.append(f'<circle cx="{e2x:.1f}" cy="{e2y:.1f}" r="4.0" fill="{ACC}"/>')
+    body.append(F.text(e2x + 36, e2y - 6, "大偏角交线（δ 较大）", 11.5, "start", ACC))
+    body.append(F.text(e2x + 36, e2y + 11, "高度偏差 ≈ |Δa|(1−cos δ)", 11, "start", ACC))
+    body.append(F.text(e2x + 36, e2y + 27, "需降低漂移率 ω 慢速接近", 10.5, "start", "#4A5568"))
+    body.append(F.line(e2x + 5, e2y, e2x + 32, e2y + 4, ACC, 0.8))
+
+    # 角度弧 δ 标注
+    arc_a = np.linspace(0, a2, 24)
+    body.append(F.poly([(cx + 38 * np.cos(t), cy - 38 * np.sin(t)) for t in arc_a], stroke=ACC, w=1.2, closed=False))
+    body.append(F.text(cx + 46 * np.cos(a2 / 2), cy - 46 * np.sin(a2 / 2) + 4, "δ", 12, "middle", ACC))
+
+    # 左图底部图例条
+    body.append(F.line(36, 372, 62, 372, GR, 1.4, "5,4"))
+    body.append(F.text(68, 376, "名义 GEO 轨道", 11, "start", "#4A5568"))
+    body.append(F.line(176, 372, 202, 372, DK, 2.0))
+    body.append(F.text(208, 376, "脉冲后漂移轨道", 11, "start", DK))
+    body.append(F.line(322, 372, 348, 372, ACC, 3.0))
+    body.append(F.text(354, 376, "交会高度偏差", 11, "start", ACC))
+
+    # ==================== 右图：束搜索逐层扩展与剪枝树 ====================
+    xs = [556, 672, 796, 922]
+    # 层标题
+    for x, lab in zip(xs, ["起点 R1", "第 1 步", "第 2 步", "第 3 步"]):
+        body.append(F.text(x, 76, lab, 12, "middle", DK))
+        body.append(F.line(x, 86, x, 336, "#E2E8F0", 0.9, "2,3"))
+
+    # 节点坐标：(x, y, kept, label)
+    root = (xs[0], 210)
+    l1 = [(xs[1], 124, True, "e1"), (xs[1], 196, True, "e2"), (xs[1], 266, False, "×"), (xs[1], 320, False, "×")]
+    l2 = [
+        (xs[2], 108, True, "e3", 0), (xs[2], 152, False, "×", 0),
+        (xs[2], 204, True, "e4", 1), (xs[2], 254, False, "×", 1),
     ]
-    bx, bw, bh, gap = 64, 492, 56, 24
-    y0 = 26
-    for i, (t1, t2) in enumerate(steps):
-        yy = y0 + i * (bh + gap)
-        fill = DK if i == 3 else (LT if i % 2 == 1 else BG)
-        c1 = "#FFFFFF" if i == 3 else DK
-        c2 = "#DCE8F4" if i == 3 else "#4A5568"
-        body.append(f'<rect x="{bx}" y="{yy}" width="{bw}" height="{bh}" rx="5" ry="5" fill="{fill}" stroke="{DK if i == 3 else BD}" stroke-width="1.1"/>')
-        body.append(F.text(bx + bw / 2, yy + 23, t1, 14, "middle", c1))
-        body.append(F.text(bx + bw / 2, yy + 44, t2, 12, "middle", c2))
-        if i < len(steps) - 1:
-            body.append(F.arrow(bx + bw / 2, yy + bh + 2, bx + bw / 2, yy + bh + gap - 2, MD, 1.8, 8))
-    F.save("fig10f_beam_flow.svg", W, H, body)
+    l3 = [
+        (xs[3], 108, True, "优选", 0), (xs[3], 150, False, "×", 0),
+        (xs[3], 204, True, "保留", 2), (xs[3], 254, False, "×", 2),
+    ]
+
+    # 画连线：先画剪枝虚线，再画保留实线
+    for nx, ny, kept, _ in l1:
+        body.append(F.line(root[0], root[1], nx, ny, DK if kept else "#B8C4D0", 1.8 if kept else 1.0, None if kept else "4,3"))
+    for nx, ny, kept, _, pid in l2:
+        px0, py0 = l1[pid][0], l1[pid][1]
+        body.append(F.line(px0, py0, nx, ny, DK if kept else "#B8C4D0", 1.8 if kept else 1.0, None if kept else "4,3"))
+    for nx, ny, kept, _, pid in l3:
+        px0, py0 = l2[pid][0], l2[pid][1]
+        body.append(F.line(px0, py0, nx, ny, DK if kept else "#B8C4D0", 1.8 if kept else 1.0, None if kept else "4,3"))
+
+    # 画节点
+    body.append(f'<circle cx="{root[0]}" cy="{root[1]}" r="12" fill="{DK}"/>')
+    body.append(F.text(root[0], root[1] + 4, "R1", 11, "middle", "#FFFFFF"))
+
+    def draw_node(x, y, kept, lab):
+        if kept:
+            rr = 14 if len(lab) >= 2 and not lab.startswith("e") else 11
+            body.append(f'<circle cx="{x}" cy="{y}" r="{rr}" fill="{LT}" stroke="{DK}" stroke-width="1.6"/>')
+            body.append(F.text(x, y + 4, lab, 10.5, "middle", DK))
+        else:
+            body.append(f'<circle cx="{x}" cy="{y}" r="9" fill="#FFFFFF" stroke="#B8C4D0" stroke-width="1.1" stroke-dasharray="2,2"/>')
+            body.append(F.text(x, y + 4, "×", 11, "middle", "#9AA5B1"))
+
+    for nx, ny, kept, lab in l1:
+        draw_node(nx, ny, kept, lab)
+    for nx, ny, kept, lab, _ in l2:
+        draw_node(nx, ny, kept, lab)
+    for nx, ny, kept, lab, _ in l3:
+        draw_node(nx, ny, kept, lab)
+
+    # 束宽 W 说明与评价值提示框
+    body.append(f'<rect x="536" y="346" width="420" height="36" rx="4" ry="4" fill="#FFFFFF" stroke="{BD}" stroke-width="0.9"/>')
+    body.append(F.text(746, 369, "每层按评价值 f 保留前 W 条低代价路径，剪去高代价与超 30 m/s 分支", 11.5, "middle", DK))
+
+    F.save("fig10e_q2_mechanism.svg", W, H, body)
 
 
 if __name__ == "__main__":
