@@ -38,7 +38,7 @@
 <rect x="352.0" y="146.0" width="336.0" height="34.0" rx="4" ry="4" fill="#1F4E79" stroke="none" stroke-width="1.0"/>
 <text x="520.0" y="168.0" font-family="SimSun, Times New Roman" font-size="14.5" text-anchor="middle" fill="#FFFFFF">问题二 · 单星多标巡游（核心主模型）</text>
 <rect x="358.0" y="194.0" width="324.0" height="62.0" rx="4" ry="4" fill="#FFFFFF" stroke="#3D72A4" stroke-width="1.0"/>
-<text x="520.0" y="218.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1F4E79">离散排序层：三维 CW 相对运动动态规划</text>
+<text x="520.0" y="218.0" font-family="SimSun, Times New Roman" font-size="13.5" text-anchor="middle" fill="#1F4E79">离散排序层：三维 CW 动态规划</text>
 <text x="520.0" y="240.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#4A5568">确定性变邻域下降 · 自动识别伴随飞越</text>
 <line x1="520.0" y1="257.0" x2="520.0" y2="278.0" stroke="#3D72A4" stroke-width="1.8"/><polygon points="520.0,278.0 516.9,270.6 523.1,270.6" fill="#3D72A4" stroke="#3D72A4" stroke-width="0.5"/>
 <rect x="358.0" y="280.0" width="296.0" height="66.0" rx="4" ry="4" fill="#FFFFFF" stroke="#3D72A4" stroke-width="1.0"/>

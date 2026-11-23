@@ -437,7 +437,7 @@ def fig3():
     # 离散层
     yy = cy0 + 58
     body.append(rect(x2 + 16, yy, w2 - 32, 62, "#FFFFFF", MD, 1.0, rx=4))
-    body.append(text(x2 + w2 / 2, yy + 24, "离散排序层：三维 CW 相对运动动态规划", 13.5, "middle", DK))
+    body.append(text(x2 + w2 / 2, yy + 24, "离散排序层：三维 CW 动态规划", 13.5, "middle", DK))
     body.append(text(x2 + w2 / 2, yy + 46, "确定性变邻域下降 · 自动识别伴随飞越", 12, "middle", "#4A5568"))
     v_arr(x2 + w2 / 2, yy + 63, yy + 84)
 
