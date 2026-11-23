@@ -8,7 +8,7 @@
 
 复核汇总见表~\ref{tab:atkall}。三个问题的全部 61 次观测（问题一 1 次、问题二 30 次、问题三 30 次）在 0.05~s 解析重放与 ATK 4.2.0 单星 MCS 连续数值积分下 100\% 满足全部距离与角度约束，且 ATK 数值积分与解析轨迹的最大位置差均不超过 0.152~m（问题一与问题三不超过 0.004~m）。全程监测卫星地心距，三问主方案的最低地心距均高于 41569~km，远大于地球半径 6378.137~km，不存在低空掠过隐患。
 
-此外，为定量检验第 5.2.1 节与第 6.2.1 节中“30 天内观测星轨道面近似不变”的物理假设，我们统计了三问主方案的面外（法向）速度增量占比与 30 天内轨道面相对初始面的最大倾转角：问题二主方案的面外机动合计 8.80~m/s（占总 $\Delta v$ 的 6.6\%），最大轨道面倾转角仅 $0.0610^\circ$；问题三 R1 与 R2 的面外机动均仅为 0.067~m/s（占比不足 0.6\%），最大倾转角分别为 $0.0007^\circ$ 与 $0.0008^\circ$。这直接印证了在未机动名义轨道面上预计算候选穿越时刻的合理性。
+此外，为定量检验第 5.2.1 节与第 6.2.1 节中“30 天内观测星轨道面近似不变”的物理假设，我们统计了三问主方案的面外（法向）速度增量占比与 30 天内轨道面相对初始面的最大倾转角（图~\ref{fig:ch8verify}(b)）：问题二主方案的面外机动合计 8.80~m/s（占总 $\Delta v$ 的 6.6\%），最大轨道面倾转角仅 $0.0610^\circ$；问题三 R1 与 R2 的面外机动均仅为 0.067~m/s（占比不足 0.6\%），最大倾转角分别为 $0.0007^\circ$ 与 $0.0008^\circ$。同时，图~\ref{fig:ch8verify}(a) 汇总了问题二、三全部 60 次观测的距离区间，所有观测均严格位于 $10\sim 50$~km 可行带内。
 
 \begin{table}[!htb]
   \centering
@@ -26,6 +26,22 @@
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig15a_obs_verify.pdf}
+    \caption{问题二、三观测段距离区间分布}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig15b_plane_tilt.pdf}
+    \caption{面外机动占比与最大轨道面倾转角}
+  \end{subfigure}
+  \caption{多目标观测约束与轨道面稳定性检验}
+  \label{fig:ch8verify}
+\end{figure}
 
 \subsubsection{全任务时间网格采样误差检验}
 
@@ -116,7 +132,7 @@
     \includegraphics[width=\linewidth]{fig14b_sens_emax.pdf}
     \caption{偏心率上限 $e_{\max}$ 对 R2 速度增量的影响}
   \end{subfigure}
-  \caption{关键参数的灵敏度分析（本文主模型口径）}
+  \caption{关键参数的灵敏度分析}
   \label{fig:sens}
 \end{figure}
 

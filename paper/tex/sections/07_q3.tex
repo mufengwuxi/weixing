@@ -7,7 +7,7 @@
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.95\textwidth]{fig11_q3abs.pdf}
-  \caption{问题三的抽象：目标经度分组、R2 初始轨道设计与双星单向并行巡游}
+  \caption{问题三的抽象：双星分区与协同巡游}
   \label{fig:q3abs}
 \end{figure}
 
@@ -168,11 +168,11 @@
     \includegraphics[width=\linewidth]{fig12b_q3_dv.pdf}
     \caption{双星各次观测的速度增量}
   \end{subfigure}
-  \caption{问题三的双星协同巡游方案（本文主模型）}
+  \caption{问题三的双星巡游方案}
   \label{fig:q3route}
 \end{figure}
 
-表~\ref{tab:q3ablation} 对比了问题三五个递进模型的结果。在经度分组与离散网格初设（M3-A，35.85~m/s）的基础上，两星固定时刻序列凸优化（M3-B）降至 34.10~m/s；放开 R2 初始轨道做固定时刻联合优化（M3-C）降至 33.46~m/s；引入脉冲时刻联合优化（M3-D）降至 28.11~m/s；最终在本文主模型中耦合观测起始时刻并执行主矢量重定位，R1 降至 11.94~m/s、R2 降至 14.12~m/s，双星总计 \textbf{26.07~m/s}，较 M3-A 下降 \textbf{27.3\%}，较 M3-C 再降 \textbf{22.1\%}。
+表~\ref{tab:q3ablation} 与图~\ref{fig:q3ablation} 分别展示了问题三的边界分区消融及五个递进模型的对比结果。在经度分组与离散网格初设（M3-A，35.85~m/s）的基础上，两星固定时刻序列凸优化（M3-B）降至 34.10~m/s；放开 R2 初始轨道做固定时刻联合优化（M3-C）降至 33.46~m/s；引入脉冲时刻联合优化（M3-D）降至 28.11~m/s；最终在本文主模型中耦合观测起始时刻并执行主矢量重定位，R1 降至 11.94~m/s、R2 降至 14.12~m/s，双星总计 \textbf{26.07~m/s}，较 M3-A 下降 \textbf{27.3\%}，较 M3-C 再降 \textbf{22.1\%}。
 
 \begin{table}[!htb]
   \centering
@@ -192,12 +192,28 @@
   \end{tabular}
 \end{table}
 
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig12c_q3_split.pdf}
+    \caption{边界目标重分配消融}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig12d_q3_ablation.pdf}
+    \caption{各求解阶段双星速度增量对比}
+  \end{subfigure}
+  \caption{问题三的分区消融与模型对比}
+  \label{fig:q3ablation}
+\end{figure}
+
 为在主模型口径下检验参数 $\delta a$ 对结论的影响，我们在本文主模型框架下于 $\delta a = 3 \sim 20$~km 范围内扫描求解了最优总速度增量 $J^*(\delta a)$，结果见图~\ref{fig:q3da} 与表~\ref{tab:q3da}。$J^*(\delta a)$ 随 $\delta a$ 单调下降且斜率平缓：各档最优半长轴均贴在下界 $\aGEO - \delta a$ 上，说明半长轴约束始终起主导作用；当 $\delta a \ge 15$~km 时，由于初始向东漂移率已足够充裕，最优初始偏心率自然回落至 $0.00079 \sim 0.00067$。整个 $\delta a = 3 \sim 20$~km 宽范围内，两星总速度增量仅从 26.142~m/s 降至 25.529~m/s（变化 0.61~m/s，约 2.3\%），说明本文结论对 $\delta a$ 取值具有良好稳健性。
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.68\textwidth]{fig13_q3_da.pdf}
-  \caption{半长轴偏离上限 $\delta a$ 对双星最优总速度增量 $J^*(\delta a)$ 的影响（本文主模型扫描）}
+  \caption{半长轴偏离上限 $\delta a$ 对总速度增量的影响}
   \label{fig:q3da}
 \end{figure}
 

@@ -7,7 +7,7 @@
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=0.95\textwidth]{fig9_q2abs.pdf}
-  \caption{问题二的抽象：在观测事件之间选取路径并逐段穿过可观测管道}
+  \caption{问题二的抽象：路径选择与逐段观测}
   \label{fig:q2abs}
 \end{figure}
 
@@ -189,11 +189,11 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从队列中部出发�
     \includegraphics[width=\linewidth]{fig10b_q2_dv.pdf}
     \caption{各次观测的速度增量}
   \end{subfigure}
-  \caption{问题二的巡游方案（本文主模型）}
+  \caption{问题二的巡游方案}
   \label{fig:q2route}
 \end{figure}
 
-为了量化各求解模块与本文主模型的递进贡献，表~\ref{tab:q2ablation} 给出了完整的消融对照结果。基线束搜索与逐段求解（M2-A）得到 210.39~m/s，经固定时刻序列凸优化（M2-B 初版）降至 180.76~m/s，再经数小时并行大邻域搜索与二次凸优化才降至 176.31~m/s。而本文的三维 CW 动态规划仅配合固定时刻 VC-SCP 即达到 177.53~m/s；进一步放开脉冲施加时刻（M2-D）降至 159.33~m/s；最终在本文主模型中同步耦合观测起始时刻 $\delta s_k$ 并引入主矢量退化脉冲重定位，累计速度增量再度大幅下降 26.30~m/s 至 \textbf{133.03~m/s}，较初始逐段方案下降 \textbf{36.8\%}，较数小时基线大邻域搜索再降 43.28~m/s（\textbf{24.6\%}）。
+为了量化各求解模块与本文主模型的递进贡献，表~\ref{tab:q2ablation} 与图~\ref{fig:q2ablation}(a) 给出了完整的消融对照结果；图~\ref{fig:q2ablation}(b) 进一步展示了主方案 30 天内累计速度增量的阶段演化。基线束搜索与逐段求解（M2-A）得到 210.39~m/s，经固定时刻序列凸优化（M2-B 初版）降至 180.76~m/s，再经数小时并行大邻域搜索与二次凸优化才降至 176.31~m/s。而本文的三维 CW 动态规划仅配合固定时刻 VC-SCP 即达到 177.53~m/s；进一步放开脉冲施加时刻（M2-D）降至 159.33~m/s；最终在本文主模型中同步耦合观测起始时刻 $\delta s_k$ 并引入主矢量退化脉冲重定位，累计速度增量再度大幅下降 26.30~m/s 至 \textbf{133.03~m/s}，较初始逐段方案下降 \textbf{36.8\%}，较数小时基线大邻域搜索再降 43.28~m/s（\textbf{24.6\%}）。
 
 \begin{table}[!htb]
   \centering
@@ -213,6 +213,22 @@ R1 的巡游路线如图~\ref{fig:q2route}(a) 所示。R1 从队列中部出发�
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig10c_q2_ablation.pdf}
+    \caption{各求解阶段累计速度增量对比}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig10d_q2_cumdv.pdf}
+    \caption{30 天累计速度增量演化}
+  \end{subfigure}
+  \caption{问题二的模型消融与燃料演化}
+  \label{fig:q2ablation}
+\end{figure}
 
 方案的约束检验见表~\ref{tab:q2check}。优化时在距离和角度上各留 0.05~km 和 $0.05^\circ$ 的安全裕量，观测时长均取 60.5~s。经 0.05~s 加密网格解析重放（ERFA 几何与视太阳双口径）以及 ATK 4.2.0 单星机动规划（MCS）连续数值积分独立复核，全部 30 次观测均严格满足所有约束，ATK 连续积分与解析轨迹的最大位置差仅 0.152~m。全程 R1 最低地心距为 41569.7~km，始终处于同步带附近。
 

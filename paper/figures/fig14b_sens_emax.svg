@@ -2,12 +2,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="620" height="360" viewBox="0 0 620 360">
 <rect x="0" y="0" width="620" height="360" fill="#FFFFFF"/>
 <line x1="100.0" y1="245.6" x2="590.0" y2="245.6" stroke="#888888" stroke-width="0.8" stroke-dasharray="4,3"/>
-<polyline points="109.2,74.4 146.2,88.4 192.5,106.3 331.1,160.0 562.3,245.6" fill="none" stroke="#1F4E79" stroke-width="1.8"/>
-<circle cx="109.2" cy="74.4" r="3.2" fill="#1F4E79" stroke="none"/>
-<circle cx="146.2" cy="88.4" r="3.2" fill="#1F4E79" stroke="none"/>
-<circle cx="192.5" cy="106.3" r="3.2" fill="#1F4E79" stroke="none"/>
-<circle cx="331.1" cy="160.0" r="3.2" fill="#1F4E79" stroke="none"/>
-<circle cx="562.3" cy="245.6" r="4.2" fill="#C0392B" stroke="none"/>
+<polyline points="109.2,74.4 146.2,88.4 192.5,106.3 331.1,160.0 562.3,245.6" fill="none" stroke="#1A365D" stroke-width="1.8"/>
+<circle cx="109.2" cy="74.4" r="3.2" fill="#1A365D" stroke="none"/>
+<circle cx="146.2" cy="88.4" r="3.2" fill="#1A365D" stroke="none"/>
+<circle cx="192.5" cy="106.3" r="3.2" fill="#1A365D" stroke="none"/>
+<circle cx="331.1" cy="160.0" r="3.2" fill="#1A365D" stroke="none"/>
+<circle cx="562.3" cy="245.6" r="4.2" fill="#9B2C2C" stroke="none"/>
 <rect x="100" y="20" width="490" height="280" fill="none" stroke="#000000" stroke-width="0.9"/>
 <line x1="100.0" y1="268.9" x2="105.0" y2="268.9" stroke="#000000" stroke-width="0.9"/>
 <line x1="590.0" y1="268.9" x2="585.0" y2="268.9" stroke="#000000" stroke-width="0.9"/>
@@ -44,11 +44,11 @@
 <text x="562.3" y="317.0" font-family="SimSun, Times New Roman" font-size="12" text-anchor="middle" fill="#000000">10</text>
 <text x="345.0" y="338.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000">R2 初始偏心率上限 e_max / (×10⁻⁴)</text>
 <text x="56.0" y="160.0" font-family="SimSun, Times New Roman" font-size="13" text-anchor="middle" fill="#000000" transform="rotate(-90 56.0 160.0)">R2 累计速度增量 / (m/s)</text>
-<rect x="108" y="28" width="291.9" height="62" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
-<line x1="114.0" y1="40.0" x2="136.0" y2="40.0" stroke="#1F4E79" stroke-width="1.6"/>
-<text x="142.0" y="44.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">主模型在不同偏心率上限下的 R2 Δv</text>
-<circle cx="125" cy="58" r="3.2" fill="#C0392B" stroke="none"/>
-<text x="142.0" y="62.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">主方案上限 e_max = 10⁻³（14.123 m/s）</text>
-<line x1="114.0" y1="76.0" x2="136.0" y2="76.0" stroke="#888888" stroke-width="1.6" stroke-dasharray="4,3"/>
-<text x="142.0" y="80.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">主方案基准 14.123 m/s（全区间变幅 +0.16%）</text>
+<rect x="110" y="30" width="178.6" height="62" fill="#FFFFFF" stroke="#7F7F7F" stroke-width="0.6"/>
+<line x1="116.0" y1="42.0" x2="138.0" y2="42.0" stroke="#1A365D" stroke-width="1.6"/>
+<text x="144.0" y="46.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">R2 累计速度增量</text>
+<circle cx="127" cy="60" r="3.2" fill="#9B2C2C" stroke="none"/>
+<text x="144.0" y="64.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">主方案（e_max = 10⁻³）</text>
+<line x1="116.0" y1="78.0" x2="138.0" y2="78.0" stroke="#888888" stroke-width="1.6" stroke-dasharray="4,3"/>
+<text x="144.0" y="82.0" font-family="SimSun, Times New Roman" font-size="11.5" text-anchor="start" fill="#000000">基准 14.123 m/s</text>
 </svg>

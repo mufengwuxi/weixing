@@ -11,10 +11,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import make_fig_analysis as F  # noqa: E402
 
-C_Q1 = "#1F4E79"   # 深蓝
-C_Q2 = "#C0392B"   # 砖红
-C_Q3 = "#1E8449"   # 深绿
-C_GRAY = "#555555"
+C_Q1 = "#1A365D"   # 深藏青
+C_Q2 = "#9B2C2C"   # 暗砖红
+C_Q3 = "#1E6B52"   # 墨绿
+C_GRAY = "#666666"
 
 
 def make_sens_margin():
@@ -47,11 +47,11 @@ def make_sens_margin():
         xfmt=lambda v: f"{v:.1f}",
         yfmt=lambda v: f"{v:.1f}",
     )
-    F.legend_box(body, L + 8, T + 8, [
-        ("line", C_Q2, None, "问题二主方案（单星 30 目标）"),
-        ("line", C_Q3, None, "问题三主方案（R2 东侧 20 目标）"),
-        ("line", "#2E86C1", "5,3", "问题三主方案（R1 西侧 10 目标，m ≤ 0.25）"),
-        ("line", C_Q1, "2,2", "问题一（单星单目标）"),
+    F.legend_box(body, L + 10, T + 10, [
+        ("line", C_Q2, None, "问题二（30 目标）"),
+        ("line", C_Q3, None, "问题三 R2（东 20 目标）"),
+        ("line", "#4A7EB0", "5,3", "问题三 R1（西 10 目标）"),
+        ("line", C_Q1, "2,2", "问题一（单目标）"),
     ])
     F.save("fig14a_sens_margin.svg", W, H, body)
 
@@ -86,10 +86,10 @@ def make_sens_emax():
         xfmt=lambda v: f"{v * 1e4:.0f}",
         yfmt=lambda v: f"{v:.3f}",
     )
-    F.legend_box(body, L + 8, T + 8, [
-        ("line", C_Q1, None, "主模型在不同偏心率上限下的 R2 Δv"),
-        ("dot", C_Q2, None, "主方案上限 e_max = 10⁻³（14.123 m/s）"),
-        ("line", "#888888", "4,3", "主方案基准 14.123 m/s（全区间变幅 +0.16%）"),
+    F.legend_box(body, L + 10, T + 10, [
+        ("line", C_Q1, None, "R2 累计速度增量"),
+        ("dot", C_Q2, None, "主方案（e_max = 10⁻³）"),
+        ("line", "#888888", "4,3", "基准 14.123 m/s"),
     ])
     F.save("fig14b_sens_emax.svg", W, H, body)
 
