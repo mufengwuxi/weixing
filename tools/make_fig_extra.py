@@ -454,7 +454,7 @@ def make_q2_cw_dp_fig():
         ts = np.linspace(0, 1, n)
         return [tuple((1 - t) ** 2 * np.array(a) + 2 * (1 - t) * t * np.array(ctrl) + t ** 2 * np.array(b)) for t in ts]
 
-    W, H = 980, 450
+    W, H = 980, 582
     body = []
 
     # ==================== 1. 底部地球弧面 ====================
@@ -522,25 +522,62 @@ def make_q2_cw_dp_fig():
     tag(pc[0] + 6, pc[1] - 24, 650, 42, "目标交会", DK, "start")
     tag((pc[0] + pc2[0]) / 2, (pc[1] + pc2[1]) / 2 + 4, 800, 198, "零机动伴随飞越", MD, "start")
 
-    # ==================== 5. 底部访问序列（放大立体卫星 + 放大字体） ====================
-    by = 392.0
-    xs = [258, 382, 506, 638, 766]
-    labs = ["B2", "…", "B19", "B20", "…"]
-    for i in range(len(xs) - 1):
-        col = MD if i == 2 else DK
-        body.append(F.arrow(xs[i] + 38, by, xs[i + 1] - 38, by, col, 1.8, 7))
-    for i, (x, lab) in enumerate(zip(xs, labs)):
-        if lab == "…":
-            body.append(F.text(x, by + 6, "…", 22, "middle", DK))
-        else:
-            body.append(flat3d(F.sat3d(x, by, "blue", 0.54)))
-            body.append(F.text(x, by + 36, lab, 15.5, "middle", MD if lab in ("B19", "B20") else "#111111"))
+    # ==================== 5. 底部访问序列优选（初始序列 -> 变邻域下降 -> 优选序列） ====================
+    y1, y2 = 384.0, 514.0
+    xs_seq = [232.0, 356.0, 480.0, 604.0, 764.0, 888.0]
+    ell_x = 684.0
 
-    # 变邻域下降弧线 + 大字号
-    sw = quad_curve((xs[0], by - 22), ((xs[0] + xs[2]) / 2, by - 54), (xs[2], by - 22), n=24)
-    body.append(F.poly(sw, stroke=ACC, w=1.4, dash="4,3", closed=False))
-    body.append(F.text((xs[0] + xs[2]) / 2, by - 42, "变邻域下降", 15, "middle", ACC))
-    body.append(F.text(xs[0] - 108, by + 6, "访问序列 π", 16.5, "middle", DK))
+    # 左侧流程标题与竖向箭头
+    body.append(F.text(104, y1 + 5, "初始序列", 16.5, "middle", DK))
+    body.append(F.arrow(104, y1 + 22, 104, y2 - 26, ACC, 2.0, 8))
+    body.append(F.text(116, (y1 + y2) / 2 + 5, "变邻域下降", 14.5, "start", ACC))
+    body.append(F.text(104, y2 + 5, "优选序列", 16.5, "middle", DK))
+
+    def draw_seq_row(y, labs, highlight_pair=False):
+        # 节点间连接箭头（跳过省略号前后的位置，改为短连接）
+        for i in (0, 1, 2):
+            body.append(F.arrow(xs_seq[i] + 34, y, xs_seq[i + 1] - 34, y, DK, 1.7, 7))
+        body.append(F.arrow(xs_seq[3] + 34, y, ell_x - 20, y, DK, 1.5, 6))
+        body.append(F.text(ell_x, y + 6, "…", 22, "middle", DK))
+        body.append(F.arrow(ell_x + 20, y, xs_seq[4] - 34, y, DK, 1.5, 6))
+        # 最后两颗之间的连接（优选序列高亮为蓝色伴随飞越虚线箭头）
+        if highlight_pair:
+            body.append(F.line(xs_seq[4] + 34, y, xs_seq[5] - 38, y, MD, 2.2, "5,3"))
+            body.append(F.arrow(xs_seq[5] - 42, y, xs_seq[5] - 34, y, MD, 2.2, 7))
+        else:
+            body.append(F.arrow(xs_seq[4] + 34, y, xs_seq[5] - 34, y, DK, 1.7, 7))
+
+        for x, lab in zip(xs_seq, labs):
+            is_moved = (lab == "B9")
+            is_pair = highlight_pair and (lab in ("B19", "B20"))
+            sat_col = "red" if is_moved else "blue"
+            body.append(flat3d(F.sat3d(x, y, sat_col, 0.56)))
+            t_col = ACC if is_moved else (MD if is_pair else "#111111")
+            body.append(F.text(x, y + 34, lab, 15.5, "middle", t_col))
+
+    # 第 1 行：初始序列（B9 位于去程，B20/B19 逆序）
+    draw_seq_row(y1, ["B2", "B9", "B26", "B30", "B20", "B19"], highlight_pair=False)
+    # 第 2 行：优选序列（B9 重插至回程，B19/B20 交换并形成零机动伴随飞越）
+    draw_seq_row(y2, ["B2", "B26", "B30", "B9", "B19", "B20"], highlight_pair=True)
+
+    # 中间演化操作示意 1：单点重插（Or-opt），将 B9 从去程移至 B30 之后（回程）
+    or_curve = quad_curve((xs_seq[1] + 14, y1 + 38), (485, (y1 + y2) / 2 - 2), (xs_seq[3] - 14, y2 - 26), n=28)
+    body.append(F.poly(or_curve, stroke=ACC, w=1.9, closed=False))
+    p_prev, p_end = or_curve[-2], or_curve[-1]
+    body.append(F.arrow(p_prev[0], p_prev[1], p_end[0], p_end[1], ACC, 1.9, 7))
+    body.append(F.text(448, (y1 + y2) / 2 + 24, "单点重插", 15.5, "end", ACC))
+
+    # 中间演化操作示意 2：两两交换（Swap），B20 与 B19 互换顺序
+    sw1 = quad_curve((xs_seq[4] + 10, y1 + 38), (826, (y1 + y2) / 2 + 2), (xs_seq[5] - 10, y2 - 26), n=24)
+    sw2 = quad_curve((xs_seq[5] - 10, y1 + 38), (826, (y1 + y2) / 2 + 2), (xs_seq[4] + 10, y2 - 26), n=24)
+    body.append(F.poly(sw1, stroke=ACC, w=1.7, closed=False))
+    body.append(F.arrow(sw1[-2][0], sw1[-2][1], sw1[-1][0], sw1[-1][1], ACC, 1.7, 7))
+    body.append(F.poly(sw2, stroke=ACC, w=1.7, closed=False))
+    body.append(F.arrow(sw2[-2][0], sw2[-2][1], sw2[-1][0], sw2[-1][1], ACC, 1.7, 7))
+    body.append(F.text(746, (y1 + y2) / 2 + 7, "两两交换", 15.5, "end", ACC))
+
+    # 底部 B19-B20 伴随飞越呼应标注
+    body.append(F.text((xs_seq[4] + xs_seq[5]) / 2, y2 + 54, "零机动伴随飞越", 15.0, "middle", MD))
 
     F.save("fig10g_cw_dp.svg", W, H, body)
 
