@@ -1,0 +1,187 @@
+\section{模型检验与灵敏度分析}
+
+\subsection{模型独立检验}
+
+\subsubsection{ATK 独立数值积分、单星机动规划复核与面外倾转检验}
+
+三个问题的求解均基于解析二体传播。为排除求解器自身实现误差，我们基于官方仿真场景模板进行二次开发，在航天任务仿真软件 ATK 4.2.0 中通过\textbf{单星机动规划（MCS）}开展全链条连续数值积分复核。
+
+复核汇总见表~\ref{tab:atkall}，ATK 4.2.0 的脉冲机动段配置界面与原生观测距离曲线示例如图~\ref{fig:atkui} 所示。三个问题的全部 61 次观测（问题一 1 次、问题二 30 次、问题三 30 次）在 0.05~s 解析重放与 ATK 4.2.0 单星 MCS 连续数值积分下 100\% 满足全部距离与角度约束，且 ATK 数值积分与解析轨迹的最大位置差均不超过 0.152~m（问题一与问题三不超过 0.004~m）。全程监测卫星地心距，三问主方案的最低地心距均高于 41569~km，远大于地球半径 6378.137~km，不存在低空掠过隐患。
+
+此外，我们在 ATK 4.2.0 中直接调用覆盖分析模块导出三问主方案的原生覆盖时段报告，分别见图~\ref{fig:atkcov_q1q2} 与图~\ref{fig:atkcov_q3}。报告显示，全部 61 次蓝方目标观测的连续覆盖时长均严格超过 60~s：问题一目标 B1 覆盖时长为 60.016~s；问题二 30 颗目标全覆盖，最短为 60.622~s（B6），最长为 3424.004~s（B7）；问题三 R1 覆盖西侧全部 10 颗目标，最短为 60.628~s（B17），R2 覆盖东侧全部 20 颗目标，最短为 61.178~s（B29）（注：问题三双星场景中两颗红方星间默认计入全程可见链路，故报告首行包含另一颗红方星，其余 10 行与 20 行分别对应全部蓝方目标）。
+
+此外，为定量检验第 5.2.1 节与第 6.2.1 节中 30 天内观测星轨道面近似不变的物理假设，我们统计了三问主方案的面外（法向）速度增量占比与 30 天内轨道面相对初始面的最大倾转角，结果见图~\ref{fig:ch8verify}(b)。问题二主方案的面外机动合计 8.80~m/s（占总 $\Delta v$ 的 6.6\%），最大轨道面倾转角仅 $0.0610^\circ$；问题三 R1 与 R2 的面外机动均仅为 0.067~m/s（占比不足 0.6\%），最大倾转角分别为 $0.0007^\circ$ 与 $0.0008^\circ$。同时，图~\ref{fig:ch8verify}(a) 汇总了问题二、三全部 60 次观测的距离区间，所有观测均严格位于 $10\sim 50$~km 可行带内。
+
+\begin{table}[!htb]
+  \centering
+  \caption{三问主方案的 ATK 4.2.0 单星 MCS 独立复核与物理安全检查汇总}
+  \label{tab:atkall}
+  \zihao{-5}\setlength{\tabcolsep}{2.4pt}
+  \begin{tabular}{lcccccc}
+    \toprule
+    方案 & $\Delta v$/(m/s) & 有效/总 & MCS 复核 & 最大位置差 & 最小间隔/s & 最低地心距/km \\
+    \midrule
+    问题一（v4） & 5.2128 & 2 / 2 & 1 / 1 & 0.001~m & 48816.0 & 42118.5 \\
+    问题二（主模型） & 133.03 & 38 / 58 & 30 / 30 & 0.152~m & 3601.0 & 41569.7 \\
+    问题三 R1（主模型） & 11.94 & 12 / 20 & 10 / 10 & 0.003~m & 38852.8 & 42118.5 \\
+    问题三 R2（主模型） & 14.12 & 18 / 40 & 20 / 20 & 0.004~m & 24306.1 & 42052.5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.55\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{atk_mcs_panel.jpg}
+    \caption{VNC 脉冲机动段设置与三维场景}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.43\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{atk_q1_verify_plot.png}
+    \caption{问题一观测段原生相对距离曲线}
+  \end{subfigure}
+  \caption{ATK 4.2.0 单星机动规划与原生距离复核}
+  \label{fig:atkui}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{subfigure}[b]{0.86\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{atk_cov_q1.png}
+    \caption{问题一 R1 覆盖时段报告（1/1 目标，时长 60.016~s）}
+  \end{subfigure}
+
+  \vspace{6pt}
+  \begin{subfigure}[b]{0.86\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{atk_cov_q2.png}
+    \caption{问题二 R1 覆盖时段报告（30/30 目标，最短 60.622~s）}
+  \end{subfigure}
+  \caption{问题一与问题二 ATK 4.2.0 原生覆盖时段报告}
+  \label{fig:atkcov_q1q2}
+\end{figure}
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{subfigure}[b]{0.86\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{atk_cov_q3_r1.png}
+    \caption{问题三 R1 覆盖时段报告（西侧 10/10 蓝方目标，最短 60.628~s）}
+  \end{subfigure}
+
+  \vspace{6pt}
+  \begin{subfigure}[b]{0.86\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{atk_cov_q3_r2.png}
+    \caption{问题三 R2 覆盖时段报告（东侧 20/20 蓝方目标，最短 61.178~s）}
+  \end{subfigure}
+  \caption{问题三双星协同 ATK 4.2.0 原生覆盖时段报告}
+  \label{fig:atkcov_q3}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig15a_obs_verify.pdf}
+    \caption{问题二、三观测段距离区间分布}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig15b_plane_tilt.pdf}
+    \caption{面外机动占比与最大轨道面倾转角}
+  \end{subfigure}
+  \caption{多目标观测约束与轨道面稳定性检验}
+  \label{fig:ch8verify}
+\end{figure}
+
+\subsubsection{全任务时间网格采样误差检验}
+
+第 5.3 节已对问题一检验了采样步长 $h$ 引起的约束漏检误差。对问题二全部 30 次观测和问题三两颗星的全部 30 次观测，同样以 0.005~s 加密网格上的曲线作为连续基准，统计 1~s 与 0.05~s 网格下的最坏采样误差，结果见表~\ref{tab:gridall}。
+
+\begin{table}[!htb]
+  \centering
+  \caption{三问主方案全部观测段在不同采样步长下的最坏约束误差}
+  \label{tab:gridall}
+  \zihao{-5}\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    方案（观测次数） & 1~s 距离误差 & 0.05~s 距离误差 & 0.05~s 光照角误差 & 0.05~s 侦测角误差 \\
+    \midrule
+    问题一（1 次） & 0.43~m & 1.60~mm & $< 10^{-6}\ {}^\circ$ & $< 10^{-6}\ {}^\circ$ \\
+    问题二主方案（30 次） & 0.85~m & 2.17~mm & $1.0\times 10^{-5}\ {}^\circ$ & $< 10^{-6}\ {}^\circ$ \\
+    问题三 R1 主方案（10 次） & 0.82~m & 2.14~mm & $7.9\times 10^{-6}\ {}^\circ$ & $2.7\times 10^{-6}\ {}^\circ$ \\
+    问题三 R2 主方案（20 次） & 0.40~m & 1.12~mm & $6.2\times 10^{-6}\ {}^\circ$ & $1.9\times 10^{-6}\ {}^\circ$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+在全部 61 次观测中，1~s 步长下最小距离的最大误差为 0.85~m，而 0.05~s 检验网格的距离误差均不超过 2.17~mm，仅为距离认证裕量（50~m）的万分之零点四量级；光照角和侦测角的最大极值误差不超过 $1.0\times 10^{-5}\ {}^\circ$，比角度认证裕量（$0.05^\circ$）小三个数量级以上。这说明 0.05~s 网格检验足以保证连续时间上的全部观测约束严格成立。
+
+\subsection{参数灵敏度分析}
+
+本节在同一主模型口径下考察三个关键参数变化对解的影响，分别是观测约束的安全裕量 $m$、问题三 R2 的初始偏心率上限 $e_{\max}$，以及第 7.3 节已给出的半长轴偏离上限 $\delta a$。
+
+\subsubsection{观测安全裕量 $m$ 的灵敏度}
+
+将观测距离约束收紧为 $10 + m \le d \le 50 - m$（单位 km），两个角度约束同时收紧为 $\alpha \le 45^\circ - m$ 与 $\theta \le 45^\circ - m$（单位度），记统一安全裕量为 $m$。本文主方案的优化与认证安全裕量为 $m = 0.05$（问题一 v4 基准为 $m = 0.01$）。我们在主方案基础上沿 $m \in [0.01, 0.50]$ 扫描求解并在 0.05~s 网格上严格认证，得到三问总速度增量随 $m$ 的变化，见表~\ref{tab:sensm} 与图~\ref{fig:sens}(a)。
+
+\begin{table}[!htb]
+  \centering
+  \caption{不同观测安全裕量 $m$ 下三问主方案的最优速度增量（本文主模型口径，单位：m/s）}
+  \label{tab:sensm}
+  \zihao{5}
+  \begin{tabular}{lccccc}
+    \toprule
+    安全裕量 $m$ & 问题一 & 问题二主方案 & 问题三 R1 & 问题三 R2 & 问题三合计 \\
+    \midrule
+    0.01 & 5.2128 & 132.89 & 11.937 & 14.118 & 26.056 \\
+    \textbf{0.05（主方案）} & 5.2133 & \textbf{133.03} & \textbf{11.944} & \textbf{14.123} & \textbf{26.067} \\
+    0.10 & 5.2138 & 133.23 & 11.952 & 14.129 & 26.081 \\
+    0.25 & 5.2155 & 133.98 & 11.979 & 14.149 & 26.128 \\
+    0.50 & 5.2184 & 135.66 & — & 14.182 & — \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+在所有可行档位下，三问的观测目标数均保持 100\% 全覆盖，累计速度增量随 $m$ 单调平缓增长。与旧基线相比，本文主模型展现出显著更强的工程稳健性。当 $m$ 从 0.01 放大 50 倍至 0.50（留出 500~m 距离裕量与 $0.5^\circ$ 角度裕量）时，问题一仅增 0.11\%，问题二主方案仅增 2.77~m/s（\textbf{2.08\%}，不足旧基线 4.4\% 增幅的一半），问题三 R2 仅增 0.064~m/s（\textbf{0.45\%}）；问题三 R1 在 $m \le 0.25$ 内仅增 0.042~m/s（\textbf{0.35\%}），当 $m$ 增至 0.50 时在固定脉冲时刻下需重新微调脉冲排布以避免边界挤压。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig14a_sens_margin.pdf}
+    \caption{安全裕量 $m$ 对速度增量相对增幅的影响}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig14b_sens_emax.pdf}
+    \caption{偏心率上限 $e_{\max}$ 对 R2 速度增量的影响}
+  \end{subfigure}
+  \caption{关键参数的灵敏度分析}
+  \label{fig:sens}
+\end{figure}
+
+\subsubsection{R2 初始偏心率上限 $e_{\max}$ 与半长轴上限 $\delta a$ 的灵敏度}
+
+在问题三主方案中，R2 初始偏心率为 $0.000950$（触及预设收缩边界 $e_{\max} - \varepsilon_e = 0.00095$）。为检验轨道圆度要求大幅收紧时的影响，我们固定 $\delta a = 5.90$~km，将偏心率上限 $e_{\max}$ 从 0.00100 逐步收紧 50 倍至 0.00002（接近理想圆轨道），逐档求解本文主模型，结果见表~\ref{tab:sensemax} 与图~\ref{fig:sens}(b)。
+
+\begin{table}[!htb]
+  \centering
+  \caption{不同初始偏心率上限 $e_{\max}$ 下问题三 R2 的最优速度增量（本文主模型，$\delta a = 5.90$~km）}
+  \label{tab:sensemax}
+  \zihao{-5}\setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    偏心率上限 $e_{\max}$ & 0.00100（主方案） & 0.00050 & 0.00020 & 0.00010 & 0.00002 \\
+    \midrule
+    R2 累计 $\Delta v$ / (m/s) & 14.1230 & 14.1340 & 14.1409 & 14.1432 & 14.1450 \\
+    初始 $a - \aGEO$ / km & $-5.895$ & $-5.895$ & $-5.895$ & $-5.895$ & $-5.895$ \\
+    实际初始偏心率 $e$ & 0.000960 & 0.000480 & 0.000192 & 0.000096 & 0.000019 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+即使把 R2 的初始偏心率上限压紧 50 倍至接近理想圆轨道（$e < 2\times 10^{-5}$），R2 的累计速度增量也只增加 0.0220~m/s（仅 \textbf{0.16\%}），而每一档的最优半长轴始终紧贴在 $\aGEO - \delta a$ 下界（$-5.895$~km）上。结合第 7.3 节对 $\delta a$ 的主模型扫描结果（$\delta a$ 在 $3 \sim 20$~km 宽范围内变化时，两星合计速度增量变动 0.61~m/s、约 2.3\%），可以得出清晰结论，即问题三 R2 初始轨道设计中起主导作用的是半长轴范围 $\delta a$ 而非偏心率上限 $e_{\max}$，且两项参数对最终方案的灵敏度均很低，方案具有良好的工程稳健性。

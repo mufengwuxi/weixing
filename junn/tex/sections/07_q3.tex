@@ -1,0 +1,291 @@
+\section{问题三模型建立及求解}
+
+\subsection{双星协同与初始轨道联合设计模型的建立}
+
+问题二中，单颗观测星 R1 从目标队列中部出发，必须先向西扫过西侧目标、再折返向东扫过东侧目标，30 天内跨越约 $38^\circ$ 的相位弧段，导致折返和高速追赶消耗了大量燃料。问题三引入一颗提前入轨的高轨卫星 R2，与 R1 共同在 30 天内观测全部 30 颗目标。我们将 30 条时变可观测管道划分为两个互不相交的子集，由 R1 和 R2 分别执行单向巡游；同时把 R2 在初始历元 $t_0$ 时刻的轨道状态作为连续优化变量，与其 30 天内的全部脉冲机动联合优化。双星各自免去了折返过程，整体思路如图~\ref{fig:q3abs} 所示。
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fig11_q3abs.pdf}
+  \caption{问题三的抽象：双星分区与协同巡游}
+  \label{fig:q3abs}
+\end{figure}
+
+\subsubsection{优化变量定义}
+
+双星协同方案由目标分配、各自的访问序列与机动序列，以及 R2 的初始轨道状态组成。记 R1 与 R2 的访问序列分别为 $\pi^{(1)} = (\pi^{(1)}_1, \dots, \pi^{(1)}_{K_1})$ 与 $\pi^{(2)} = (\pi^{(2)}_1, \dots, \pi^{(2)}_{K_2})$，两星各段的机动与观测变量仍按式~\eqref{eq:q2var} 记为 $\bm z^{(1)}_k$（$k = 1, \dots, K_1$）和 $\bm z^{(2)}_k$（$k = 1, \dots, K_2$）。由于 R2 提前发射入轨，其在 $t_0$ 时刻的六维位置速度状态
+\begin{equation}
+  \bm x_0^{(2)} = \big(\bm r_0^{(2)},\ \bm v_0^{(2)}\big) \in \mathbb R^6
+  \label{eq:q3x0}
+\end{equation}
+也纳入优化变量。完整方案记为 $\mathcal P = \big(\pi^{(1)}, \bm z^{(1)};\ \bm x_0^{(2)}, \pi^{(2)}, \bm z^{(2)}\big)$。
+
+\subsubsection{目标函数设置}
+
+按照第 4.4 节的两阶段字典序目标，第一阶段最大化两星合计观测到的不同目标数 $K = K_1 + K_2$，第二阶段在观测数最大的方案中最小化两星累计速度增量之和
+\begin{equation}
+  J(\mathcal P) = J_1 + J_2 = \sum_{k=1}^{K_1} \big(\|\Delta\bm v^{(1)}_{k,1}\| + \|\Delta\bm v^{(1)}_{k,2}\|\big) + \sum_{k=1}^{K_2} \big(\|\Delta\bm v^{(2)}_{k,1}\| + \|\Delta\bm v^{(2)}_{k,2}\|\big) .
+  \label{eq:q3obj}
+\end{equation}
+
+\subsubsection{约束条件分析}
+
+两颗观测星的时间约束、脉冲约束和观测约束与第 6.1.3 节相同，且两星的累计速度增量预算相互独立，分别满足 $J_1 \le 300$~m/s 与 $J_2 \le 300$~m/s。两星的观测目标互不重复，即 $\pi^{(1)}$ 与 $\pi^{(2)}$ 的元素两两不同且交集为空。
+
+对于 R2 的初始轨道状态 $\bm x_0^{(2)}$，题面要求 R2 为提前入轨、偏心率小于 0.001 的高轨卫星，并未给出半长轴的具体数值范围。本文依据目标星座的实际分布引入半长轴偏离上限参数 $\delta a$。由附件数据可知，30 颗蓝方目标的半长轴相对地球同步轨道半长轴 $\aGEO = 42164.17$~km 的偏离量介于 $-5.90$~km（B30）与 $+4.73$~km（B21）之间，红方 R1 的偏离量为 $+1.77$~km。同步带上蓝方其他高轨卫星和红方高轨卫星的半长轴偏离量同样较小，R2 作为红方提前入轨的高轨卫星，其初始轨道应与上述卫星同处同步带内。本文因此取 $\delta a = 5.90$~km（即目标半长轴的最大偏离量），并将偏心率与半长轴约束施加于 R2 在 $t_0$ 时刻的初始轨道，记可行集为
+\begin{equation}
+  \mathcal X_{\mathrm{init}}(\delta a) = \Big\{\bm x_0^{(2)} \in \mathbb R^6 \;\Big|\; \|\bm e(\bm x_0^{(2)})\| < 0.001,\ \big|a(\bm x_0^{(2)}) - \aGEO\big| \le \delta a \Big\} ,
+  \label{eq:q3init}
+\end{equation}
+其中 $a(\cdot)$ 与 $\bm e(\cdot)$ 分别是由位置速度矢量计算半长轴与偏心率矢量的解析公式。$t_0$ 之后的机动照常计入 R2 的速度增量，机动后的轨道只受机动约束与预算限制。为检验 $\delta a$ 取值的影响，后文将在 $\delta a = 3 \sim 19$~km 范围内给出最优总速度增量曲线 $J^*(\delta a)$。
+
+\subsubsection{模型汇总}
+
+沿用式~\eqref{eq:q2set} 的时间与脉冲可行集记号 $\mathcal Z_{K_1}$、$\mathcal Z_{K_2}$，问题三的优化模型汇总为
+\begin{equation}
+  \operatorname*{lexmax}_{\substack{\pi^{(1)},\,\pi^{(2)},\,\bm x_0^{(2)}\in\mathcal X_{\mathrm{init}}(\delta a)\\ \bm z^{(1)}\in\mathcal Z_{K_1},\,\bm z^{(2)}\in\mathcal Z_{K_2}}}\ \big(K_1 + K_2,\ -(J_1 + J_2)\big)
+  \label{eq:q3model}
+\end{equation}
+\begin{equation*}
+  \text{s.t.}\quad
+  \begin{aligned}[t]
+    & \bm\rho^{(i)}_{\pi^{(i)}_k}(s^{(i)}_k + j;\,\mathcal P) \in \mathcal C_{\pi^{(i)}_k}(s^{(i)}_k + j),\quad j = 0,\dots,60,\ k = 1,\dots,K_i,\ i \in \{1, 2\}, \\
+    & \pi^{(1)} \cap \pi^{(2)} = \varnothing,\quad \pi^{(i)}_k \ne \pi^{(i)}_l\ (k \ne l) .
+  \end{aligned}
+\end{equation*}
+
+\subsection{优化模型求解}
+
+模型~\eqref{eq:q3model} 在问题二的基础上增加了双星分工与 R2 初始轨道设计。下文先给出双星空间分区与固定时刻基线方案（记为 M3-A），再将本文主模型推广至双星系统，同步联合优化两星机动、观测时刻与 R2 初始轨道。
+
+\subsubsection{基线求解：双星空间分区与固定时刻优化}
+
+由第 2.2 节的漂移代价关系可知，同步带巡游的燃料消耗主要由卫星所需覆盖的相位跨度及是否发生折返决定。对一般的双星抵近巡游问题，设固定起点卫星 R1 的初始相对经度为 $\lambda_1 = 0^\circ$，将全部 $N$ 颗目标按相对经度升序排列为 $\lambda_{(1)} \le \lambda_{(2)} \le \cdots \le \lambda_{(N)}$。为避免两星轨迹交叉重叠，考虑用一维分割点 $k \in \{1, \dots, N-1\}$ 将目标划分为连续的西侧子集 $\{1, \dots, k\}$（交由 R1）与东侧子集 $\{k+1, \dots, N\}$（交由 R2）。由于新星 R2 的初始经度可自由布设于东侧子集的西端，其无折返单向扫过东侧目标所需的相位跨度恒为 $\Lambda_2(k) = \lambda_{(N)} - \lambda_{(k+1)}$；而 R1 起点固定在 $0^\circ$，若其负责的目标全部位于 $0^\circ$ 同侧，只需单向漂移即可覆盖，若横跨 $0^\circ$ 两侧则必须先向一侧推进再掉头折返。由此构造最小化双星总相位路程的通用分区目标函数
+\begin{equation}
+  \begin{aligned}
+    J_{\mathrm{part}}(k) ={} & \big(\max(\lambda_{(k)}, 0) - \min(\lambda_{(1)}, 0)\big) + \big(\lambda_{(N)} - \lambda_{(k+1)}\big) \\
+    & + \min\big(|\lambda_{(1)}|, |\lambda_{(k)}|\big)\,\mathbb{I}(\lambda_{(1)} < 0 < \lambda_{(k)}) ,
+  \end{aligned}
+  \label{eq:q3part}
+\end{equation}
+其中 $\mathbb{I}(\cdot)$ 为示性函数，第二项刻画 R1 跨过初始经度 $0^\circ$ 时的额外折返路程。对任意分布在 $0^\circ$ 两侧的目标星座，分析式~\eqref{eq:q3part} 的单调性可知，当分割点取在满足 $\lambda_{(k^*)} \le 0 < \lambda_{(k^*+1)}$ 的位置时，R1 的折返惩罚项严格归零，且两星总相位路程达到唯一全局最小。若将分割点向右移（$k > k^*$），R1 被迫先向东折返再向西推进，总路程骤增；若向左移（$k < k^*$），R1 仍需抵达最西端 $\lambda_{(1)}$ 而总跨度不变，同时 R2 的覆盖跨度与目标数均被迫扩大。
+
+将本题 30 颗目标的初始相对经度代入式~\eqref{eq:q3part}，自然求得唯一最优分割点 $k^* = 10$，即将西侧 10 颗目标（B1、B2、B3、B5、B8、B9、B17、B18、B26、B30，跨度约 $18.8^\circ$）分配给 R1 单向西行，将东侧 20 颗目标（B4、B6、B7、B10 至 B16、B19 至 B25、B27 至 B29，跨度约 $18.9^\circ$）分配给 R2 自由选址并单向东行，如图~\ref{fig:q3part} 所示。经此分区，两星各自免去折返，单星相位跨度由 $38^\circ$ 减半至约 $19^\circ$，平均漂移率大幅降低，从而能够平缓接近交线偏离公共拱线较远的目标。
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fig12e_q3_partition.pdf}
+  \caption{双星空间分区与单向巡游示意}
+  \label{fig:q3part}
+\end{figure}
+
+为在精确二体动力学下检验理论分割点 $k^* = 10$ 的最优性，我们以 $k = 10$ 为中心向东西两侧各扩展三档，在 7/23 至 13/17 共七组划分方案上开展了同一求解预算的对比消融，结果如图~\ref{fig:q3split} 所示。无论是三维 CW 动态规划代价还是精确二体单轮优化结果，均在 10/20 划分处取得唯一谷底，其中 CW 代价为 23.40~m/s，单轮精确二体代价为 13.37~m/s，经完整主模型精修后进一步收敛至 11.94~m/s。将分界点向左移至 9/21、8/22 或 7/23 时，尽管 R1 访问的目标减少，但跳过零度附近的 B2、B1、B3 后首段即需跨越更大相位弧段直奔西侧远端目标，导致 R1 单轮精确二体代价反而升至 14.62~m/s、21.88~m/s 与 21.54~m/s，同时 R2 的覆盖跨度与目标数也随之扩大。反之，将分界点向右移至 11/19、12/18 或 13/17 时，R1 被迫先向东折返访问 B4、B11、B6 再掉头西进，CW 代价骤增至 39.81~m/s、43.89~m/s 与 48.69~m/s，同预算下精确二体轨控飙升至 35.69~m/s 以上甚至难以收敛。理论推导与七档对称数值实验共同印证了 10/20 空间分区的最优性。
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.68\textwidth]{fig12c_q3_split.pdf}
+  \caption{以 $k^* = 10$ 为中心的七档空间分区消融验证}
+  \label{fig:q3split}
+\end{figure}
+
+完成空间分区后，基线解法先对 R2 的初始半长轴偏离 $\Delta a$、倾角 $i$、升交点赤经 $\Omega$ 与初始相位 $\varphi_0$ 做网格扫描，并在两星各自任务集上采用第 6.2.1 节的漂移相位束搜索与逐段精修，求得 R1 累计 18.94~m/s、R2 累计 16.91~m/s、合计 35.85~m/s 的全覆盖初解。随后对两星依次执行固定时刻序列凸优化（合计降至 34.10~m/s），再放开 R2 初始轨道做固定时刻联合优化，最终得到两星合计 \textbf{33.46~m/s} 的基线方案（记为 M3-A，其中 R1 为 18.15~m/s、R2 为 15.31~m/s）。对该方案两星各自运行 1~h 并行大邻域搜索均未找到更优顺序，说明分区后的访问序列已趋近局部最优。
+
+\subsubsection{本文主模型：双星时空联合序列凸优化}
+
+固定时刻基线方案 M3-A 仍有三处明显优化空间。其一，R1 在基线方案中仅用前 18.6 天便结束巡游，浪费了后 11 天的充裕漂移窗口；其二，全部脉冲施加时刻 $t_m$ 与观测起始时刻 $s_k$ 均被冻结；其三，归零的退化脉冲尚未重新配置。为此，本文将第 6.2.2 节的“离散排序—连续精修”主模型直接推广至双星协同系统。
+
+\paragraph{（1）离散层：双星三维 CW 动态规划重排}
+
+在 R1 负责的西侧 10 颗目标上，应用第 6.2.2 节的三维 CW 物理状态动态规划重新安排各目标的观测日期，将原本在前 18.6 天便匆忙完成的西向巡游均匀拉开至整个 30 天，把后 11 天闲置时间也用于缓慢漂移，使平均向西漂移速率由约 $1.0^\circ$/天降至约 $0.63^\circ$/天，按式~\eqref{eq:drift} 显著降低了每次变轨所需的速度增量；R2 则承接东侧 20 颗目标的优选单向序列，作为连续层联合优化的初始排程。
+
+\paragraph{（2）连续层：双星脉冲与 R2 初始轨道联合序列凸优化}
+
+在连续层，R1 直接放开全部脉冲矢量、脉冲施加时刻与观测起始时刻 $(\Delta\bm v_m, t_m, s_k)$ 执行时空联合序列凸优化与退化脉冲重定位；R2 则在此基础上将初始六维状态修正 $\delta\bm x_0^{(2)} \in \mathbb R^6$、全部 40 次脉冲矢量修正 $\delta\Delta\bm v_m$、脉冲时刻修正 $\delta t_m$ 及观测起始时刻修正 $\delta s_k$ 同步纳入二阶锥规划子问题，其一阶线性化展开为
+\begin{equation}
+  \begin{aligned}
+    \bm\rho^{(2)}_{\pi^{(2)}_k}(t_i + \delta s_k) \approx{} & \bar{\bm\rho}^{(2)}_{\pi^{(2)}_k}(t_i) + \bm\Phi_{rx}(t_i, 0)\,\delta\bm x_0^{(2)} + \big(\bar{\bm v}_{\mathrm{R2}}(t_i) - \bar{\bm v}_{\pi^{(2)}_k}(t_i)\big)\,\delta s_k \\
+    & + \sum_{t_m < t_i} \Big(\bm\Phi_{rv}(t_i, t_m)\,\delta\Delta\bm v_m + \bm\Phi_{rt}(t_i, t_m)\,\delta t_m\Big) ,
+  \end{aligned}
+  \label{eq:q3lin}
+\end{equation}
+其中 $\bm\Phi_{rx}$、$\bm\Phi_{rv}$ 与 $\bm\Phi_{rt}$ 均由精确二体传播并行有限差分求得。初始轨道的偏心率与半长轴约束在当前初始状态 $\bar{\bm x}_0^{(2)}$ 处线性化为严格的矢量二阶锥与线性不等式
+\begin{equation}
+  \big\|\bm e(\bar{\bm x}_0^{(2)}) + \bm J_e\,\delta\bm x_0^{(2)}\big\|_2 \le e_{\max} - \varepsilon_e,\qquad
+  \aGEO - \delta a + \varepsilon_a \le a(\bar{\bm x}_0^{(2)}) + \bm J_a\,\delta\bm x_0^{(2)} \le \aGEO + \delta a - \varepsilon_a ,
+  \label{eq:q3initlin}
+\end{equation}
+其中 $\bm J_e \in \mathbb R^{3\times 6}$ 和 $\bm J_a \in \mathbb R^{1\times 6}$ 分别是偏心率矢量和半长轴关于初始状态的雅可比矩阵，$\varepsilon_e = 5\times 10^{-5}$ 与 $\varepsilon_a = 5\times 10^{-3}$~km 为非线性收缩安全裕量。连同式~\eqref{eq:socp} 的观测凸集、单次脉冲上界和最小间隔约束，每轮子问题仍是标准二阶锥规划，并同样采用粗网格优化与 0.05~s 细网格检验的双层策略，同时用解析公式严格校验 $e(\bm x_0^{(2)}) < 0.001$ 与 $|a(\bm x_0^{(2)}) - \aGEO| \le \delta a$。
+
+\subsection{结果的分析与验证}
+
+在主方案 $\delta a = 5.90$~km 下，本文主模型求得了一套 30 天全覆盖双星协同方案，两星累计速度增量合计降至 \textbf{26.07~m/s}。其中 R1 观测西侧 10 颗目标消耗 \textbf{11.94~m/s}（占单星预算 4.0\%，较基线 M3-A 下降 34.2\%），R2 观测东侧 20 颗目标消耗 \textbf{14.12~m/s}（占单星预算 4.7\%，较基线 M3-A 下降 7.8\%）。与问题二单星主方案的 133.03~m/s 相比，双星协同使总速度增量大幅下降了 \textbf{80.4\%}。
+
+优化得到的 R2 初始轨道状态与经典根数见表~\ref{tab:q3r2init}。R2 初始半长轴为 42158.275~km，较 $\aGEO$ 低 5.895~km，紧贴 $\delta a = 5.90$~km 下界以自带向东自然漂移；偏心率为 0.000950，严格满足小于 0.001 的要求；倾角微调至 $4.9766^\circ$、升交点赤经微调至 $80.666^\circ$，以更好地匹配东侧 20 颗目标的轨道面平均分布。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题三 R2 初始轨道设计结果（本文主模型，$\delta a = 5.90$~km，$t_0$ 时刻 ICRF 系）}
+  \label{tab:q3r2init}
+  \zihao{5}
+  \begin{tabular}{lc@{\hspace{24pt}}lc}
+    \toprule
+    ICRF 状态分量 & 数值 & 经典轨道根数 & 数值 \\
+    \midrule
+    $x_0$ / km & $-30159.297$ & 半长轴 $a$ / km & 42158.275 \\
+    $y_0$ / km & $-29397.143$ & 相对偏离 $a - \aGEO$ / km & $-5.895$ \\
+    $z_0$ / km & $2176.274$ & 偏心率 $e$ & 0.000950 \\
+    $v_{x0}$ / (km/s) & $2.130423$ & 倾角 $i$ / ($^\circ$) & 4.9766 \\
+    $v_{y0}$ / (km/s) & $-2.205434$ & 升交点赤经 $\Omega$ / ($^\circ$) & 80.666 \\
+    $v_{z0}$ / (km/s) & $-0.214202$ & 相对 R1 初始相位差 & $+4.19^\circ$（东侧） \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+两星各自的观测序列和单次观测速度增量见表~\ref{tab:q3plan}，完整有效脉冲的施加时刻与三维速度增量见附录表~\ref{tab:app_q3burns}。在本文主模型中，R1 充分利用全部 30 天时间窗（第 29.57 天结束），以极平缓的向西漂移完成 10 颗目标，共 20 次脉冲槽位（有效脉冲仅 12 次），单次最大脉冲 3.44~m/s，相邻有效脉冲最小间隔高达 38852.8~s（10.79~h）；R2 在第 29.52 天完成东侧 20 颗目标，共 40 次脉冲槽位（有效脉冲仅 18 次），单次最大脉冲仅 2.87~m/s，最小间隔 24306.1~s（6.75~h），且 B7、B10、B14、B22、B29 共 5 颗目标实现零脉冲自然滑行观测。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题三双星观测序列（本文主模型；左：R1 西侧 10 颗，右：R2 东侧 20 颗）}
+  \label{tab:q3plan}
+  \zihao{5}\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{clcc@{\hspace{10pt}}clcc}
+    \toprule
+    序号 & 目标 & 观测开始（UTC） & $\Delta v$/(m/s) & 序号 & 目标 & 观测开始（UTC） & $\Delta v$/(m/s) \\
+    \midrule
+    1 & B2 & 01-02 13:39:16 & 4.41 & 1 & B4 & 01-01 14:21:55 & 0.05 \\
+    2 & B1 & 01-03 14:22:19 & 0.70 & 2 & B11 & 01-04 14:05:17 & 1.07 \\
+    3 & B3 & 01-07 14:15:17 & 0.08 & 3 & B7 & 01-05 15:49:29 & 0.00 \\
+    4 & B5 & 01-08 14:15:26 & 0.41 & 4 & B6 & 01-06 17:14:58 & 0.36 \\
+    5 & B9 & 01-12 13:49:14 & 0.34 & 5 & B10 & 01-08 13:40:47 & 0.00 \\
+    6 & B8 & 01-16 13:54:18 & 1.80 & 6 & B12 & 01-11 13:27:22 & 0.02 \\
+    7 & B17 & 01-21 13:45:37 & 1.74 & 7 & B13 & 01-12 13:22:34 & 0.75 \\
+    8 & B18 & 01-26 11:35:29 & 1.03 & 8 & B15 & 01-14 12:51:11 & 1.66 \\
+    9 & B30 & 01-27 17:45:52 & 0.12 & 9 & B14 & 01-15 13:03:02 & 0.00 \\
+    10 & B26 & 01-30 13:42:20 & 1.30 & 10 & B16 & 01-15 18:29:37 & 1.74 \\
+    & & & & 11 & B19 & 01-18 12:42:28 & 0.18 \\
+    & & & & 12 & B20 & 01-19 12:41:44 & 1.88 \\
+    & & & & 13 & B21 & 01-20 16:56:00 & 1.34 \\
+    & & & & 14 & B23 & 01-22 12:22:25 & 0.45 \\
+    & & & & 15 & B22 & 01-23 17:25:23 & 0.00 \\
+    & & & & 16 & B24 & 01-25 12:04:06 & 0.16 \\
+    & & & & 17 & B25 & 01-26 15:24:58 & 1.48 \\
+    & & & & 18 & B27 & 01-28 11:43:27 & 0.10 \\
+    & & & & 19 & B29 & 01-29 13:05:13 & 0.00 \\
+    & & & & 20 & B28 & 01-30 12:26:11 & 2.87 \\
+    \midrule
+    \multicolumn{4}{l}{R1 合计 11.94~m/s（10 颗）} & \multicolumn{4}{l}{R2 合计 14.12~m/s（20 颗）；双星总计 26.07~m/s} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+双星的巡游路线和各次观测速度增量如图~\ref{fig:q3route} 所示。与图~\ref{fig:q2route} 的单星路线相比，R1 和 R2 从队列中部分头向西、向东匀速推进，轨迹近似两条斜率更平缓的直线，全程均铺满 30 天且没有折返。全部 30 颗目标单次观测速度增量的中位数从问题二的 2.76~m/s 骤降至 0.43~m/s；除 R1 建立初始向西漂移的首颗目标 B2（4.41~m/s）外，其余 29 颗目标的观测代价全部低于 2.9~m/s。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig12a_q3_route.pdf}
+    \caption{双星相对经度随时间的变化}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig12b_q3_dv.pdf}
+    \caption{双星各次观测的速度增量}
+  \end{subfigure}
+  \caption{问题三的双星巡游方案}
+  \label{fig:q3route}
+\end{figure}
+
+表~\ref{tab:q3compare} 对比了固定时刻基线方案与本文主模型的双星综合性能。基线方案经经度分区、网格初搜（35.85~m/s）、固定时刻序列凸优化（34.10~m/s）以及固定时刻 R2 初始轨道联合优化后，两星合计消耗 33.46~m/s。在此基础上，本文主模型将两星合计速度增量压低至 \textbf{26.07~m/s}，较基线方案再降 7.39~m/s（\textbf{22.1\%}），其中 R1 降幅尤为显著，由 18.15~m/s 降至 11.94~m/s（下降 34.2\%）。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题三基线方案与本文主模型综合对比}
+  \label{tab:q3compare}
+  \zihao{-5}\setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    求解方案 & R1/(m/s) & R2/(m/s) & 两星合计/(m/s) & 相对基线 & $\delta a$/km \\
+    \midrule
+    基线方案（M3-A，固定时刻联合优化） & 18.15 & 15.31 & 33.46 & — & 5.90 \\
+    \textbf{本文主模型（CW 动态规划 + 时空联合）} & \textbf{11.94} & \textbf{14.12} & \textbf{26.07} & $\mathbf{-22.1\%}$ & \textbf{5.90} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+进一步拆解表~\ref{tab:q3ablation} 可见，双星主模型的性能提升同样来自两层核心模块的递进贡献。首先，引入三维 CW 物理状态动态规划重排两星交会日期，并放开脉冲施加时刻与 R2 初始六维状态同步联合优化后（阶段 2），R1 充分利用了全部 30 天时间窗，两星合计单步下降 5.35~m/s 至 28.11~m/s；随后同步耦合观测起始时刻并执行退化脉冲重定位（阶段 3），两星合计再度下降 2.04~m/s 至最终的 \textbf{26.07~m/s}。
+
+\begin{table}[!htb]
+  \centering
+  \caption{本文主模型各核心模块的递进消融对比（问题三）}
+  \label{tab:q3ablation}
+  \zihao{-5}\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    迭代阶段与新增核心技术点 & R1/(m/s) & R2/(m/s) & 合计/(m/s) & 单步降幅/(m/s) \\
+    \midrule
+    阶段 1（空间分区 + 固定时刻联合优化，即 M3-A） & 18.15 & 15.31 & 33.46 & — \\
+    阶段 2（+ CW 动态规划重排与脉冲时刻放开） & 13.50 & 14.61 & 28.11 & $-5.35$（$-16.0\%$） \\
+    \textbf{阶段 3（+ 观测时刻耦合与退化脉冲重定位）} & \textbf{11.94} & \textbf{14.12} & \textbf{26.07} & $\mathbf{-2.04}$（$\mathbf{-7.3\%}$） \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+为在主模型口径下检验参数 $\delta a$ 对结论的影响，我们在本文主模型框架下于 $\delta a = 3 \sim 20$~km 范围内扫描求解了最优总速度增量 $J^*(\delta a)$，结果见图~\ref{fig:q3da} 与表~\ref{tab:q3da}。$J^*(\delta a)$ 随 $\delta a$ 单调下降且斜率平缓，各档最优半长轴均贴在下界 $\aGEO - \delta a$ 上，说明半长轴约束始终起主导作用；当 $\delta a \ge 15$~km 时，由于初始向东漂移率已足够充裕，最优初始偏心率自然回落至 $0.00079 \sim 0.00067$。整个 $\delta a = 3 \sim 20$~km 宽范围内，两星总速度增量仅从 26.142~m/s 降至 25.529~m/s（变化 0.61~m/s，约 2.3\%），说明本文结论对 $\delta a$ 取值具有良好稳健性。
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.68\textwidth]{fig13_q3_da.pdf}
+  \caption{半长轴偏离上限 $\delta a$ 对总速度增量的影响}
+  \label{fig:q3da}
+\end{figure}
+
+\begin{table}[!htb]
+  \centering
+  \caption{不同 $\delta a$ 下的双星最优解与 R2 初始轨道参数（本文主模型扫描）}
+  \label{tab:q3da}
+  \zihao{5}\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{ccccc}
+    \toprule
+    $\delta a$ / km & R2 / (m/s) & 两星合计 / (m/s) & 初始 $a - \aGEO$ / km & 初始偏心率 $e$ \\
+    \midrule
+    3.00 & 14.198 & 26.142 & $-2.995$ & 0.00095 \\
+    5.00 & 14.125 & 26.069 & $-4.995$ & 0.00095 \\
+    \textbf{5.90（主方案）} & \textbf{14.093} & \textbf{26.036} & $-5.895$ & 0.00095 \\
+    8.00 & 14.016 & 25.960 & $-7.995$ & 0.00095 \\
+    15.00 & 13.766 & 25.709 & $-14.995$ & 0.00079 \\
+    20.00 & 13.585 & 25.529 & $-19.995$ & 0.00067 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+将该双星方案在 0.05~s 加密网格下复算并导入 ATK 4.2.0 做连续数值积分检验（表~\ref{tab:q3check}、图~\ref{fig:q3atk}），R1 全部 10 次与 R2 全部 20 次观测均满足距离与角度约束，ATK 与解析轨迹的最大位置偏差分别仅 0.003~m 和 0.004~m，全程最低地心距保持在 42118.5~km 与 42052.5~km，始终稳定运行于同步带附近。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题三双星主方案约束检验（本文主模型）}
+  \label{tab:q3check}
+  \zihao{5}\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lccc}
+    \toprule
+    检验项 & 要求 & R1（西侧 10 颗） & R2（东侧 20 颗） \\
+    \midrule
+    观测目标数 & 合计 30 颗不重复 & 10 / 10 & 20 / 20 \\
+    累计速度增量 & 单星 $\le 300$~m/s & 11.94~m/s & 14.12~m/s \\
+    单次速度增量 & $\le 30$~m/s & 最大 3.44~m/s & 最大 2.87~m/s \\
+    相邻脉冲间隔 & $\ge 3600$~s & 最小 38852.8~s & 最小 24306.1~s \\
+    每次观测前机动次数 & $\le 2$ & 最多 2（有效 12/20） & 最多 2（有效 18/40） \\
+    R2 初始 $e$ / $|a-\aGEO|$ & $< 0.001$ / $\le 5.90$~km & — & 0.00095 / 5.895~km \\
+    观测距离 & $10 \sim 50$~km & $10.05 \sim 49.95$~km & $10.05 \sim 49.95$~km \\
+    最大光照角 / 侦测角 & $\le 45^\circ$ & $44.95^\circ$ / $44.95^\circ$ & $44.95^\circ$ / $44.95^\circ$ \\
+    ATK 4.2.0 单星 MCS 复核 & 全部满足 & 10 / 10（$\le 0.003$~m） & 20 / 20（$\le 0.004$~m） \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.82\textwidth]{q3_dual_overview.jpg}
+  \caption{问题三 ATK 4.2.0 双星三维仿真轨迹（白线：R1 与 R2；紫点：30 颗目标）}
+  \label{fig:q3atk}
+\end{figure}

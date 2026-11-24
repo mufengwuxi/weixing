@@ -1,0 +1,234 @@
+\section{问题一模型建立及求解}
+
+\subsection{单目标两脉冲观测模型的建立}
+
+问题一是第 4.3 节观测单元的直接应用。把每一时刻的可观测区域 $\mathcal C_{\mathrm{B1}}(t)$ 沿时间轴排列起来，就得到相对位置空间中的一条时变可观测管道。问题一的本质是用至多两次脉冲，使 R1 相对 B1 的轨迹以最小的速度增量进入这条管道，并在管道内连续停留 60~s。管道的截面随太阳和目标的运动而转动，而且只在少数时刻靠近 R1，这决定了问题的难点在于何时进入、从哪里进入以及怎样进入。下面先给出模型，再按这三个层次求解，整体思路如图~\ref{fig:tube} 所示。
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fig8_tube.pdf}
+  \caption{问题一的抽象：以两次脉冲穿过时变可观测管道}
+  \label{fig:tube}
+\end{figure}
+
+\subsubsection{优化变量定义}
+
+题目允许每次观测前最多机动两次，本问只有一次观测，所以 R1 至多进行两次脉冲机动。待求优化变量为两次脉冲的时刻 $t_1, t_2$、速度增量 $\Delta\bm v_1, \Delta\bm v_2$ 和观测开始时刻 $s$，记为
+\begin{equation}
+  \bm z = (t_1,\ t_2,\ \Delta\bm v_1,\ \Delta\bm v_2,\ s) \in \mathbb R^9 .
+  \label{eq:q1var}
+\end{equation}
+给定 $\bm z$ 后，按式~\eqref{eq:impulse} 依次施加两次脉冲，用 $\Phi$ 传播，即可得到 R1 在任意时刻的位置。只用一次脉冲或不机动的方案对应 $\Delta\bm v_j = \bm 0$，也包含在这组变量中。
+
+\subsubsection{目标函数设置}
+
+本问只观测一颗目标，字典序目标的第一阶段 $N^* = 1$ 是确定的，只需最小化累计速度增量
+\begin{equation}
+  J(\bm z) = \|\Delta\bm v_1\| + \|\Delta\bm v_2\| .
+  \label{eq:q1obj}
+\end{equation}
+范数在速度增量为零处不可导，求解时用 $\sqrt{\|\Delta\bm v_j\|^2 + \varepsilon}$ 代替 $\|\Delta\bm v_j\|$，$\varepsilon$ 取很小的正数，使梯度类算法可以正常迭代。
+
+\subsubsection{约束条件分析}
+
+约束分为三类。第一类是时间约束，两次机动依次进行，间隔不少于 1~h，观测在第二次机动之后开始，并在 48~h 内结束。第二类是脉冲约束，单次速度增量不超过 30~m/s；本问累计速度增量远小于 300~m/s，预算约束自动满足。第三类是观测约束，观测区间内每一时刻相对位置都要落在可观测区域 $\mathcal C_{\mathrm{B1}}(t)$ 内。
+
+第三类约束要求在 60~s 连续时间区间内的每一时刻都成立，属于连续时间区间约束。我们把观测区间按 1~s 等分，在 61 个采样时刻 $s + j$，$j = 0, 1, \dots, 60$ 上施加式~\eqref{eq:feasset} 的条件，化为有限个不等式约束。采样点之间是否越界，在求解后用更细的网格检验。
+
+\subsubsection{模型汇总}
+
+记时间约束和脉冲约束构成的集合为
+\begin{equation}
+  \mathcal Z = \big\{\bm z \;\big|\; 0 \le t_1,\ \ t_2 - t_1 \ge 3600,\ \ t_2 \le s \le T - \tau,\ \ \|\Delta\bm v_j\| \le 30~\mathrm{m/s},\ j = 1,2\big\},
+  \label{eq:q1set}
+\end{equation}
+则问题一的优化模型为
+\begin{equation}
+  \min_{\bm z\in\mathcal Z}\ \ \|\Delta\bm v_1\| + \|\Delta\bm v_2\| \qquad \text{s.t.}\quad \bm\rho(s + k;\,\bm z) \in \mathcal C_{\mathrm{B1}}(s + k),\quad k = 0, 1, \dots, 60 ,
+  \label{eq:q1model}
+\end{equation}
+其中 $\bm\rho(t;\bm z)$ 是给定 $\bm z$ 时 R1 相对 B1 的位置，$\mathcal C_{\mathrm{B1}}$ 由式~\eqref{eq:feasset} 给出，时间单位为 s。
+
+\subsection{优化模型求解}
+
+模型~\eqref{eq:q1model} 有 9 个变量，可观测区域非凸，直接搜索很难找到可行解。为此，我们分三个步骤逐步缩小搜索范围。首先找出可观测管道靠近 R1 的少数候选观测时刻，其次在这些时刻的管道截面内选取离边界最远的瞄准点，最后由相位漂移关系估计脉冲初值，再以非线性规划精修。前两步把 9 维的搜索降为对少数候选时刻和一个瞄准距离的选择，第三步只在可行解附近做局部优化。
+
+\subsubsection{候选观测时刻的确定}
+
+观测只能发生在两个条件同时成立的时刻附近。第一个条件是两个观测圆锥有交集，即 $\beta(t) \le 90^\circ$，这在第 2.1 节已经给出。第二个条件是 R1 正好处在目标轨道面附近。记目标轨道面的单位法向为 $\hat{\bm h}_b$，R1 到目标轨道面的有向距离为
+\begin{equation}
+  g(t) = \bm r_{\mathrm{R1}}(t)\cdot\hat{\bm h}_b .
+  \label{eq:planedist}
+\end{equation}
+
+R1 与 B1 的轨道面夹角为 $4.21^\circ$，$g(t)$ 的振幅约为 3093~km。观测要求两星距离不超过 50~km，因而必须有 $|g(t)| \le 50$~km。在 $g(t)$ 的零点 $t_c$ 附近，$|g(t)| \approx a\,n\sin i_{\mathrm{rel}}\,|t - t_c|$，由此得到 $|t - t_c| \le 222$~s，即在 R1 轨道面不变时，观测只能发生在穿越目标轨道面前后约 4 分钟之内，如图~\ref{fig:crossing}(c) 所示。1 米每秒的脉冲最多使轨道面转动约 $0.019^\circ$，问题一中机动量只有几米每秒，所以可以在 R1 不机动的轨道上预先计算穿越时刻，作为候选观测时刻。
+
+据此，候选观测时刻取为
+\begin{equation}
+  \mathcal S = \{\, t_c \in [0, T] \mid g(t_c) = 0,\ \beta(t_c) \le 90^\circ \,\} .
+  \label{eq:candidates}
+\end{equation}
+
+对本题数据，48~h 内 R1 共穿越 B1 轨道面 4 次，时刻为 2.45~h、14.42~h、26.38~h 和 38.35~h，如图~\ref{fig:crossing}(b) 所示。其中第 1、3 次发生在向阳侧交点，$\beta$ 约为 $146^\circ$，不满足条件；第 2、4 次发生在背阳侧交点，$\beta$ 约为 $34^\circ$，构成两个候选观测时刻。两类交点的几何关系如图~\ref{fig:crossing}(a) 所示。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.86\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig6a_crossing.pdf}
+    \caption{两轨道面的交线与交点}
+  \end{subfigure}
+
+  \vspace{4pt}
+  \begin{subfigure}[b]{0.53\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig6b_g48h.pdf}
+    \caption{48~h 内 R1 到目标轨道面的距离 $g(t)$}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig6c_gzoom.pdf}
+    \caption{穿越时刻前后 10~min 的 $g(t)$}
+  \end{subfigure}
+  \caption{候选观测时刻的确定}
+  \label{fig:crossing}
+\end{figure}
+
+\subsubsection{瞄准点的选取}
+
+对每个候选时刻 $t_c$，构造一个“观测开始时 R1 恰好到达瞄准点”的两脉冲问题，它只含等式约束，容易求解，其解作为精修的初值。瞄准点按下面的方法选取。
+
+瞄准方向取目标处太阳方向 $\hat{\bm u}_\odot$ 与地心方向 $\hat{\bm u}_E$ 的角平分线。两个圆锥的半顶角都是 $45^\circ$，轴线夹角为 $\beta$，角平分线方向与两条轴线的夹角都是 $\beta/2$，离两个锥面的角距离都是 $45^\circ - \beta/2$。对其他方向，到某一个锥面的距离一定小于这个值，所以角平分线是角度可行区域里离边界最远的方向。在 $\beta \approx 34^\circ$ 时，这个裕量约为 $28^\circ$。瞄准距离 $L$ 在 $[10, 50]$~km 内均匀抽取，瞄准点为
+\begin{equation}
+  \bm r_{\mathrm{aim}} = \bm r_b(t_c) + L\,\frac{\hat{\bm u}_\odot + \hat{\bm u}_E}{\|\hat{\bm u}_\odot + \hat{\bm u}_E\|} .
+  \label{eq:aim}
+\end{equation}
+
+\subsubsection{脉冲初值构造与优化求解}
+
+初始脉冲由第 2.2 节的相位漂移模型估计。设 $t_c$ 时刻目标相对 R1 的沿轨相位差为 $\Delta\lambda$，第一次机动时刻为 $t_1$，可用时间为 $T_1 = t_c - t_1$。要在 $T_1$ 内消除这一相位差，所需的切向速度增量约为
+\begin{equation}
+  \Delta v_T = -\frac{a\,\Delta\lambda}{3\,T_1},
+  \label{eq:dvguess}
+\end{equation}
+正值表示沿速度方向。对本题，两个候选时刻的相位差都约为 $-1.31^\circ$，即 B1 在 R1 西侧，R1 需要沿速度方向加速、抬高轨道、向西漂移。初值中第一次脉冲取沿速度方向、大小为式~\eqref{eq:dvguess} 乘以 $[0.3, 1.5]$ 内的随机系数；第二次脉冲取 0.5~m/s 量级的随机小量。两次机动时刻在满足间隔约束的范围内随机抽取。
+
+以瞄准问题的解为初值，用序列二次规划方法 SLSQP\cite{kraft1988} 求解完整模型~\eqref{eq:q1model}，具体调用 SciPy 中的实现\cite{scipy2020}。候选时刻、瞄准距离、机动时刻和初始脉冲的随机系数都随机抽取，重复 300 次，从所有可行解中取速度增量最小者。得到方案后，需要确认 1~s 采样点之间没有越界。设某个约束函数在观测段内的二阶导数绝对值不超过 $M$，则在步长为 $h$ 的两个相邻采样点之间，它的极值最多比两端采样值中较优的一个多出 $Mh^2/8$。我们据此选取检验网格，在 0.05~s 的网格上逐点检验全部约束，并在距离和角度上各留 0.01~km 和 $0.01^\circ$ 的裕量，使检验网格的误差远小于裕量。由于瞄准初值已落在可行解附近，多起点搜索中有大量初值收敛到同一最优解，其收敛分布见第 5.3 节。
+
+\subsection{结果的分析与验证}
+
+求得的机动方案见表~\ref{tab:q1plan}。R1 两次机动的速度增量分别为 4.096~m/s 和 1.117~m/s，累计 5.2128~m/s，观测于 2027 年 1 月 2 日 14:25:46.63 开始，持续 60~s。三段自由飞行时间依次为 14.76~h、13.56~h 和 10.11~h，两次机动间隔远大于 1~h 的下限。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题一机动方案}
+  \label{tab:q1plan}
+  \zihao{5}\setlength{\tabcolsep}{3pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    事件 & 时刻（UTC） & $t$ / s & $\Delta\bm v$ / (m/s) & $\|\Delta\bm v\|$ / (m/s) & 机动后 $\Delta a$ / km \\
+    \midrule
+    初始 & 01-01 00:00:00 & 0 & — & — & 1.77 \\
+    机动 1 & 01-01 14:45:24.6 & 53124.64 & $(-4.024,\ 0.700,\ 0.308)$ & 4.096 & 114.31 \\
+    机动 2 & 01-02 04:19:00.0 & 101940.01 & $(-1.066,\ -0.326,\ 0.074)$ & 1.117 & 83.63 \\
+    观测开始 & 01-02 14:25:46.6 & 138346.63 & — & — & — \\
+    观测结束 & 01-02 14:26:46.6 & 138406.63 & — & — & — \\
+    \midrule
+    合计 & & & & 5.2128 & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+机动的作用可以用第 2.2 节的相位漂移来理解。初始时刻 B1 位于 R1 西侧约 $1.35^\circ$。第 1 次机动主要沿速度方向，使 R1 的半长轴升高约 112~km，R1 开始以每天约 $1.47^\circ$ 的速率向西漂移，追赶 B1。第 2 次机动把漂移率减到每天约 $1.07^\circ$，同时微调轨道，使 R1 在第二个可能观测时段恰好穿过 B1 轨道面附近，进入可观测区域。任务在观测结束时终止，不需要第三次机动来停止漂移，所以两次脉冲就足够了。
+
+对两个观测时段的比较验证了第 2.3 节的判断。把观测限定在第一个时段时，用同样的方法求得的最小速度增量为 13.35~m/s，是第二个时段的 2.6 倍。第一个时段留给相位调整的时间不到第二个时段的 40\%，所需漂移率更大，代价也就更高。
+
+观测过程如图~\ref{fig:q1obs} 所示。R1 以约 0.23~km/s 的相对速度从 B1 旁边掠过，15~min 前距离还在 200~km 以外，最近时约 10.3~km，随后迅速远离。在距离和角度分别留出 0.01~km 与 $0.01^\circ$ 裕量的设定下，观测开始时侦测角、结束时光照角均触及 $44.99^\circ$ 的认证边界，期间最小距离降到 10.28~km，三个约束同时趋近边界，60~s 的观测时段正好卡在其中。这说明当前最优解处在可行域边缘，再减少燃料就会越出认证边界。用管道的语言来说，最省燃料的方案是从管道边缘斜穿而过，而不是停留在管道中心。此外，第 6 节提出的联合序列凸优化模型同样可直接应用于问题一，在安全裕量 $m = 0.05$ 下无需 SLSQP 即可于 6.2~s 内收敛至 5.2155~m/s，与本节结果高度一致。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig5a_q1_range.pdf}
+    \caption{观测前后 15~min 的距离}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig5b_q1_angles.pdf}
+    \caption{观测前后 3~min 的角度与距离}
+  \end{subfigure}
+  \caption{问题一的观测过程}
+  \label{fig:q1obs}
+\end{figure}
+
+采样误差的检验结果如图~\ref{fig:q1grid} 所示。以 0.001~s 网格上的曲线为基准，最小距离出现在观测开始后 42.42~s，为 10.27951~km，而 1~s 采样点给出的最小值为 10.27994~km，两者相差 0.43~m。把采样网格的起点在一个步长内平移并取最坏情形，最小距离的采样误差随步长按 $h^2$ 下降，与误差界 $Mh^2/8$ 几乎重合。步长为 1~s 时，距离误差最多 0.63~m，两个角度的误差界分别为 $0.012^\circ$ 和 $0.016^\circ$，已经超过角度裕量，所以只用优化时的 1~s 采样并不足以保证约束成立。步长为 0.05~s 时，距离误差降到 1.6~mm，角度误差不超过 $0.00004^\circ$，都比裕量小两个数量级以上，检验结果可以代表连续时间上的约束。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7a_grid_zoom.pdf}
+    \caption{最小距离附近的采样点与连续曲线}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7b_grid_err.pdf}
+    \caption{最小距离的采样误差随步长的变化}
+  \end{subfigure}
+  \caption{采样步长对约束检验的影响}
+  \label{fig:q1grid}
+\end{figure}
+
+观测段的约束检验见表~\ref{tab:q1check}。表中的 ATK 结果由 ATK 4.2.0 软件独立数值积分得到，与解析传播在观测时刻的位置差不超过 0.001~m，两种方法都表明 60~s 内全部约束成立。ATK 三维仿真轨迹如图~\ref{fig:q1atk} 所示，R1（紫线）由左下方初始位置出发，经两次脉冲调整后在右上方与 B1（白线）实现抵近交会。
+
+\begin{table}[!htb]
+  \centering
+  \caption{问题一观测段约束检验}
+  \label{tab:q1check}
+  \zihao{5}
+  \begin{tabular}{lcccc}
+    \toprule
+    检验方式 & 距离 / km & 最大光照角 / ($^\circ$) & 最大侦测角 / ($^\circ$) & 是否满足 \\
+    \midrule
+    约束要求 & $10 \sim 50$ & $\le 45$ & $\le 45$ & — \\
+    解析传播 & $10.2795 \sim 14.0513$ & 44.9900 & 44.9900 & 是 \\
+    ATK 数值积分 & $10.2795 \sim 14.0513$ & 44.9898 & 44.9901 & 是 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.86\textwidth]{q1_overview.png}
+  \caption{问题一 ATK 4.2.0 三维仿真轨迹（紫线：R1；白线：B1）}
+  \label{fig:q1atk}
+\end{figure}
+
+为检验上述方案的最优性，我们固定一部分优化变量、对剩余变量重新优化，观察最小速度增量 $J^*$ 的变化，结果如图~\ref{fig:q1opt} 所示。图~\ref{fig:q1opt}(a) 按 1~h 步长遍历两次机动时刻 $(t_1, t_2)$，共 704 个组合，每个格点对 $\Delta\bm v_1$、$\Delta\bm v_2$ 和 $s$ 重新优化。全图的最小值正是本文方案的 5.2128~m/s，周围格点的代价均更高，最近的一格为 5.219~m/s；在 $t_1 \approx 3$~h、$t_2 \approx 15$~h 附近存在另一个代价较高的局部盆地；灰色区域在以相邻格点解为初值重算后仍未找到可行解。
+
+图~\ref{fig:q1opt}(b) 把两次脉冲各分解为径向（R）、沿迹（T）和法向（N）三个分量，每次固定一个分量使其偏离本文方案 $-1$ 到 $+1$~m/s，对其余变量重新优化。6 条剖面曲线的最低点都落在偏移为 0 处，其中沿迹分量最为敏感，偏离 1~m/s 时 $J^*$ 升至约 6.0~m/s。图~\ref{fig:q1opt}(c) 统计了 300 个随机初值的收敛结果，第一个候选观测时段的初值全部收敛到 13.35~m/s 或 14.65~m/s，第二个时段有 117 个收敛到 5.2128~m/s，其余落在 6.4、9.3、12.0~m/s 等较差的局部最优，没有任何一个初值得到更低的解。
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[b]{0.62\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7c_q1_t1t2.pdf}
+    \caption{固定两次机动时刻的最小速度增量 $J^*(t_1, t_2)$}
+  \end{subfigure}
+
+  \vspace{6pt}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7d_q1_dvprof.pdf}
+    \caption{两次脉冲各 RTN 分量偏离时的 $J^*$ 剖面}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig7e_q1_multistart.pdf}
+    \caption{300 个随机初值的收敛结果分布}
+  \end{subfigure}
+  \caption{问题一方案的最优性检验}
+  \label{fig:q1opt}
+\end{figure}
+
+为检验方法的可迁移性，我们不修改任何代码和参数，只把观测目标依次换成 B7 和 B20，用相同的设置求解。两者分别得到 8.98~m/s 和 34.83~m/s 的可行方案，候选观测时刻、相位差和初始脉冲都由式~\eqref{eq:candidates} 至式~\eqref{eq:dvguess} 自动给出。其中 B20 的第二次脉冲达到 30~m/s 的上限，说明不同目标的机动代价差别很大，这也是问题二需要优化访问顺序的原因。
